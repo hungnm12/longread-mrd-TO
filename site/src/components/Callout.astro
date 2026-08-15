@@ -1,0 +1,13 @@
+---
+interface Props {
+  title: string;
+  tone: "observation" | "interpretation" | "claim" | "caveat";
+}
+
+const { title, tone } = Astro.props;
+---
+
+<section class={`callout callout--${tone}`}>
+  <strong>{title}</strong>
+  <slot />
+</section>

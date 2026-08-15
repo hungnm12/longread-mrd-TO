@@ -1,0 +1,22 @@
+reference:
+  fasta: /big8_disk/ref/GRCh38_no_alt_analysis_set.fasta
+
+samples:
+  tumor:
+    name: HCC1395
+    bam: /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395.bam
+    platform: ont_r10_dorado_sup_5khz_ssrs
+
+caller:
+  name: clairs-to
+  version: "0.5.0"
+  snv_vcf: /big8_disk/hung114/ONT_MRD/week4/expA_full/HCC1395_pure/snv.vcf.gz
+  snv_min_af: 0.05
+  qual_cutoff: 4
+  disable_indels: true
+
+output:
+  results_dir: /big8_disk/hung114/ONT_MRD/mrd-longphase/results/tumor_only/HCC1395
+  figures_dir: /big8_disk/hung114/ONT_MRD/mrd-longphase/figures/tumor_only
+  weekly_report: /big8_disk/hung114/ONT_MRD/mrd-longphase/reports/weekly/2026-08-13_hcc1395_phase1_tumor_only.md
+  change_log: /big8_disk/hung114/ONT_MRD/mrd-longphase/reports/change_log.tsv

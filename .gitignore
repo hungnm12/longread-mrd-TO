@@ -1,0 +1,16 @@
+# Agent-local context, not for push
+.agent-context/
+
+# Frontend dependencies and build outputs
+site/node_modules/
+site/dist/
+site/.astro/
+site/.config/
+
+# Python cache noise
+**/__pycache__/
+**/*.pyc
+
+# OS/editor noise
+.DS_Store
+Thumbs.db

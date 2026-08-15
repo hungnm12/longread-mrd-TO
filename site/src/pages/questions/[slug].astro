@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("questions");
+  return entries.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={entry.data.title} description="Research question">
+  <section class="hero">
+    <span class="eyebrow">{entry.data.id}</span>
+    <h1>{entry.data.title}</h1>
+  </section>
+  <section class="content-panel"><Content /></section>
+</BaseLayout>

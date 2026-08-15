@@ -1,0 +1,44 @@
+# --- large / raw bioinformatics data (never commit) ---
+*.bam
+*.bam.bai
+*.cram
+*.crai
+*.fasta
+*.fa
+*.fasta.fai
+*.fa.fai
+*.fastq
+*.fastq.gz
+*.fq.gz
+# VCFs / indexes (keep small curated ones with `git add -f` if needed)
+*.vcf
+*.vcf.gz
+*.vcf.gz.tbi
+*.bcf
+*.bed.gz
+*.bed.gz.tbi
+
+# --- generated outputs ---
+results/**
+figures/**
+!results/**/.gitkeep
+!figures/**/.gitkeep
+
+# --- python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.ipynb_checkpoints/
+
+# --- editors / os ---
+.vscode/
+.idea/
+.DS_Store
+
+# --- logs / tmp ---
+*.log
+tmp/
+.mpl/

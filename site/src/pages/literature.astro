@@ -1,0 +1,50 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Badge from "@components/Badge.astro";
+import { getCollection } from "astro:content";
+import { entryHref } from "@utils/content";
+
+const papers = await getCollection("papers");
+---
+
+<BaseLayout title="Literature Matrix" description="Seed literature for the MRD research map.">
+  <section class="hero">
+    <span class="eyebrow">Literature matrix</span>
+    <h1>Seven seed documents frame the tumor-only to multimodal roadmap.</h1>
+    <p class="muted">
+      The current entries stay conservative: they only restate the role described in the project
+      brief unless a local PDF has been attached and reviewed.
+    </p>
+  </section>
+
+  <section class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Paper</th>
+          <th>Strategy</th>
+          <th>Signals</th>
+          <th>Transfer value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {papers.map((paper) => (
+          <tr>
+            <td>{paper.data.id}</td>
+            <td>
+              <a href={entryHref("papers", paper.slug)}>{paper.data.title}</a>
+              <div class="muted">{paper.data.local_filename}</div>
+            </td>
+            <td>{paper.data.strategy}</td>
+            <td>{paper.data.signal_modalities.join(", ")}</td>
+            <td>
+              <Badge label={paper.data.evidence_level === "external_report" ? "External report" : paper.data.evidence_level} tone={paper.data.evidence_level === "preliminary" ? "preliminary" : "default"} />
+              <p>{paper.data.role_in_map}</p>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+</BaseLayout>

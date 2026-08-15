@@ -1,0 +1,121 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Badge from "@components/Badge.astro";
+import Callout from "@components/Callout.astro";
+import { getCollection, getEntry, render } from "astro:content";
+import { candidateLandscape } from "@data/week001";
+import { entryHref } from "@utils/content";
+
+export async function getStaticPaths() {
+  const weeks = await getCollection("weeks");
+  return weeks.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const refs = await Promise.all([
+  Promise.all(entry.data.research_questions.map((id) => getEntry("questions", id.toLowerCase()))),
+  Promise.all(entry.data.hypotheses.map((id) => getEntry("hypotheses", id.toLowerCase()))),
+  Promise.all(entry.data.experiments.map((id) => getEntry("experiments", id.toLowerCase()))),
+  Promise.all(entry.data.results.map((id) => getEntry("results", id.toLowerCase()))),
+  Promise.all(entry.data.decisions.map((id) => getEntry("decisions", id.toLowerCase())))
+]);
+const [questions, hypotheses, experiments, results, decisions] = refs;
+const toc = [
+  { href: "#storyline", label: "Storyline" },
+  { href: "#evidence", label: "Evidence" },
+  { href: "#interpretation", label: "Interpretation" },
+  { href: "#summary", label: "Three-slide summary" }
+];
+---
+
+<BaseLayout title={entry.data.title} description="Weekly report">
+  <section class="hero">
+    <span class="eyebrow">{entry.data.id}</span>
+    <h1>{entry.data.title}</h1>
+    <div class="pill-list">
+      <Badge label={entry.data.status} />
+      <Badge label={entry.data.evidence_level} tone="preliminary" />
+      <Badge label={entry.data.period} />
+    </div>
+  </section>
+
+  <div class="page">
+    <div class="page__content stack">
+      <section id="storyline" class="content-panel">
+        <h2>Storyline</h2>
+        <Content />
+      </section>
+
+      <section id="evidence" class="content-panel">
+        <h2>Evidence generated this week</h2>
+        <div class="summary-grid">
+          {candidateLandscape.funnel.map((step) => (
+            <article class="card">
+              <h3>{step.label}</h3>
+              <div class="metric__value">{step.count.toLocaleString()}</div>
+              <div class="funnel__bar" style={`--value:${Math.max(step.pct, 1)}%`}></div>
+              <p class="muted">{step.pct}% of total ClairS-TO records</p>
+            </article>
+          ))}
+        </div>
+        <div class="summary-grid" style="margin-top: 1rem;">
+          {candidateLandscape.distributions.map((item) => (
+            <article class="card">
+              <h3>{item.label}</h3>
+              <p><strong>Median:</strong> {item.median} {item.unit}</p>
+              <p><strong>IQR:</strong> {item.q25} to {item.q75} {item.unit}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="interpretation" class="content-panel stack">
+        <h2>Observation vs interpretation</h2>
+        <Callout title="Observation" tone="observation">
+          <p>{results[0]?.data.observation}</p>
+        </Callout>
+        <Callout title="Interpretation" tone="interpretation">
+          <p>{results[0]?.data.interpretation}</p>
+        </Callout>
+        <Callout title="Caveat" tone="caveat">
+          <ul class="list-clean">
+            {results[0]?.data.caveats.map((caveat) => <li>{caveat}</li>)}
+          </ul>
+        </Callout>
+      </section>
+
+      <section id="summary" class="content-panel">
+        <h2>Three-slide-ready summary</h2>
+        <ol class="list-clean">
+          <li>The tumor-only Week 1 baseline keeps 48,819 PASS SNVs out of 3,169,996 ClairS-TO records, which is a retention funnel rather than a truth label.</li>
+          <li>The retained calls sit in a substantial depth and allele-support range, but those distributions alone do not establish somatic origin or MRD sensitivity.</li>
+          <li>The next useful step is to define a reliability ladder for tumor-only markers before interpreting biology more aggressively.</li>
+        </ol>
+      </section>
+
+      <section class="content-panel">
+        <h2>Linked research objects</h2>
+        <div class="grid grid--cards">
+          {[...questions, ...hypotheses, ...experiments, ...results, ...decisions]
+            .filter(Boolean)
+            .map((item) => (
+              <article class="card">
+                <strong>{item?.data.id}</strong>
+                <p>{item?.data.title}</p>
+                <a href={entryHref(item!.collection, item!.slug)}>Open page</a>
+              </article>
+            ))}
+        </div>
+      </section>
+    </div>
+    <aside class="toc content-panel">
+      <strong>On this page</strong>
+      <ul>
+        {toc.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </aside>
+  </div>
+</BaseLayout>

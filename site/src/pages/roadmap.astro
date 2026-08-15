@@ -1,0 +1,63 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { graduationRoadmap, researchRoadmap } from "@data/roadmap";
+
+const toc = [
+  { href: "#research-logic", label: "Research logic" },
+  { href: "#graduation-roadmap", label: "Graduation roadmap" },
+  { href: "#rolling-plan", label: "Rolling plan" }
+];
+---
+
+<BaseLayout title="Roadmap" description="Research, graduation, and near-term roadmap.">
+  <section class="hero">
+    <span class="eyebrow">Roadmap</span>
+    <h1>Research logic stays ahead of tooling complexity.</h1>
+  </section>
+
+  <div class="page">
+    <div class="page__content stack">
+      <section id="research-logic" class="content-panel">
+        <h2>Research logic roadmap</h2>
+        <div class="grid grid--cards">
+          {researchRoadmap.map((step) => (
+            <article class="card">
+              <h3>{step.title}</h3>
+              <p>{step.summary}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="graduation-roadmap" class="content-panel">
+        <h2>Graduation roadmap</h2>
+        <div class="grid grid--cards">
+          {graduationRoadmap.map((step) => (
+            <article class="card">
+              <h3>{step.title}</h3>
+              <p>{step.summary}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="rolling-plan" class="content-panel">
+        <h2>Current 4 to 6 week rolling plan</h2>
+        <ul class="list-clean">
+          <li>Complete the descriptive Week 1 baseline and keep its interpretation boundaries explicit.</li>
+          <li>Define a tumor-only reliability feature ladder before any biological rescue of filtered calls.</li>
+          <li>Prepare a small ingestion path for chart-ready summaries rather than wiring heavy genomics data into the build.</li>
+          <li>Use later benchmark or matched-normal data only as retrospective validation, not as the discovery prerequisite.</li>
+        </ul>
+      </section>
+    </div>
+    <aside class="toc content-panel">
+      <strong>On this page</strong>
+      <ul>
+        {toc.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </aside>
+  </div>
+</BaseLayout>

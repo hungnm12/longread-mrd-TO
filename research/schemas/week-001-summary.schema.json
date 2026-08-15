@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Week001CandidateLandscapeSummary",
+  "type": "object",
+  "required": [
+    "id",
+    "label",
+    "evidence_level",
+    "source_files",
+    "summary"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "evidence_level": {
+      "type": "string",
+      "enum": ["preliminary", "verified", "reproduced", "external_report"]
+    },
+    "source_files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "role"],
+        "properties": {
+          "path": { "type": "string" },
+          "role": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "total_calls",
+        "pass_snvs",
+        "pass_snv_fraction_pct",
+        "median_depth",
+        "depth_q25",
+        "depth_q75",
+        "median_vaf",
+        "vaf_q25",
+        "vaf_q75",
+        "median_alt_support",
+        "alt_support_q25",
+        "alt_support_q75"
+      ],
+      "properties": {
+        "total_calls": { "type": "integer" },
+        "pass_snvs": { "type": "integer" },
+        "pass_snv_fraction_pct": { "type": "number" },
+        "median_depth": { "type": "integer" },
+        "depth_q25": { "type": "integer" },
+        "depth_q75": { "type": "integer" },
+        "median_vaf": { "type": "number" },
+        "vaf_q25": { "type": "number" },
+        "vaf_q75": { "type": "number" },
+        "median_alt_support": { "type": "integer" },
+        "alt_support_q25": { "type": "integer" },
+        "alt_support_q75": { "type": "integer" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

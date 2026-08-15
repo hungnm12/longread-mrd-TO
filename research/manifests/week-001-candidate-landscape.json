@@ -1,0 +1,40 @@
+{
+  "id": "RESULT-001-SUMMARY",
+  "label": "Week 1 tumor-only candidate landscape summary",
+  "evidence_level": "preliminary",
+  "source_files": [
+    {
+      "path": "mrd-longphase/results/tumor_only/HCC1395/variant_summary.tsv",
+      "role": "summary_table"
+    },
+    {
+      "path": "mrd-longphase/results/tumor_only/HCC1395/qc_stats.txt",
+      "role": "qc_stats"
+    },
+    {
+      "path": "mrd-longphase/results/tumor_only/HCC1395/candidate_analysis.tsv",
+      "role": "candidate_rows"
+    }
+  ],
+  "summary": {
+    "total_calls": 3169996,
+    "pass_snvs": 48819,
+    "pass_snv_fraction_pct": 1.54,
+    "median_depth": 80,
+    "depth_q25": 59,
+    "depth_q75": 106,
+    "median_vaf": 0.461,
+    "vaf_q25": 0.292,
+    "vaf_q75": 0.779,
+    "median_alt_support": 35,
+    "alt_support_q25": 24,
+    "alt_support_q75": 53,
+    "vaf_het_like_0_40_0_60_pct": 24.4,
+    "vaf_hom_like_gt_0_90_pct": 22.4,
+    "depth_lt_10_pct": 0.2,
+    "depth_gt_3x_median_pct": 0.4,
+    "corr_vaf_depth": -0.419,
+    "corr_alt_depth": 0.328,
+    "corr_alt_vaf": 0.613
+  }
+}

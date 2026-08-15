@@ -1,0 +1,4 @@
+sample_id	role	path	type	notes
+HCC1395	tumor_bam	/big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395.bam	BAM	Read-only source BAM; do not modify in place.
+GRCh38_no_alt_analysis_set	reference_fasta	/big8_disk/ref/GRCh38_no_alt_analysis_set.fasta	FASTA	Read-only source reference; do not modify in place.
+HCC1395_clairs_to_week4	tumor_only_snv_vcf	/big8_disk/hung114/ONT_MRD/week4/expA_full/HCC1395_pure/snv.vcf.gz	VCF.gz	ClairS-TO v0.5.0 tumor-only SNV calls used for Phase 1 characterization.

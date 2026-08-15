@@ -1,0 +1,32 @@
+# Example experiment configuration for mrd-longphase.
+# Copy to config/<experiment>.yaml and edit. Never hard-code paths in src/.
+
+reference:
+  fasta: /path/to/GRCh38_no_alt_analysis_set.fasta
+
+samples:
+  tumor:
+    bam: /path/to/HCC1395_tumor.bam
+    platform: ont_r10_dorado_sup_5khz_ssrs
+  # matched normal is OPTIONAL — this project is primarily tumor-only
+  # normal:
+  #   bam: /path/to/HCC1395BL.bam
+
+truth:
+  snv_vcf: /path/to/high-confidence_sSNV_in_HC_regions.vcf.gz
+  hc_bed:  /path/to/High-Confidence_Regions.bed
+
+caller:
+  name: clairs-to
+  version: "0.5.0"
+  snv_min_af: 0.05
+  qual_cutoff: 4
+  disable_indels: true
+
+dilution:
+  levels: [1e-2, 1e-3, 1e-4]   # tumor fractions
+  control: 0.0                  # 0% control (required)
+
+output:
+  results_dir: results/
+  figures_dir: figures/

@@ -1,0 +1,26 @@
+{
+  "name": "mrd-research-os-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "XDG_CONFIG_HOME=$PWD/.config ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "XDG_CONFIG_HOME=$PWD/.config ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "XDG_CONFIG_HOME=$PWD/.config ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "check": "XDG_CONFIG_HOME=$PWD/.config ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "validate:content": "node ./scripts/validate-content.mjs",
+    "lint": "npm run check && npm run validate:content",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "astro": "^5.12.0",
+    "gray-matter": "^4.0.3",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@types/node": "^22.13.10",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

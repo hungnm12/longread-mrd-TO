@@ -1,0 +1,28 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Badge from "@components/Badge.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const papers = await getCollection("papers");
+  return papers.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={entry.data.title} description="Paper detail page">
+  <section class="hero">
+    <span class="eyebrow">{entry.data.id}</span>
+    <h1>{entry.data.title}</h1>
+    <div class="pill-list">
+      <Badge label={entry.data.evidence_level === "external_report" ? "External report" : entry.data.evidence_level} />
+      <Badge label={entry.data.pdf_available ? "PDF available" : "PDF missing"} tone={entry.data.pdf_available ? "verified" : "preliminary"} />
+      <Badge label={entry.data.strategy} />
+    </div>
+  </section>
+  <section class="content-panel">
+    <Content />
+  </section>
+</BaseLayout>
