@@ -1,0 +1,78 @@
+---
+// The point-by-point response matrix.
+//
+// This is the table the weekly meeting opens with, and it is the single most load-bearing
+// view in the system: one row per suggestion, with "what was done" read from the linked
+// daily logs rather than from the suggestion's own prose. A row with nothing behind it says
+// so — incomplete and blocked rows are never filtered out, and never collapsed.
+import StatusBadge from "@components/StatusBadge.astro";
+import MissingLabel from "@components/MissingLabel.astro";
+import EvidenceLink from "@components/EvidenceLink.astro";
+import {
+  buildResponseRow,
+  suggestionHref,
+  suggestionTone,
+  logHref,
+  type DailyLog,
+  type EvidenceRecord,
+  type Suggestion
+} from "@utils/researchOs";
+
+interface Props {
+  suggestions: Suggestion[];
+  logById: Map<string, DailyLog>;
+  evidenceById: Map<string, EvidenceRecord>;
+  compact?: boolean;
+}
+
+const { suggestions, logById, evidenceById, compact = false } = Astro.props;
+const rows = suggestions.map((suggestion) => buildResponseRow(suggestion, logById));
+---
+
+<div class="matrix-wrap" role="region" aria-label="Point-by-point response to previous suggestions" tabindex="0">
+  <table class={`matrix${compact ? " matrix--compact" : ""}`}>
+    <thead>
+      <tr>
+        <th scope="col">Previous suggestion</th>
+        <th scope="col">Planned response</th>
+        <th scope="col">What was done</th>
+        <th scope="col">Evidence / result</th>
+        <th scope="col">Status</th>
+        <th scope="col">Why incomplete</th>
+        <th scope="col">Next action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr class={row.missingEvidence ? "matrix__row--flagged" : undefined}>
+          <th scope="row">
+            <a href={suggestionHref(row.id)}>{row.id}</a>
+            <span class="matrix__text">{row.suggestion}</span>
+          </th>
+          <td>{row.plannedResponse}</td>
+          <td>
+            {row.whatWasDone.length === 0 ? (
+              <MissingLabel label="Not completed" detail={row.logs.length === 0 ? "No daily log links to this suggestion" : null} />
+            ) : (
+              <ul class="matrix__list">
+                {row.whatWasDone.map((item) => <li>{item}</li>)}
+              </ul>
+            )}
+            {row.logs.length > 0 && (
+              <p class="matrix__logs">
+                {row.logs.map((logId) => <a href={logHref(logId)}>{logId}</a>)}
+              </p>
+            )}
+          </td>
+          <td>
+            <EvidenceLink ids={row.evidence} evidenceById={evidenceById} emptyDetail={null} />
+            {row.result && <p class="matrix__result">{row.result}</p>}
+          </td>
+          <td><StatusBadge status={row.status} tone={suggestionTone(row.status)} /></td>
+          <td>{row.whyIncomplete ?? "—"}</td>
+          <td>{row.nextAction ?? "—"}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

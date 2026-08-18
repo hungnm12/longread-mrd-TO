@@ -1,0 +1,98 @@
+---
+// Suggestion tracker, with the point-by-point response view at the top.
+//
+// Everything is on one page and nothing is filtered away: open, blocked and abandoned
+// suggestions are as visible as completed ones. The status filter is a client-side
+// highlight, not a removal — the counts stay true whatever is selected.
+import ResearchOsLayout from "@layouts/ResearchOsLayout.astro";
+import ResponseMatrix from "@components/ResponseMatrix.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+import MissingLabel from "@components/MissingLabel.astro";
+import { loadResearchOs, suggestionHref, suggestionTone, statusLabel } from "@utils/researchOs";
+
+const { suggestions, logById, evidenceById } = await loadResearchOs();
+
+const statusOrder = ["blocked", "in_progress", "planned", "captured", "completed", "not_pursued"];
+const byStatus = statusOrder
+  .map((status) => ({
+    status,
+    entries: suggestions.filter((entry) => entry.data.status === status)
+  }))
+  .filter((group) => group.entries.length > 0);
+
+const seeded = suggestions.filter((entry) => entry.data.record_kind === "seeded_context").length;
+---
+
+<ResearchOsLayout
+  area="suggestions"
+  title="Suggestion tracker"
+  description="Every suggestion from the previous meeting, answered point by point with evidence, status and next action."
+>
+  <header class="os-page-head">
+    <h1>Suggestion tracker</h1>
+    <p class="os-section__lede">
+      {suggestions.length} tracked suggestions. The matrix below is the first thing shown at the
+      weekly meeting; the detail cards underneath carry the interpretation and the planned actions.
+    </p>
+    {seeded > 0 && (
+      <p class="os-note">
+        {seeded} of these are <strong>seeded context</strong> derived from the project brief and
+        repository history, not from a recorded meeting. Suggestions captured at a real meeting
+        should be recorded with <code>record_kind: recorded</code> and a <code>meeting_date</code>.
+      </p>
+    )}
+  </header>
+
+  <section class="os-section" id="response-matrix">
+    <h2>Point-by-point response</h2>
+    <ResponseMatrix suggestions={suggestions} logById={logById} evidenceById={evidenceById} />
+  </section>
+
+  <section class="os-section" id="by-status">
+    <h2>By status</h2>
+    <div class="os-status-groups">
+      {byStatus.map((group) => (
+        <article class="os-status-group">
+          <h3>
+            <StatusBadge status={group.status} tone={suggestionTone(group.status)} />
+            <span class="os-status-group__count">{group.entries.length}</span>
+          </h3>
+          <ul class="os-list">
+            {group.entries.map((entry) => (
+              <li>
+                <a href={suggestionHref(entry.data.id)}>{entry.data.id}</a> — {entry.data.suggestion}
+                {entry.data.status === "blocked" && !entry.data.reason_not_completed && (
+                  <MissingLabel label="Blocked" detail="No reason recorded" />
+                )}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="os-section" id="detail">
+    <h2>Detail</h2>
+    <div class="os-cards">
+      {suggestions.map((entry) => (
+        <article class="os-card" id={entry.data.id.toLowerCase()}>
+          <header class="os-card__head">
+            <a class="os-card__id" href={suggestionHref(entry.data.id)}>{entry.data.id}</a>
+            <StatusBadge status={entry.data.status} tone={suggestionTone(entry.data.status)} />
+            <span class="os-card__kind">{statusLabel(entry.data.record_kind)}</span>
+          </header>
+          <p class="os-card__title">{entry.data.suggestion}</p>
+          <dl class="os-card__fields">
+            <dt>My interpretation</dt>
+            <dd>{entry.data.my_interpretation}</dd>
+            <dt>Why it matters</dt>
+            <dd>{entry.data.why_it_matters}</dd>
+            <dt>Next action</dt>
+            <dd>{entry.data.next_action ?? "—"}</dd>
+          </dl>
+        </article>
+      ))}
+    </div>
+  </section>
+</ResearchOsLayout>

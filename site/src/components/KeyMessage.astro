@@ -1,0 +1,21 @@
+---
+// A callout carrying one key message.
+//
+// The tone is part of the claim discipline rather than decoration: `observation` states
+// what was seen, `boundary` states what the page does *not* establish, and `open-question`
+// marks something still unresolved. A reader can therefore tell the epistemic status of a
+// highlighted sentence from its styling alone.
+interface Props {
+  title: string;
+  tone?: "message" | "observation" | "boundary" | "open-question";
+}
+
+const { title, tone = "message" } = Astro.props;
+---
+
+<aside class={`key-message key-message--${tone}`}>
+  <p class="key-message__title">{title}</p>
+  <div class="key-message__body">
+    <slot />
+  </div>
+</aside>

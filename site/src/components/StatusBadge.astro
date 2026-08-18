@@ -1,0 +1,18 @@
+---
+// Status pill with a fixed colour vocabulary.
+//
+// The tone is derived from the status, never passed in ad hoc, so "blocked" looks the same
+// on the dashboard, in the tracker, and inside a weekly slide. A reader learns the colours
+// once.
+import { statusLabel, type StatusTone } from "@utils/researchOs";
+
+interface Props {
+  status: string;
+  tone: StatusTone;
+  title?: string;
+}
+
+const { status, tone, title } = Astro.props;
+---
+
+<span class={`status status--${tone}`} title={title}>{statusLabel(status)}</span>

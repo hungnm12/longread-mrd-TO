@@ -1,5 +1,13 @@
 # Research Scope
 
+> **Superseded as the primary storyline (2026-08-16).** The project's main direction is now
+> *tumor-only long-read MRD through haplotype-conditioned native methylation evidence* —
+> see [`research/00_scope.md`](./research/00_scope.md).
+>
+> Everything below remains accurate and is retained as the **upstream baseline**: it
+> describes the tumor-only candidate characterization that supplies the candidate loci the
+> new pipeline iterates over. The scientific guardrails in this document still apply.
+
 ## Canonical direction
 
 - Topic: long-read MRD research.

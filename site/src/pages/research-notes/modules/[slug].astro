@@ -1,0 +1,59 @@
+---
+import { getCollection, render } from "astro:content";
+import ModuleLayout from "@layouts/ModuleLayout.astro";
+
+export async function getStaticPaths() {
+  const modules = (await getCollection("modules")).sort((a, b) => a.data.part - b.data.part);
+  const byId = new Map(modules.map((module) => [module.data.id, module]));
+
+  return modules.map((module) => {
+    // Resolve sibling links by id so a reordering of files cannot silently break the
+    // previous/next chain; the validator already guarantees the ids exist.
+    const previousEntry = module.data.previous_module ? byId.get(module.data.previous_module) : undefined;
+    const nextEntry = module.data.next_module ? byId.get(module.data.next_module) : undefined;
+
+    return {
+      params: { slug: module.slug },
+      props: {
+        module,
+        previous: previousEntry
+          ? { href: `/research-notes/modules/${previousEntry.slug}/`, title: `Part ${previousEntry.data.part} — ${previousEntry.data.title}` }
+          : null,
+        next: nextEntry
+          ? { href: `/research-notes/modules/${nextEntry.slug}/`, title: `Part ${nextEntry.data.part} — ${nextEntry.data.title}` }
+          : null
+      }
+    };
+  });
+}
+
+const { module, previous, next } = Astro.props;
+const { Content, headings } = await render(module);
+const data = module.data;
+---
+
+<ModuleLayout
+  part={data.part}
+  title={data.title}
+  subtitle={data.subtitle}
+  readingTime={data.reading_time_minutes}
+  status={data.status}
+  evidenceLevel={data.evidence_level}
+  objectives={data.learning_objectives}
+  whyItMatters={data.why_it_matters}
+  boundaries={data.interpretation_boundaries}
+  openQuestions={data.open_questions}
+  prerequisites={data.prerequisites}
+  sources={data.sources}
+  headings={headings}
+  previous={previous}
+  next={next}
+  glossaryTerms={data.glossary_terms}
+  diagram={data.diagram}
+  hypothesisBoxes={data.hypothesis_boxes}
+  predictions={data.predictions}
+  failureModes={data.failure_modes}
+  pendingExperiments={data.pending_experiments}
+>
+  <Content />
+</ModuleLayout>

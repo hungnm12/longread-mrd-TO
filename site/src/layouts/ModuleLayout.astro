@@ -1,0 +1,269 @@
+---
+// Research-guide module layout, in the CCU Bioinformatics Lab tutorial style.
+//
+// The section order is fixed by the layout rather than left to each author: objectives and
+// "why it matters" before the body, interpretation boundaries and open questions after it.
+// A reader therefore always meets the limits of a claim in the same place, and a module
+// cannot be written that quietly omits them — the schema requires the fields and this
+// layout renders them unconditionally.
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PipelineDiagram from "@components/PipelineDiagram.astro";
+import HypothesisBox from "@components/HypothesisBox.astro";
+import Prediction from "@components/Prediction.astro";
+import FailureMode from "@components/FailureMode.astro";
+import PendingExperiment from "@components/PendingExperiment.astro";
+import GlossaryTerm from "@components/GlossaryTerm.astro";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Source {
+  label: string;
+  ref?: string | null;
+  note?: string | null;
+}
+
+interface Props {
+  part: number;
+  title: string;
+  subtitle: string;
+  readingTime: number;
+  status: string;
+  evidenceLevel: string;
+  objectives: string[];
+  whyItMatters: string;
+  boundaries: string[];
+  openQuestions: string[];
+  prerequisites?: string[];
+  sources?: Source[];
+  headings: Heading[];
+  previous?: { href: string; title: string } | null;
+  next?: { href: string; title: string } | null;
+  glossaryTerms?: string[];
+  diagram?: any;
+  hypothesisBoxes?: any[];
+  predictions?: any[];
+  failureModes?: any[];
+  pendingExperiments?: any[];
+}
+
+const {
+  part,
+  title,
+  subtitle,
+  readingTime,
+  status,
+  evidenceLevel,
+  objectives,
+  whyItMatters,
+  boundaries,
+  openQuestions,
+  prerequisites = [],
+  sources = [],
+  headings,
+  previous = null,
+  next = null,
+  glossaryTerms = [],
+  diagram = null,
+  hypothesisBoxes = [],
+  predictions = [],
+  failureModes = [],
+  pendingExperiments = []
+} = Astro.props;
+
+// Only h2/h3 reach the table of contents; deeper levels make it unusable on a long page.
+const tocItems = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+---
+
+<BaseLayout title={`Part ${part} — ${title}`} description={subtitle}>
+  <article class="module">
+    <header class="module__header">
+      <p class="module__eyebrow">Research guide · Part {part}</p>
+      <h1 class="module__title">{title}</h1>
+      <p class="module__subtitle">{subtitle}</p>
+      <ul class="module__meta">
+        <li><span>Status</span> {status}</li>
+        <li><span>Evidence</span> {evidenceLevel}</li>
+        <li><span>Reading time</span> ~{readingTime} min</li>
+      </ul>
+      {prerequisites.length > 0 && (
+        <p class="module__prereq">
+          <span>Before this:</span> {prerequisites.join(" · ")}
+        </p>
+      )}
+    </header>
+
+    <section class="module__objectives" aria-labelledby="objectives-heading">
+      <h2 id="objectives-heading">Learning objectives</h2>
+      <p class="module__objectives-lead">After this module you should be able to:</p>
+      <ul>
+        {objectives.map((objective) => <li>{objective}</li>)}
+      </ul>
+    </section>
+
+    <section class="module__why" aria-labelledby="why-heading">
+      <h2 id="why-heading">Why it matters</h2>
+      <p>{whyItMatters}</p>
+    </section>
+
+    {glossaryTerms.length > 0 && (
+      <section class="module__terms" aria-labelledby="terms-heading">
+        <h2 id="terms-heading">Key terms</h2>
+        <p class="module__terms-lead">
+          Hover or focus a term for its short definition; select it for the full entry.
+        </p>
+        <ul class="module__terms-list">
+          {glossaryTerms.map((term) => (
+            <li><GlossaryTerm term={term} /></li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <div class="module__body-shell">
+      {tocItems.length > 0 && (
+        <nav class="module__toc" aria-label="On this page">
+          <p class="module__toc-title">On this page</p>
+          <ol>
+            {tocItems.map((heading) => (
+              <li class={`module__toc-item module__toc-item--h${heading.depth}`}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+
+      <div class="module__body">
+        {diagram && (
+          <PipelineDiagram
+            title={diagram.title}
+            caption={diagram.caption ?? undefined}
+            orientation={diagram.orientation}
+            stages={diagram.stages.map((stage: any) => ({
+              label: stage.label,
+              note: stage.note ?? undefined,
+              emphasis: stage.emphasis
+            }))}
+          />
+        )}
+
+        <slot />
+
+        {hypothesisBoxes.length > 0 && (
+          <section class="module__blocks" aria-label="Hypotheses">
+            <h2 id="hypotheses">Hypotheses</h2>
+            {hypothesisBoxes.map((box: any) => (
+              <HypothesisBox
+                id={box.id}
+                name={box.name}
+                claim={box.claim}
+                gate={box.gate ?? undefined}
+                accepts={box.accepts}
+                rejects={box.rejects}
+                status={box.status}
+              />
+            ))}
+          </section>
+        )}
+
+        {predictions.length > 0 && (
+          <section class="module__blocks" aria-label="Predictions">
+            <h2 id="predictions">Predictions, recorded before results</h2>
+            {predictions.map((item: any) => (
+              <Prediction
+                question={item.question}
+                prediction={item.prediction}
+                outcome={item.outcome ?? undefined}
+                verdict={item.verdict ?? undefined}
+              />
+            ))}
+          </section>
+        )}
+
+        {failureModes.length > 0 && (
+          <section class="module__blocks" aria-label="Failure modes">
+            <h2 id="failure-modes">Failure modes</h2>
+            {failureModes.map((mode: any) => (
+              <FailureMode title={mode.title} looksLike={mode.looks_like} severity={mode.severity}>
+                {mode.detail && <p>{mode.detail}</p>}
+              </FailureMode>
+            ))}
+          </section>
+        )}
+
+        {pendingExperiments.length > 0 && (
+          <section class="module__blocks" aria-label="Pending experiments">
+            <h2 id="pending">Where results will go</h2>
+            {pendingExperiments.map((item: any) => (
+              <PendingExperiment
+                title={item.title}
+                blockedOn={item.blocked_on ?? undefined}
+                experiment={item.experiment ?? undefined}
+              />
+            ))}
+          </section>
+        )}
+      </div>
+    </div>
+
+    <section class="module__boundaries" aria-labelledby="boundaries-heading">
+      <h2 id="boundaries-heading">Interpretation boundaries</h2>
+      <p class="module__boundaries-lead">
+        What this module does <strong>not</strong> establish. These are binding on any use of
+        the material above.
+      </p>
+      <ul>
+        {boundaries.map((boundary) => <li>{boundary}</li>)}
+      </ul>
+    </section>
+
+    <section class="module__questions" aria-labelledby="questions-heading">
+      <h2 id="questions-heading">Open questions</h2>
+      <ul>
+        {openQuestions.map((question) => <li>{question}</li>)}
+      </ul>
+    </section>
+
+    {sources.length > 0 && (
+      <section class="module__sources" aria-labelledby="sources-heading">
+        <h2 id="sources-heading">Sources</h2>
+        <ol>
+          {sources.map((source) => (
+            <li>
+              {source.ref ? <a href={`/research-notes/papers/${source.ref.toLowerCase()}/`}>{source.label}</a> : source.label}
+              {source.note && <span class="module__source-note"> — {source.note}</span>}
+            </li>
+          ))}
+        </ol>
+        <p class="module__sources-caveat">
+          Entries indexed from the project brief are marked <code>external_report</code> and have
+          not been verified against the source PDF. No claim above rests on an unverified
+          numeric result.
+        </p>
+      </section>
+    )}
+
+    <nav class="module__nav" aria-label="Module navigation">
+      {previous ? (
+        <a class="module__nav-link module__nav-link--prev" href={previous.href}>
+          <span>Previous</span>
+          <strong>{previous.title}</strong>
+        </a>
+      ) : (
+        <span class="module__nav-link module__nav-link--disabled"><span>Previous</span><strong>—</strong></span>
+      )}
+      {next ? (
+        <a class="module__nav-link module__nav-link--next" href={next.href}>
+          <span>Next</span>
+          <strong>{next.title}</strong>
+        </a>
+      ) : (
+        <span class="module__nav-link module__nav-link--disabled"><span>Next</span><strong>—</strong></span>
+      )}
+    </nav>
+  </article>
+</BaseLayout>

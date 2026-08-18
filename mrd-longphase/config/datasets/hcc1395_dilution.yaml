@@ -1,0 +1,69 @@
+# HCC1395 ONT dilution series — dataset registry.
+#
+# Discovered from week4/phase0_results.md and confirmed on disk 2026-08-16.
+# ALL PATHS ARE READ-ONLY. Nothing in this project modifies, re-indexes, copies or moves
+# them (docs/DATA_GOVERNANCE.md).
+#
+# Verified during the Phase 0 audit (docs/repo_audit.md §14):
+#   - every BAM below carries MM/ML tags with both C+m (5mC) and C+h (5hmC) codes
+#   - no BAM carries HP/PS — haplotagging is still to be run
+#   - per-read source labels are recoverable by read-name membership against the two
+#     source BAMs (28/28 assigned, 0 collisions in the pilot window)
+
+dataset_id: hcc1395_ont_dilution_25x
+platform: ont_r10_dorado_sup_5khz_ssrs
+basecall: 5mCG_5hmCG
+reference: /big8_disk/ref/GRCh38_no_alt_analysis_set.fasta
+
+# Source BAMs. Used for candidate discovery (tumor) and for EVALUATION-ONLY per-read
+# labels (both). HCC1395BL is never an inference input — see docs/research/05_claim_boundaries.md.
+sources:
+  tumor:
+    name: HCC1395
+    bam: /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395.bam
+    approx_coverage: 100
+    role: [candidate_discovery, evaluation_label_source]
+  normal:
+    name: HCC1395BL
+    bam: /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395BL.bam
+    role: [evaluation_label_source]
+
+# Mixtures. `dilution` is the NOMINAL mixing ratio; the realized tumor fraction in each BAM
+# has not been independently measured. Every result derived from these must carry that caveat.
+samples:
+  - sample_id: HCC1395_TF0_25x_rep1
+    dilution: "0"
+    role: control
+    bam: /bip7_disk/pingting114/mixed_bam/HCC1395/TF0_25x/TF0_25x.rep1.bam
+    approx_coverage: 25
+    replicates: 1
+
+  - sample_id: HCC1395_TF1e-2_25x_rep1
+    dilution: "1e-2"
+    role: dilution
+    bam: /bip7_disk/pingting114/mixed_bam/HCC1395/TF1e-2_25x/TF1e-2_25x.rep1.bam
+    approx_coverage: 25
+    replicates: 1
+
+  - sample_id: HCC1395_TF1e-3_25x_rep1
+    dilution: "1e-3"
+    role: dilution
+    bam: /bip7_disk/pingting114/mixed_bam/HCC1395/TF1e-3_25x/TF1e-3_25x.rep1.bam
+    approx_coverage: 25
+    replicates: 1
+
+  - sample_id: HCC1395_TF1e-4_25x_rep1
+    dilution: "1e-4"
+    role: dilution
+    bam: /bip7_disk/pingting114/mixed_bam/HCC1395/TF1e-4_25x/TF1e-4_25x.rep1.bam
+    approx_coverage: 25
+    replicates: 1
+
+# Known limitations that bound every claim built on this dataset.
+limitations:
+  - "One replicate per dilution level: within-level variance is not estimable."
+  - "One blank sample: limit-of-blank in the analytical-validation sense is not estimable."
+  - "Cell-line genomic DNA, not plasma cfDNA: fragmentation and pre-analytical methylation
+     bias differ, so results do not transfer to liquid biopsy without further work."
+  - "Dilution levels are nominal mixing ratios, not measured tumor fractions."
+  - "HP/PS absent as of 2026-08-16: haplotagging must be run before H1 can be evaluated."

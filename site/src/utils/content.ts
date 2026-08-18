@@ -29,24 +29,24 @@ export async function loadCollections() {
 export function entryHref(collection: string, slug: string) {
   switch (collection) {
     case "weeks":
-      return `/weeks/${slug}/`;
+      return `/research-notes/weeks/${slug}/`;
     case "papers":
-      return `/papers/${slug}/`;
+      return `/research-notes/papers/${slug}/`;
     case "questions":
-      return `/questions/${slug}/`;
+      return `/research-notes/questions/${slug}/`;
     case "hypotheses":
-      return `/hypotheses/${slug}/`;
+      return `/research-notes/hypotheses/${slug}/`;
     case "experiments":
-      return `/experiments/${slug}/`;
+      return `/research-notes/experiments/${slug}/`;
     case "runs":
-      return `/runs/${slug}/`;
+      return `/research-notes/runs/${slug}/`;
     case "results":
-      return `/results/${slug}/`;
+      return `/research-notes/results/${slug}/`;
     case "decisions":
-      return `/decisions/${slug}/`;
+      return `/research-notes/decisions/${slug}/`;
     case "glossary":
-      return `/glossary/${slug}/`;
+      return `/research-notes/glossary/${slug}/`;
     default:
-      return "/";
+      return "/research-notes/";
   }
 }

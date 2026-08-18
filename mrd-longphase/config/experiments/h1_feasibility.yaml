@@ -1,0 +1,84 @@
+# H1 — observation feasibility.
+#
+# "Do enough reads carry allele, haplotype AND methylation information simultaneously?"
+# See docs/research/03_hypotheses.md#h1--observation-feasibility.
+#
+# ─────────────────────────────────────────────────────────────────────────────────────
+#  EVERY `null` BELOW IS A DELIBERATE HARD STOP, NOT AN OVERSIGHT.
+#
+#  The runner refuses to execute rather than substituting a default, because a defaulted
+#  threshold is an unrecorded research decision. Fill these in BEFORE the first run and
+#  record the reasoning in docs/research/decision_log.md. Setting a threshold after seeing
+#  results is prohibited by docs/research/05_claim_boundaries.md.
+# ─────────────────────────────────────────────────────────────────────────────────────
+
+id: EXP-H1-001
+title: Joint-molecule observation feasibility across the HCC1395 dilution series
+hypothesis: H1
+dataset: hcc1395_ont_dilution_25x   # config/datasets/hcc1395_dilution.yaml
+
+# ---- Extraction filters -------------------------------------------------------------
+# Applied in the fixed order documented in docs/joint_molecule_schema.md §4, so that
+# exclusion reasons partition the examined pairs exactly.
+extraction:
+  # Minimum MAPQ. ONT long reads in repetitive regions carry low MAPQ; too high a floor
+  # silently removes the difficult regions where background suppression matters most.
+  min_mapping_quality: null
+
+  # Minimum base quality at the candidate position.
+  min_allele_quality: null
+
+  # Minimum usable CpGs per read, applied AFTER read-end exclusion. This is the main knob
+  # controlling how strict "methylation-informative" is, and therefore the joint yield.
+  min_cpg_per_read: null
+
+  # Drop CpGs within this many bases of either read end. PAPER-003 reports read-end
+  # methylation as less reliable; the magnitude is `[unverified — needs PDF]`, so this is
+  # configuration rather than a constant.
+  read_end_exclusion_bp: null
+
+  # P(5mC) at or above which a CpG counts as methylated; at or below (1 - this) as
+  # unmethylated. CpGs between the two are counted as neither — that gap is the read's
+  # ambiguity mass and is deliberately preserved.
+  methylation_call_threshold: null
+
+  # Whether an untagged read is excluded or merely recorded as untagged.
+  # Keep both true for the H1 headline number; flip to false to measure how much yield the
+  # requirement itself costs.
+  require_haplotype: true
+  require_methylation: true
+
+# ---- H1 acceptance ------------------------------------------------------------------
+thresholds:
+  # Minimum usable joint molecules at the 1e-2 level for H1 to pass.
+  T_H1_min_molecules: null
+  # No single funnel stage may drop below this survival fraction.
+  T_H1_min_stage_survival: null
+  # Minimum candidate loci contributing at least one joint molecule.
+  T_H1_min_candidates: null
+
+# ---- Reporting ----------------------------------------------------------------------
+report:
+  stratify_by:
+    - sample_id
+    - dilution
+    - chrom
+    - region_id
+    - candidate_id
+    - phase_set
+    - haplotype_family
+  distributions:
+    - cpgs_per_read
+    - read_length
+    - cpg_distance_to_read_end
+    - methylation_missingness
+    - exclusion_reason
+
+# ---- Provenance ---------------------------------------------------------------------
+provenance:
+  seed: null            # resolved and recorded at run time; nothing here is stochastic yet
+  record_tool_versions: true
+
+# ---- Scope reminder -----------------------------------------------------------------
+# H1 is a counting exercise. It decides whether H2 is testable. It does NOT fit a model,
+# and no model may be fitted until H1 is accepted (docs/research/03_hypotheses.md).

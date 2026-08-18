@@ -1,0 +1,17 @@
+id: EV-0002
+created_at: 2026-08-13
+type: figure
+title: VAF distribution of PASS SNV candidates
+description: Histogram of variant allele fraction across the retained tumor-only PASS SNV candidates.
+path_or_url: mrd-longphase/figures/tumor_only/vaf_distribution.png
+generated_by: mrd-longphase/workflow/tumor_only/build_candidates.py
+input_data:
+  - ClairS-TO v0.5.0 tumor-only VCF for HCC1395
+linked_log: LOG-2026-08-13
+linked_suggestion: SUG-2026-08-005
+linked_claims:
+  - Candidate VAF is centered at a median of 0.461 with IQR 0.292-0.779
+verification_status: file_present
+verified_by: null
+verified_on: null
+notes: VAF is an allele fraction in the source sample; it is not a tumor fraction.

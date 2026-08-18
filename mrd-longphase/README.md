@@ -24,11 +24,16 @@ mrd-longphase/
 │   └── mrd_detection/      #   MRD detection / limit-of-detection estimation
 │
 ├── src/                    # importable Python package (reusable logic, no I/O side effects)
-│   ├── candidates/         #   candidate variant parsing / QC
+│   ├── candidates/         #   candidate variant parsing / QC          [upstream baseline]
+│   ├── io/                 #   regions: parsing, partitioning, merging
+│   ├── phasing/            #   HP/PS haplotype context
+│   ├── methylation/        #   MM/ML -> per-CpG 5mC & 5hmC evidence
+│   ├── joint_evidence/     #   the joint-molecule record and its writer
+│   ├── provenance/         #   tool versions, seeds, run manifests
 │   ├── markers/            #   marker/compendium construction & tagging
 │   ├── evidence/           #   per-locus read evidence (exact-ALT pileup, VAF)
-│   ├── models/             #   detection / noise models (e.g. MRDetect-style scoring)
-│   └── evaluation/         #   metrics: precision/recall/F1, LoD, titration
+│   ├── models/             #   the A-F ablation grid + interpretable classifiers
+│   └── evaluation/         #   feasibility funnel, leakage-safe splits, metrics
 │
 ├── data/                   # inputs (large raw data lives outside; keep pointers here)
 │   ├── metadata/           #   sample sheets, BAM paths, coverage, run metadata
@@ -43,8 +48,20 @@ mrd-longphase/
 │
 ├── notebooks/              # exploratory analysis (Jupyter)
 ├── figures/                # publication / thesis figures
+├── tests/                  # unit/, integration/, fixtures/ — synthetic BAMs only
+├── experiments/            # registry/ (pre-registered manifests) + templates/
+├── docs/                   # joint_molecule_schema.md — the data contract
 └── reports/                # write-ups
     └── weekly/             #   weekly research reports
+```
+
+Additional `workflow/` stages for the current research direction:
+
+```
+workflow/
+├── joint_molecule/         # extract_joint_molecules.py — per-region evidence extraction
+├── feasibility_funnel/     # report_funnel.py — the H1 decision
+└── tools/                  # report_environment.py — versions + data reachability
 ```
 
 ## Conventions
@@ -71,3 +88,40 @@ The repository now includes a Phase 1 tumor-only HCC1395 characterization flow u
 
 The current configured HCC1395 run is documented in `config/tumor_only_hcc1395.yaml`
 with read-only source paths recorded in `data/metadata/hcc1395_tumor_only_inputs.tsv`.
+
+## Current research direction
+
+The primary storyline is now **tumor-only long-read MRD through haplotype-conditioned native
+methylation evidence**; the tumor-only candidate characterization above is its *upstream
+baseline*, supplying the candidate loci the new pipeline iterates over.
+
+The data contract for the new work is [`docs/joint_molecule_schema.md`](./docs/joint_molecule_schema.md):
+one record per (read, candidate), carrying the allele, the HP/PS haplotype context, and the
+MM/ML methylation evidence read off the same alignment record.
+
+```
+candidate regions
+  -> extract overlapping reads      workflow/joint_molecule/
+  -> read allele, HP/PS, MM/ML      src/{joint_evidence,phasing,methylation}/
+  -> apply quality checks in order  src/joint_evidence/extract.py
+  -> emit sparse records            src/joint_evidence/writer.py
+  -> count the funnel               workflow/feasibility_funnel/  <- the H1 decision
+```
+
+Research documents live one level up in [`../docs/research/`](../docs/research). Read
+`00_scope.md` first, and treat `05_claim_boundaries.md` as binding on every output.
+
+## Conventions added for this direction
+
+- **No threshold defaults inside `src/`.** A missing required threshold raises; the funnel
+  reports `BLOCKED`. A defaulted threshold is an unrecorded research decision.
+- **Every examined read is recorded**, usable or not, tagged with the first check it failed.
+  The feasibility funnel is a grouping over that one table, not a second pipeline.
+- **5mC and 5hmC are never summed.** Separate columns, separate features.
+- **`source_label_for_evaluation_only` never reaches a model.** The name is deliberately
+  awkward; `tests/unit/test_leakage.py` asserts the firewall holds.
+- **Partitions are byte-reproducible.** Sorted records, fixed float precision, `gzip mtime=0`.
+- **Tests use synthetic BAMs only** (`tests/fixtures/synthetic_bam.py`). No test touches a
+  real BAM.
+
+Run everything with `../run-tests.sh python`.

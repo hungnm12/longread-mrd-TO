@@ -1,0 +1,25 @@
+---
+// A failure-mode warning: a specific way this step can go wrong, and what it looks like.
+//
+// The `looksLike` prop is required because an unrecognisable failure mode is not actionable
+// — the useful part of the warning is the symptom, not the abstract risk.
+interface Props {
+  title: string;
+  /** How the failure presents itself in the data or the output. */
+  looksLike: string;
+  /** Severity of consequence if it goes unnoticed. */
+  severity?: "silent" | "loud";
+}
+
+const { title, looksLike, severity = "silent" } = Astro.props;
+---
+
+<aside class={`failure-mode failure-mode--${severity}`}>
+  <p class="failure-mode__head">
+    <span class="failure-mode__icon" aria-hidden="true">!</span>
+    <strong>{title}</strong>
+    {severity === "silent" && <span class="failure-mode__tag">fails silently</span>}
+  </p>
+  <p class="failure-mode__looks"><span>Looks like:</span> {looksLike}</p>
+  <div class="failure-mode__body"><slot /></div>
+</aside>

@@ -1,0 +1,63 @@
+---
+// Sticky section navigation for the long-form narrative.
+//
+// Plain anchor links, so the page keeps working with keyboard scrolling, mobile touch, and
+// JavaScript disabled. The small inline script only *highlights* the section currently in
+// view; it never takes over scrolling or paginates the page.
+interface Item {
+  id: string;
+  label: string;
+  short?: string;
+}
+
+interface Props {
+  items: readonly Item[];
+  heading?: string;
+}
+
+const { items, heading = "On this page" } = Astro.props;
+---
+
+<nav class="toc-nav" aria-label="Sections">
+  <p class="toc-nav__heading">{heading}</p>
+  <ol class="toc-nav__list">
+    {items.map((item, index) => (
+      <li>
+        <a class="toc-nav__link" href={`#${item.id}`} data-toc-link={item.id}>
+          <span class="toc-nav__index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+          <span>{item.short ?? item.label}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<script>
+  // Progressive enhancement only: without this script the links still navigate.
+  const links = document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]");
+  const sections = Array.from(links)
+    .map((link) => document.getElementById(link.dataset.tocLink ?? ""))
+    .filter((section): section is HTMLElement => section !== null);
+
+  if (sections.length > 0 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const setCurrent = (id: string) => {
+      links.forEach((link) => {
+        link.classList.toggle("toc-nav__link--current", link.dataset.tocLink === id);
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible) {
+          setCurrent(visible.target.id);
+        }
+      },
+      { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+  }
+</script>

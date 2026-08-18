@@ -1,0 +1,19 @@
+---
+// An explicit gap marker.
+//
+// Used wherever a section would otherwise be silently empty. The four labels are the ones
+// the weekly-report skill is allowed to emit, so a gap looks identical whether a human or
+// the skill recorded it.
+interface Props {
+  label: "Missing evidence" | "Not completed" | "Blocked" | "Requires researcher interpretation";
+  detail?: string | null;
+}
+
+const { label, detail } = Astro.props;
+const slug = label.toLowerCase().replace(/\s+/g, "-");
+---
+
+<span class={`gap gap--${slug}`}>
+  <span class="gap__label">{label}</span>
+  {detail && <span class="gap__detail">{detail}</span>}
+</span>

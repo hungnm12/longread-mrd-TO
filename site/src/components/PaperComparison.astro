@@ -1,0 +1,65 @@
+---
+// Related-work comparison.
+//
+// Two renderings of the same rows: a table on wide screens, stacked cards on narrow ones.
+// Both are emitted and CSS chooses, because a seven-column table cannot be made readable on
+// a phone by scrolling alone, and this section is the one readers scan most.
+import CitationMarker from "@components/CitationMarker.astro";
+import type { RelatedWorkEntry } from "@data/relatedWork";
+
+interface Props {
+  entries: RelatedWorkEntry[];
+}
+
+const { entries } = Astro.props;
+
+const columns = [
+  { key: "problem", label: "Problem addressed" },
+  { key: "modality", label: "Evidence modality" },
+  { key: "strategy", label: "Proposed strategy" },
+  { key: "contribution", label: "Main contribution" },
+  { key: "limitation", label: "Limitation relevant to this thesis" }
+] as const;
+---
+
+<div class="paper-comparison">
+  <div class="paper-comparison__table-wrap" role="region" aria-label="Related work comparison table" tabindex="0">
+    <table class="paper-comparison__table">
+      <thead>
+        <tr>
+          <th scope="col">Study</th>
+          {columns.map((column) => <th scope="col">{column.label}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {entries.map((entry) => (
+          <tr>
+            <th scope="row">
+              <span class="paper-comparison__name">{entry.name}</span>
+              <CitationMarker refs={entry.ref} />
+            </th>
+            {columns.map((column) => <td>{entry[column.key]}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="paper-comparison__cards">
+    {entries.map((entry) => (
+      <article class="paper-card">
+        <h3 class="paper-card__title">
+          {entry.name} <CitationMarker refs={entry.ref} />
+        </h3>
+        <dl class="paper-card__fields">
+          {columns.map((column) => (
+            <>
+              <dt>{column.label}</dt>
+              <dd>{entry[column.key]}</dd>
+            </>
+          ))}
+        </dl>
+      </article>
+    ))}
+  </div>
+</div>

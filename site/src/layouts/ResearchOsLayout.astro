@@ -1,0 +1,63 @@
+---
+// Shell for the research operating system: dashboard, tracker, logs, evidence, reports.
+//
+// Deliberately plain — a fixed top bar, a full-width working area, no hero. These pages are
+// read while working or while presenting, so information density matters more than framing.
+import "@styles/global.css";
+import { researchOs } from "@utils/researchOs";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Nav key of the current area, used for aria-current. */
+  area?: string;
+}
+
+const { title, description, area } = Astro.props;
+
+const nav = [
+  { key: "dashboard", href: "/", label: "Dashboard" },
+  { key: "suggestions", href: "/suggestions/", label: "Suggestions" },
+  { key: "logs", href: "/logs/", label: "Daily logs" },
+  { key: "evidence", href: "/evidence/", label: "Evidence" },
+  { key: "reports", href: "/weekly-reports/", label: "Weekly reports" },
+  { key: "narrative", href: "/research-narrative/", label: "Research narrative" },
+  { key: "notes", href: "/research-notes/", label: "Notes" }
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} | MRD Research OS</title>
+    {description && <meta name="description" content={description} />}
+  </head>
+  <body class="os-body">
+    <header class="os-header">
+      <div class="os-header__inner">
+        <a class="os-header__brand" href="/">
+          <span class="os-header__brand-name">MRD Research OS</span>
+          <span class="os-header__brand-phase">{researchOs.current_phase}</span>
+        </a>
+        <nav class="os-nav" aria-label="Primary">
+          {nav.map((item) => (
+            <a href={item.href} aria-current={item.key === area ? "page" : undefined}>{item.label}</a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    <main class="os-main">
+      <slot />
+    </main>
+
+    <footer class="os-footer">
+      <div class="os-footer__inner">
+        <span>Records live in <code>research/</code> — suggestions, daily logs, evidence, weekly reports.</span>
+        <span>Current period {researchOs.current_period.label} · {researchOs.current_period.start} → {researchOs.current_period.end}</span>
+      </div>
+    </footer>
+  </body>
+</html>

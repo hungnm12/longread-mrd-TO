@@ -1,0 +1,58 @@
+---
+// Weekly report index.
+import ResearchOsLayout from "@layouts/ResearchOsLayout.astro";
+import MissingLabel from "@components/MissingLabel.astro";
+import { loadResearchOs, reportHref } from "@utils/researchOs";
+
+const { reports } = await loadResearchOs();
+---
+
+<ResearchOsLayout
+  area="reports"
+  title="Weekly reports"
+  description="Weekly research reports compiled from daily logs, the suggestion tracker and the evidence registry."
+>
+  <header class="os-page-head">
+    <h1>Weekly reports</h1>
+    <p class="os-section__lede">
+      Each report is compiled from the records of its period — the point-by-point response matrix is
+      derived from the suggestion tracker rather than retyped, so a report cannot claim progress the
+      tracker does not have.
+    </p>
+    <p class="os-note">
+      Build one with the <code>weekly-report-builder</code> skill, then review the gaps it labelled
+      before presenting.
+    </p>
+  </header>
+
+  <section class="os-section">
+    {reports.length === 0 ? (
+      <MissingLabel label="Not completed" detail="No weekly report has been compiled yet" />
+    ) : (
+      <table class="os-table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Period</th>
+            <th scope="col">Title</th>
+            <th scope="col">Status</th>
+            <th scope="col">Suggestions reviewed</th>
+            <th scope="col">Labelled gaps</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reports.map((report) => (
+            <tr>
+              <th scope="row"><a href={reportHref(report.data.id)}>{report.data.id}</a></th>
+              <td>{report.data.period_start} → {report.data.period_end}</td>
+              <td>{report.data.title}</td>
+              <td>{report.data.status}</td>
+              <td>{report.data.suggestions_reviewed.length}</td>
+              <td>{report.data.known_gaps.length}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+  </section>
+</ResearchOsLayout>

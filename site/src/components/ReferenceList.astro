@@ -1,0 +1,26 @@
+---
+// IEEE bibliography with hanging indentation.
+//
+// Rendered from src/data/references.ts in array order, so the printed numbers are the same
+// numbers CitationMarker emits. Each entry carries the anchor its markers link to.
+import { formatReference, referenceAnchor, references } from "@data/references";
+
+const entries = references.map((entry, index) => ({
+  entry,
+  number: index + 1,
+  anchor: referenceAnchor(entry.key)
+}));
+---
+
+<ol class="reference-list">
+  {entries.map(({ entry, number, anchor }) => (
+    <li class="reference-list__item" id={anchor} value={number}>
+      <span class="reference-list__number" aria-hidden="true">[{number}]</span>
+      <span class="reference-list__body">
+        {formatReference(entry)}
+        {entry.doi && <> <a class="reference-list__doi" href={`https://doi.org/${entry.doi}`} rel="noreferrer">{`doi: ${entry.doi}`}</a>{"."}</>}
+        {entry.url && <>{" [Online]. Available: "}<a class="reference-list__doi" href={entry.url} rel="noreferrer">{entry.url}</a>{entry.accessed ? ` (accessed ${entry.accessed}).` : "."}</>}
+      </span>
+    </li>
+  ))}
+</ol>

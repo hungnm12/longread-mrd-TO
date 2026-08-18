@@ -1,0 +1,26 @@
+id: SUG-2026-08-004
+meeting_date: null
+source: Seeded context — derived from the project brief, not from a recorded meeting
+record_kind: seeded_context
+suggestion: >-
+  Treat the contribution of phase and native methylation evidence as something to be tested by
+  ablation, not assumed.
+my_interpretation: >-
+  The three admissible outcomes are complementary, redundant, and unhelpful. The design must be able
+  to produce all three, which means the ablation is part of the experiment, not a follow-up to it.
+why_it_matters: >-
+  A design that can only show improvement will show improvement. Stating this before implementation
+  is what keeps the eventual result interpretable.
+planned_actions:
+  - action: Define the ablation grid over sequence, phase and methylation evidence
+    expected_evidence: An ablation table listing each configuration and what it isolates
+    status: planned
+status: blocked
+linked_daily_logs: []
+evidence: []
+result: null
+reason_not_completed: >-
+  Blocked by SUG-2026-08-002 and SUG-2026-08-003: an ablation cannot be scored without a metric and
+  cannot be interpreted without a frozen baseline.
+next_action: Revisit once the metric and the SNV-only baseline exist.
+target_week: null

@@ -1,0 +1,35 @@
+---
+// An explicit "pending experiment" placeholder.
+//
+// This component exists so that a page can show *where* a result will go without showing a
+// number. docs/research/05_claim_boundaries.md §4 prohibits fabricated or placeholder
+// figures presented as measurements; an empty, clearly-labelled cell is a valid research
+// artifact and this is how one is rendered.
+interface Props {
+  title: string;
+  /** What must happen before this can be filled in. */
+  blockedOn?: string;
+  /** Which experiment manifest will produce it. */
+  experiment?: string;
+}
+
+const { title, blockedOn, experiment } = Astro.props;
+---
+
+<section class="pending">
+  <header class="pending__head">
+    <span class="pending__badge">pending experiment</span>
+    <strong>{title}</strong>
+  </header>
+  <p class="pending__body">
+    No result exists yet. This space is deliberately empty: showing an expected or
+    illustrative number here would be indistinguishable from a measurement.
+  </p>
+  {blockedOn && (
+    <p class="pending__meta"><span>Blocked on</span> {blockedOn}</p>
+  )}
+  {experiment && (
+    <p class="pending__meta"><span>Will be produced by</span> <code>{experiment}</code></p>
+  )}
+  <slot />
+</section>

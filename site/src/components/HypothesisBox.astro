@@ -1,0 +1,46 @@
+---
+// A gated hypothesis, shown with its acceptance and rejection conditions side by side.
+//
+// Both conditions are required props: a hypothesis presented without the result that would
+// falsify it is not a hypothesis, and this component refuses to render one that way.
+interface Props {
+  id: string;
+  name: string;
+  claim: string;
+  accepts: string;
+  rejects: string;
+  /** Where this sits in the H1 -> H4 gate. */
+  gate?: string;
+  status?: "pending" | "running" | "accepted" | "rejected" | "blocked";
+}
+
+const { id, name, claim, accepts, rejects, gate, status = "pending" } = Astro.props;
+
+const statusLabel: Record<string, string> = {
+  pending: "not yet tested",
+  running: "in progress",
+  accepted: "accepted",
+  rejected: "rejected",
+  blocked: "blocked"
+};
+---
+
+<section class={`hypothesis-box hypothesis-box--${status}`} id={id}>
+  <header class="hypothesis-box__head">
+    <span class="hypothesis-box__tag">{name}</span>
+    <span class="hypothesis-box__status">{statusLabel[status] ?? status}</span>
+  </header>
+  <p class="hypothesis-box__claim">{claim}</p>
+  {gate && <p class="hypothesis-box__gate">Gate: {gate}</p>}
+  <dl class="hypothesis-box__conditions">
+    <div>
+      <dt>Accepted if</dt>
+      <dd>{accepts}</dd>
+    </div>
+    <div>
+      <dt>Rejected if</dt>
+      <dd>{rejects}</dd>
+    </div>
+  </dl>
+  <slot />
+</section>

@@ -1,0 +1,126 @@
+---
+// Weekly report deck shell.
+//
+// Two viewing modes over the same markup:
+//   • document mode (default) — every slide stacked, ordinary scrolling, every slide
+//     linkable and searchable;
+//   • presentation mode — one slide at a time, arrow-key navigation, optional fullscreen,
+//     for showing the report on a projector.
+//
+// Printing always emits every slide, one per page, so "export to PDF" is the browser's own
+// print dialog and needs no extra tooling.
+interface Props {
+  reportId: string;
+  title: string;
+  subtitle: string;
+}
+
+const { reportId, title, subtitle } = Astro.props;
+---
+
+<div class="deck" data-deck data-report={reportId}>
+  <div class="deck__toolbar no-print">
+    <div class="deck__toolbar-titles">
+      <strong>{title}</strong>
+      <span>{subtitle}</span>
+    </div>
+    <div class="deck__toolbar-actions">
+      <button type="button" data-deck-present aria-pressed="false">Presentation mode</button>
+      <button type="button" data-deck-print>Print / PDF</button>
+      <span class="deck__counter" data-deck-counter hidden></span>
+    </div>
+  </div>
+
+  <div class="deck__slides" data-deck-slides>
+    <slot />
+  </div>
+
+  <div class="deck__controls no-print" data-deck-controls hidden>
+    <button type="button" data-deck-prev aria-label="Previous slide">←</button>
+    <button type="button" data-deck-next aria-label="Next slide">→</button>
+    <button type="button" data-deck-exit>Exit</button>
+  </div>
+</div>
+
+<script>
+  // Presentation mode is opt-in and fully reversible: the document-mode page is the source of
+  // truth, and the script only toggles a class plus an active index. Nothing is rendered
+  // twice, so a slide's anchor stays valid in both modes.
+  const deck = document.querySelector<HTMLElement>("[data-deck]");
+  if (deck) {
+    const slides = Array.from(deck.querySelectorAll<HTMLElement>(".deck-slide"));
+    const counter = deck.querySelector<HTMLElement>("[data-deck-counter]");
+    const controls = deck.querySelector<HTMLElement>("[data-deck-controls]");
+    const presentButton = deck.querySelector<HTMLButtonElement>("[data-deck-present]");
+    let index = 0;
+    let presenting = false;
+
+    const render = () => {
+      slides.forEach((slide, position) => {
+        slide.classList.toggle("deck-slide--active", !presenting || position === index);
+      });
+      if (counter) {
+        counter.hidden = !presenting;
+        counter.textContent = `${index + 1} / ${slides.length}`;
+      }
+      if (controls) {
+        controls.hidden = !presenting;
+      }
+    };
+
+    const setPresenting = (value: boolean) => {
+      presenting = value;
+      deck.classList.toggle("deck--presenting", presenting);
+      document.body.classList.toggle("deck-presenting", presenting);
+      presentButton?.setAttribute("aria-pressed", String(presenting));
+      if (presenting) {
+        // Start from whichever slide the reader was looking at.
+        const current = slides.findIndex((slide) => slide.getBoundingClientRect().bottom > 80);
+        index = current === -1 ? 0 : current;
+      } else if (slides[index]) {
+        slides[index].scrollIntoView({ block: "start" });
+      }
+      render();
+    };
+
+    const move = (delta: number) => {
+      index = Math.min(slides.length - 1, Math.max(0, index + delta));
+      render();
+      history.replaceState(null, "", `#${slides[index].id}`);
+    };
+
+    presentButton?.addEventListener("click", () => setPresenting(!presenting));
+    deck.querySelector("[data-deck-exit]")?.addEventListener("click", () => setPresenting(false));
+    deck.querySelector("[data-deck-next]")?.addEventListener("click", () => move(1));
+    deck.querySelector("[data-deck-prev]")?.addEventListener("click", () => move(-1));
+    deck.querySelector("[data-deck-print]")?.addEventListener("click", () => window.print());
+
+    // Keys are bound only while presenting, so ordinary scrolling with the arrow keys keeps
+    // working on the document view.
+    document.addEventListener("keydown", (event) => {
+      if (!presenting) {
+        if (event.key.toLowerCase() === "p" && (event.metaKey || event.ctrlKey) === false && event.target === document.body) {
+          setPresenting(true);
+        }
+        return;
+      }
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        move(1);
+      } else if (["ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        move(-1);
+      } else if (event.key === "Escape") {
+        setPresenting(false);
+      } else if (event.key.toLowerCase() === "f") {
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        } else {
+          deck.requestFullscreen?.();
+        }
+      }
+    });
+
+    render();
+  }
+</script>

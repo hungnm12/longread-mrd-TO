@@ -1,0 +1,37 @@
+---
+// Glossary tooltip. Renders the short definition inline on hover/focus and links to the
+// full entry, so a reader new to bioinformatics is never blocked by a term but is also
+// never given a definition without a source they can open.
+import { getCollection } from "astro:content";
+
+interface Props {
+  /** Glossary entry id, e.g. "GLOSSARY-PASS-SNV". */
+  term: string;
+  /** Optional display text; defaults to the glossary entry's term. */
+  label?: string;
+}
+
+const { term, label } = Astro.props;
+
+// Glossary entries live at src/content/glossary/<slug>.md; the id is the frontmatter field,
+// so resolve by scanning rather than assuming id === slug.
+const glossary = await getCollection("glossary");
+const entry = glossary.find((item) => item.data.id === term || item.slug === term);
+const display = label ?? entry?.data.term ?? term;
+---
+
+{
+  entry ? (
+    <a class="glossary-term" href={`/research-notes/glossary/${entry.slug}/`} tabindex="0">
+      {display}
+      <span class="glossary-term__tip" role="tooltip">
+        <strong>{entry.data.term}</strong>
+        <span>{entry.data.short_definition}</span>
+      </span>
+    </a>
+  ) : (
+    // An unresolved term renders as plain text rather than a dead link or an invented
+    // definition. The content validator reports it separately.
+    <span class="glossary-term glossary-term--unresolved">{display}</span>
+  )
+}

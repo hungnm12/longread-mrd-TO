@@ -1,0 +1,23 @@
+{
+  // Cloudflare Workers static-assets deployment for the built Astro site.
+  //
+  // There is no Worker script: `assets.directory` alone makes this an assets-only Worker,
+  // which is what a fully static site needs. `npm run build` must run first — wrangler
+  // uploads `dist/` as it finds it and never builds for you.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mrd-research-os",
+  "compatibility_date": "2026-08-17",
+  "assets": {
+    "directory": "./dist",
+    // The site is built with `build.format: "directory"`, so every route is a
+    // `<route>/index.html`. `auto-trailing-slash` serves those at `/suggestions/` and
+    // redirects `/suggestions` to it, matching how the site links internally.
+    "html_handling": "auto-trailing-slash",
+    // No SPA fallback: an unknown path is a genuine 404, not a silent redirect to the
+    // dashboard, which would hide broken links instead of surfacing them.
+    "not_found_handling": "none"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

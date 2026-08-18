@@ -1,0 +1,176 @@
+---
+// Landing page for the archived working notes.
+//
+// These pages predate the current narrative and are kept because they carry the provenance
+// behind it — weekly walkthroughs, per-object research records, the literature map, and the
+// roadmap. They are not part of the research story and are not linked from its flow.
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Badge from "@components/Badge.astro";
+import { candidateLandscape } from "@data/week001";
+import { researchRoadmap } from "@data/roadmap";
+import { loadCollections, entryHref } from "@utils/content";
+
+const { weeks, questions, hypotheses, results, decisions } = await loadCollections();
+const week = weeks[0];
+const question = questions[0];
+const hypothesis = hypotheses[0];
+const result = results[0];
+const decision = decisions[0];
+---
+
+<BaseLayout
+  title="Research notes"
+  description="Working notes and provenance behind the tumor-only long-read MRD research narrative."
+>
+  <section class="hero">
+    <span class="eyebrow">Secondary route</span>
+    <h1>Research notes and working material.</h1>
+    <p class="muted">
+      This section holds the notebook that produced the main narrative: the weekly walkthrough, the
+      per-object research records, the literature map, and the roadmap. The reviewed research story
+      lives on the <a href="/">main page</a>; nothing here supersedes it.
+    </p>
+    <div class="pill-list">
+      <Badge label="Working material" />
+      <Badge label="Tumor-only first" />
+      <Badge label="Preliminary evidence" tone="preliminary" />
+    </div>
+  </section>
+
+  <section class="tutorial-overview">
+    <article class="tutorial-overview__lead content-panel">
+      <p class="section-kicker">Research objects</p>
+      <h2>Current study focus</h2>
+      <p>
+        The active question is still narrow: describe what survives in the tumor-only PASS SNV
+        candidate set before making stronger somatic or MRD claims.
+      </p>
+      <div class="quick-facts">
+        <div class="quick-facts__item">
+          <span class="muted">Question</span>
+          <strong>{question.data.id}</strong>
+          <a href={entryHref("questions", question.slug)}>{question.data.title}</a>
+        </div>
+        <div class="quick-facts__item">
+          <span class="muted">Hypothesis</span>
+          <strong>{hypothesis.data.id}</strong>
+          <a href={entryHref("hypotheses", hypothesis.slug)}>{hypothesis.data.title}</a>
+        </div>
+        <div class="quick-facts__item">
+          <span class="muted">Decision</span>
+          <strong>{decision.data.id}</strong>
+          <a href={entryHref("decisions", decision.slug)}>{decision.data.title}</a>
+        </div>
+      </div>
+    </article>
+    <article class="tutorial-overview__side card">
+      <p class="section-kicker">Current week</p>
+      <h2>{week.data.id}</h2>
+      <p>{week.data.title}</p>
+      <a href={entryHref("weeks", week.slug)}>Open the weekly walkthrough</a>
+    </article>
+  </section>
+
+  <section class="content-panel" style="margin-top: 1rem;">
+    <p class="section-kicker">Sections</p>
+    <h2>Where the working material sits</h2>
+    <div class="tutorial-grid">
+      <article class="tutorial-card">
+        <span class="tutorial-card__step">01</span>
+        <h3>Weekly walkthrough</h3>
+        <p>
+          The current week as a guided lab note: storyline, generated evidence, interpretation, and
+          the next smallest test.
+        </p>
+        <a href={entryHref("weeks", week.slug)}>Go to {week.data.id}</a>
+      </article>
+      <article class="tutorial-card">
+        <span class="tutorial-card__step">02</span>
+        <h3>Literature map</h3>
+        <p>
+          The per-paper records behind the narrative's related-work section, including what has and
+          has not been verified against the source.
+        </p>
+        <a href="/research-notes/literature/">Open literature map</a>
+      </article>
+      <article class="tutorial-card">
+        <span class="tutorial-card__step">03</span>
+        <h3>Roadmap and next decisions</h3>
+        <p>
+          The sequencing of work after the hypothesis — kept here rather than on the narrative page,
+          which stops at the hypothesis.
+        </p>
+        <a href="/research-notes/roadmap/">Open roadmap</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="content-panel" style="margin-top: 1rem;">
+    <p class="section-kicker">Current output snapshot</p>
+    <h2>Candidate landscape in numbers</h2>
+    <div class="summary-grid">
+      <article class="card metric">
+        <span class="muted">Total ClairS-TO calls</span>
+        <div class="metric__value">{candidateLandscape.summary.total_calls.toLocaleString()}</div>
+      </article>
+      <article class="card metric">
+        <span class="muted">PASS SNVs retained</span>
+        <div class="metric__value">{candidateLandscape.summary.pass_snvs.toLocaleString()}</div>
+      </article>
+      <article class="card metric">
+        <span class="muted">PASS SNV proportion</span>
+        <div class="metric__value">{candidateLandscape.summary.pass_snv_fraction_pct}%</div>
+      </article>
+      <article class="card metric">
+        <span class="muted">Median depth / VAF / ALT</span>
+        <div class="metric__value">
+          {candidateLandscape.summary.median_depth} / {candidateLandscape.summary.median_vaf} / {candidateLandscape.summary.median_alt_support}
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="grid grid--cards" style="margin-top: 1rem;">
+    <article class="card">
+      <p class="section-kicker">Latest evidence</p>
+      <h2>What is safe to say now</h2>
+      <Badge label="Preliminary" tone="preliminary" />
+      <p>{result.data.observation}</p>
+      <p class="muted">{result.data.interpretation}</p>
+      <a href={entryHref("results", result.slug)}>Open result page</a>
+    </article>
+    <article class="card">
+      <p class="section-kicker">Current blockers</p>
+      <h2>What still prevents a stronger claim</h2>
+      <ul class="list-clean">
+        {week.data.blockers.map((blocker) => <li>{blocker}</li>)}
+      </ul>
+    </article>
+    <article class="card">
+      <p class="section-kicker">Readiness</p>
+      <h2>What is already in place</h2>
+      <ul class="list-clean">
+        {week.data.readiness.map((item) => <li>{item}</li>)}
+      </ul>
+    </article>
+  </section>
+
+  <section class="content-panel" style="margin-top: 1rem;">
+    <p class="section-kicker">Research path</p>
+    <h2>Roadmap steps</h2>
+    <div class="path-list">
+      {researchRoadmap.map((step, index) => (
+        <article class="path-step">
+          <div class="path-step__index">{String(index + 1).padStart(2, "0")}</div>
+          <div>
+            <div class="pill-list" style="margin-bottom: 0.35rem;">
+              <Badge label={step.status} />
+            </div>
+            <h3>{step.title}</h3>
+            <p>{step.summary}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

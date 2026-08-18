@@ -10,7 +10,80 @@ site/.config/
 # Python cache noise
 **/__pycache__/
 **/*.pyc
+**/.pytest_cache/
+.venv/
+venv/
 
-# OS/editor noise
-.DS_Store
-Thumbs.db
+# ---------------------------------------------------------------------------
+# Defensive rules for large data.
+#
+# Source BAMs and the dilution series total roughly 765 GB and live under
+# read-only paths owned by other users (docs/DATA_GOVERNANCE.md). Nothing should
+# ever place one inside this repository, but an accidental `cp` or a pipeline
+# writing to the wrong --outdir is a realistic mistake, and a 80 GB `git add`
+# is expensive to undo. These patterns make that mistake impossible rather than
+# merely discouraged.
+# ---------------------------------------------------------------------------
+*.bam
+*.bam.bai
+*.bai
+*.cram
+*.crai
+*.sam
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.fasta
+*.fa
+*.fasta.fai
+*.fa.fai
+*.2bit
+*.pod5
+*.fast5
+*.blow5
+
+# Variant call payloads. Small curated VCFs may be force-added deliberately with
+# `git add -f`; the default is to keep them out.
+*.vcf
+*.vcf.gz
+*.vcf.gz.tbi
+*.bcf
+*.tbi
+*.csi
+
+# Generated intermediate outputs
+mrd-longphase/results/joint_evidence/
+mrd-longphase/results/feasibility/
+mrd-longphase/results/ablation/
+mrd-longphase/results/**/regions/
+mrd-longphase/results/**/_complete/
+*.parquet
+*.tsv.gz
+
+# Tool installs, models and reference databases (multi-GB, third-party)
+**/external/
+**/runtime/
+**/clairs*_models*/
+**/clairs*_databases/
+**/*.tar.gz
+
+# Run logs
+*.log
+
+# Matplotlib cache when MPLCONFIGDIR is set inside the tree
+.mplconfig/
+
+# ---------------------------------------------------------------------------
+# Explicit exceptions: small tracked artifacts the ignore rules above would
+# otherwise swallow. Kept because they are the evidence the site and reports
+# cite, and they are all well under a megabyte.
+# ---------------------------------------------------------------------------
+!mrd-longphase/results/tumor_only/**/*.tsv
+!mrd-longphase/results/tumor_only/**/*.txt
+!mrd-longphase/reports/**/*.tsv
+!mrd-longphase/tests/fixtures/**
+!research/**
+
+# Wrangler local state
+site/.wrangler/

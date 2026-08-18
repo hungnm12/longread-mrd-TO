@@ -1,0 +1,37 @@
+---
+// A conceptual pipeline diagram, rendered as labelled stages.
+//
+// Conceptual by construction: it draws named steps and optional annotations, and has no
+// way to encode a quantity. A diagram that cannot plot a number cannot accidentally imply
+// a measured one — which is what docs/research/05_claim_boundaries.md §4 forbids.
+interface Stage {
+  label: string;
+  note?: string;
+  /** Marks the stage this project contributes, versus inherited upstream steps. */
+  emphasis?: boolean;
+}
+
+interface Props {
+  title?: string;
+  caption?: string;
+  stages: Stage[];
+  orientation?: "vertical" | "horizontal";
+}
+
+const { title, caption, stages, orientation = "vertical" } = Astro.props;
+---
+
+<figure class={`pipeline pipeline--${orientation}`}>
+  {title && <figcaption class="pipeline__title">{title}</figcaption>}
+  <ol class="pipeline__stages">
+    {stages.map((stage, index) => (
+      <li class={`pipeline__stage${stage.emphasis ? " pipeline__stage--emphasis" : ""}`}>
+        <span class="pipeline__index">{index + 1}</span>
+        <span class="pipeline__label">{stage.label}</span>
+        {stage.note && <span class="pipeline__note">{stage.note}</span>}
+      </li>
+    ))}
+  </ol>
+  <p class="pipeline__disclaimer">Conceptual diagram — stage sizes carry no quantitative meaning.</p>
+  {caption && <p class="pipeline__caption">{caption}</p>}
+</figure>

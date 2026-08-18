@@ -1,0 +1,31 @@
+---
+// A top-level section of the research narrative.
+//
+// The `id` is the section's permanent address: the table of contents, the scroll-spy, and
+// any link shared during a meeting all resolve to it, so it must not be renamed casually.
+interface Props {
+  id: string;
+  title: string;
+  /** Displayed section number, e.g. "01". */
+  index?: string;
+  kicker?: string;
+  lede?: string;
+}
+
+const { id, title, index, kicker, lede } = Astro.props;
+---
+
+<section class="research-section" id={id} aria-labelledby={`${id}-heading`}>
+  <header class="research-section__header">
+    {kicker && <p class="section-kicker">{kicker}</p>}
+    <h2 class="research-section__title" id={`${id}-heading`}>
+      {index && <span class="research-section__index" aria-hidden="true">{index}</span>}
+      <span>{title}</span>
+      <a class="research-section__anchor" href={`#${id}`} aria-label={`Link to section: ${title}`}>#</a>
+    </h2>
+    {lede && <p class="research-section__lede">{lede}</p>}
+  </header>
+  <div class="research-section__body">
+    <slot />
+  </div>
+</section>

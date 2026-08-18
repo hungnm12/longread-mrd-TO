@@ -1,0 +1,29 @@
+id: SUG-2026-08-001
+meeting_date: null
+source: Seeded context — derived from the project brief, not from a recorded meeting
+record_kind: seeded_context
+suggestion: >-
+  Determine the somatic, germline and technical-artifact composition of the tumor-only PASS SNV
+  candidate set before treating any of it as an MRD marker set.
+my_interpretation: >-
+  A candidate count is not an analysis population until its composition is known. Without a
+  composition estimate, every downstream metric is measured against an undefined denominator.
+why_it_matters: >-
+  Tumor-only calling has no matched normal to subtract, so germline and recurrent artifact classes
+  stay inside the candidate set. Any recognition metric computed before that is uninterpretable.
+planned_actions:
+  - action: Define the composition classes to be estimated and the resources that can support each
+    expected_evidence: A written class definition with the resource used for each class
+    status: planned
+  - action: Estimate the composition of the PASS SNV set with population resources and the panel of normals already used upstream
+    expected_evidence: A composition table with counts per class and an explicit uncertainty statement
+    status: planned
+status: planned
+linked_daily_logs: []
+evidence: []
+result: null
+reason_not_completed: >-
+  Not started. The class definitions must be fixed before any counting, otherwise the estimate has
+  no stable meaning.
+next_action: Write the composition class definitions and record them as a decision.
+target_week: 2026-W34

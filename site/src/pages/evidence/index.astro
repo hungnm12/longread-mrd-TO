@@ -1,0 +1,83 @@
+---
+// Evidence registry.
+//
+// One row per artifact, with the verification status stated plainly. `file_present` means
+// the path exists in the repository and nothing more; only a named person on a named date
+// can move a record to `verified`. An AI summary never changes this column.
+import ResearchOsLayout from "@layouts/ResearchOsLayout.astro";
+import MissingLabel from "@components/MissingLabel.astro";
+import { evidenceHref, loadResearchOs, logHref, suggestionHref } from "@utils/researchOs";
+
+const { evidence } = await loadResearchOs();
+const verifiedCount = evidence.filter((entry) => entry.data.verification_status === "verified").length;
+---
+
+<ResearchOsLayout
+  area="evidence"
+  title="Evidence registry"
+  description="Artifacts backing the research claims, with provenance and verification status."
+>
+  <header class="os-page-head">
+    <h1>Evidence registry</h1>
+    <p class="os-section__lede">
+      {evidence.length} registered artifacts, {verifiedCount} independently verified. An artifact is
+      registered because it exists and something depends on it — registration is not endorsement of
+      what it shows.
+    </p>
+  </header>
+
+  <section class="os-section">
+    <table class="os-table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Type</th>
+          <th scope="col">Title</th>
+          <th scope="col">Path</th>
+          <th scope="col">Links</th>
+          <th scope="col">Verification</th>
+        </tr>
+      </thead>
+      <tbody>
+        {evidence.map((entry) => (
+          <tr>
+            <th scope="row"><a href={evidenceHref(entry.data.id)}>{entry.data.id}</a></th>
+            <td>{entry.data.type.replace(/_/g, " ")}</td>
+            <td>{entry.data.title}</td>
+            <td><code class="os-path">{entry.data.path_or_url}</code></td>
+            <td>
+              {entry.data.linked_log && <a href={logHref(entry.data.linked_log)}>{entry.data.linked_log}</a>}
+              {entry.data.linked_suggestion && (
+                <a href={suggestionHref(entry.data.linked_suggestion)}>{entry.data.linked_suggestion}</a>
+              )}
+              {!entry.data.linked_log && !entry.data.linked_suggestion && "—"}
+            </td>
+            <td>
+              {entry.data.verification_status === "missing" ? (
+                <MissingLabel label="Missing evidence" detail="Registered but not found" />
+              ) : (
+                <span class={`verify verify--${entry.data.verification_status}`}>
+                  {entry.data.verification_status.replace(/_/g, " ")}
+                </span>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="os-section">
+    <h2>What the verification levels mean</h2>
+    <dl class="os-definitions">
+      <dt>file_present</dt>
+      <dd>The path resolves inside the repository. Nobody has re-read the contents.</dd>
+      <dt>reviewed</dt>
+      <dd>A person opened it and confirmed it is what the record claims it is.</dd>
+      <dt>verified</dt>
+      <dd>Reproduced or independently checked, with <code>verified_by</code> and <code>verified_on</code> recorded.</dd>
+      <dt>unverified / missing</dt>
+      <dd>Registered without a check, or referenced but not found. Both are shown, never hidden.</dd>
+    </dl>
+  </section>
+</ResearchOsLayout>

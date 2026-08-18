@@ -1,0 +1,34 @@
+---
+// Prediction-before-result.
+//
+// Renders a prediction and, beside it, the slot where the outcome will go. The outcome
+// stays visibly empty until an experiment produces it. Putting them in one component makes
+// a retrofitted prediction awkward to write, which is the point: a prediction recorded
+// after the result is worthless, and the pattern that made week4/phase0_results.md
+// trustworthy was locking the expectation first.
+interface Props {
+  question: string;
+  prediction: string;
+  /** Set once a real result exists. Leave unset to render the pending state. */
+  outcome?: string;
+  /** "matched" | "contradicted" | "partial" — only meaningful once outcome is set. */
+  verdict?: "matched" | "contradicted" | "partial";
+}
+
+const { question, prediction, outcome, verdict } = Astro.props;
+---
+
+<section class="prediction">
+  <p class="prediction__question">{question}</p>
+  <div class="prediction__grid">
+    <div class="prediction__cell">
+      <h4>Prediction <span class="prediction__when">recorded before the run</span></h4>
+      <p>{prediction}</p>
+    </div>
+    <div class={`prediction__cell prediction__cell--outcome${outcome ? "" : " prediction__cell--empty"}`}>
+      <h4>Outcome {verdict && <span class={`prediction__verdict prediction__verdict--${verdict}`}>{verdict}</span>}</h4>
+      {outcome ? <p>{outcome}</p> : <p class="prediction__placeholder">Not yet observed.</p>}
+    </div>
+  </div>
+  <slot />
+</section>

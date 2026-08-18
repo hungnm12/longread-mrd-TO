@@ -1,0 +1,23 @@
+id: SUG-2026-08-003
+meeting_date: null
+source: Seeded context — derived from the project brief, not from a recorded meeting
+record_kind: seeded_context
+suggestion: >-
+  Specify the SNV-only baseline before evaluating whether phase or methylation evidence adds value.
+my_interpretation: >-
+  "Incremental" is only defined against a fixed reference. The SNV-only configuration must be frozen
+  — features, thresholds, and scoring — so later configurations differ in exactly one respect.
+why_it_matters: >-
+  If the baseline moves while modalities are added, an apparent improvement cannot be attributed to
+  the added modality.
+planned_actions:
+  - action: Freeze the SNV-only feature set and scoring rule
+    expected_evidence: A versioned baseline configuration file under the workflow directory
+    status: planned
+status: captured
+linked_daily_logs: []
+evidence: []
+result: null
+reason_not_completed: Not started; requires the evaluation metric from SUG-2026-08-002.
+next_action: Write the baseline configuration once the metric is defined.
+target_week: 2026-W36

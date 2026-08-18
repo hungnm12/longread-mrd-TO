@@ -1,0 +1,23 @@
+---
+// An IEEE in-text citation marker, e.g. [3].
+//
+// The number is resolved from the reference list at build time rather than typed into the
+// prose, so the bibliography and the markers cannot drift apart. An unknown key fails the
+// build instead of rendering a wrong number.
+//
+// The markup below is deliberately written without line breaks inside the span: Astro
+// preserves template whitespace, and a newline here would render as " [1] ." in running
+// text.
+import { citationNumber, referenceAnchor } from "@data/references";
+
+interface Props {
+  /** One key, or several to render as [1], [4]. */
+  refs: string | string[];
+}
+
+const { refs } = Astro.props;
+const keys = Array.isArray(refs) ? refs : [refs];
+const entries = keys.map((key) => ({ number: citationNumber(key), anchor: referenceAnchor(key) }));
+---
+
+<span class="citation">{entries.map((entry, index) => (<><Fragment set:html={index > 0 ? ", " : ""} /><a class="citation__link" href={`#${entry.anchor}`}>{`[${entry.number}]`}</a></>))}</span>

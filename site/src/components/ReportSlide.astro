@@ -1,0 +1,31 @@
+---
+// One slide of a weekly report deck.
+//
+// A slide is a normal section of the document that happens to be paginated: it keeps its own
+// anchor id so a link can point straight at it from a suggestion or an evidence record, and
+// it prints as one page. Presentation mode only changes which slide is visible.
+interface Props {
+  id: string;
+  index: number;
+  title: string;
+  kicker?: string;
+  /** Rendered small in the slide footer — usually the source records. */
+  provenance?: string;
+}
+
+const { id, index, title, kicker, provenance } = Astro.props;
+---
+
+<section class="deck-slide" id={id} data-slide={index} aria-labelledby={`${id}-title`}>
+  <header class="deck-slide__head">
+    {kicker && <p class="deck-slide__kicker">{kicker}</p>}
+    <h2 class="deck-slide__title" id={`${id}-title`}>{title}</h2>
+  </header>
+  <div class="deck-slide__body">
+    <slot />
+  </div>
+  <footer class="deck-slide__foot">
+    <span>{provenance}</span>
+    <span class="deck-slide__number">{index}</span>
+  </footer>
+</section>

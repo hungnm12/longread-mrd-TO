@@ -1,0 +1,198 @@
+---
+// One daily log.
+//
+// The page is laid out as the five distinct kinds of statement — action, evidence,
+// observation, interpretation, decision — plus failures. They are visually separated rather
+// than merged into a narrative, so that an activity with no observation reads as exactly
+// that: an activity, not a result.
+import ResearchOsLayout from "@layouts/ResearchOsLayout.astro";
+import MissingLabel from "@components/MissingLabel.astro";
+import EvidenceLink from "@components/EvidenceLink.astro";
+import { getCollection, render } from "astro:content";
+import { isoWeek, loadResearchOs, logHref, suggestionHref } from "@utils/researchOs";
+
+export async function getStaticPaths() {
+  const logs = await getCollection("dailyLogs");
+  return logs.map((entry) => ({
+    params: { id: entry.data.id.toLowerCase() },
+    props: { logId: entry.data.id }
+  }));
+}
+
+const { logId } = Astro.props;
+const { logById, evidenceById, logs } = await loadResearchOs();
+const entry = logById.get(logId)!;
+const data = entry.data;
+const { Content } = await render(entry);
+
+const index = logs.findIndex((log) => log.data.id === logId);
+const newer = index > 0 ? logs[index - 1] : null;
+const older = index < logs.length - 1 ? logs[index + 1] : null;
+---
+
+<ResearchOsLayout area="logs" title={`${data.date} — daily log`} description={data.research_question}>
+  <header class="os-page-head">
+    <p class="os-breadcrumb"><a href="/logs/">Daily logs</a> / {data.id}</p>
+    <h1>{data.date}</h1>
+    <p class="os-badges">
+      <span class="os-card__kind">{isoWeek(data.date)}</span>
+      <span class="os-card__kind">{data.record_kind.replace(/_/g, " ")}</span>
+      {data.linked_suggestions.map((id) => (
+        <a class="os-card__kind os-card__kind--link" href={suggestionHref(id)}>{id}</a>
+      ))}
+    </p>
+    <p class="os-question os-question--small">{data.research_question}</p>
+  </header>
+
+  <section class="os-section">
+    <h2>Actions and what they produced</h2>
+    <table class="os-table os-table--actions">
+      <thead>
+        <tr>
+          <th scope="col">Action</th>
+          <th scope="col">Evidence</th>
+          <th scope="col">Observation</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.actions_completed.map((action) => (
+          <tr>
+            <td>{action.action}</td>
+            <td>
+              <EvidenceLink
+                ids={action.evidence}
+                evidenceById={evidenceById}
+                emptyDetail={action.evidence_note}
+              />
+            </td>
+            <td>
+              {action.observation ?? (
+                <MissingLabel
+                  label="Requires researcher interpretation"
+                  detail="No observation recorded for this action"
+                />
+              )}
+            </td>
+            <td>{action.status.replace(/_/g, " ")}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <div class="os-grid">
+    <section class="os-panel os-panel--wide">
+      <h2>Observations</h2>
+      {data.observations.length === 0 ? (
+        <MissingLabel label="Missing evidence" detail="No observation recorded for this day" />
+      ) : (
+        <ul class="os-list os-list--plain">
+          {data.observations.map((observation) => <li>{observation}</li>)}
+        </ul>
+      )}
+      <h2 class="os-panel__subhead">Interpretation</h2>
+      {data.interpretation ? (
+        <p class="os-interpretation">{data.interpretation}</p>
+      ) : (
+        <MissingLabel label="Requires researcher interpretation" detail={null} />
+      )}
+    </section>
+
+    <section class="os-panel">
+      <h2>Provenance</h2>
+      <dl class="os-card__fields">
+        <dt>Commands / scripts</dt>
+        <dd>
+          {data.commands_or_scripts.length === 0 ? "—" : (
+            <ul class="os-list os-list--plain">
+              {data.commands_or_scripts.map((command) => <li><code>{command}</code></li>)}
+            </ul>
+          )}
+        </dd>
+        <dt>Inputs</dt>
+        <dd>
+          {data.inputs.length === 0 ? "—" : (
+            <ul class="os-list os-list--plain">{data.inputs.map((input) => <li>{input}</li>)}</ul>
+          )}
+        </dd>
+        <dt>Outputs</dt>
+        <dd>
+          {data.outputs.length === 0 ? "—" : (
+            <ul class="os-list os-list--plain">
+              {data.outputs.map((output) => <li><code>{output}</code></li>)}
+            </ul>
+          )}
+        </dd>
+      </dl>
+    </section>
+  </div>
+
+  <div class="os-grid">
+    <section class="os-panel">
+      <h2>Problems and failures</h2>
+      {data.problems_and_failures.length === 0 ? (
+        <p class="os-empty">None recorded.</p>
+      ) : (
+        <ul class="os-list os-list--plain">
+          {data.problems_and_failures.map((problem) => (
+            <li class="os-problem">
+              <strong>{problem.problem}</strong>
+              {problem.impact && <span class="os-problem__meta">Impact: {problem.impact}</span>}
+              {problem.resolution && <span class="os-problem__meta">Handling: {problem.resolution}</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+
+    <section class="os-panel">
+      <h2>Decisions</h2>
+      {data.decisions.length === 0 ? (
+        <p class="os-empty">No decision was recorded for this day.</p>
+      ) : (
+        <ul class="os-list os-list--plain">
+          {data.decisions.map((decision) => (
+            <li>
+              <strong>{decision.decision}</strong>
+              <span class="os-problem__meta">Why: {decision.rationale}</span>
+              {decision.linked_suggestion && (
+                <a class="os-list__meta" href={suggestionHref(decision.linked_suggestion)}>
+                  {decision.linked_suggestion}
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+
+    <section class="os-panel">
+      <h2>Next actions</h2>
+      {data.next_actions.length === 0 ? (
+        <p class="os-empty">None carried forward.</p>
+      ) : (
+        <ul class="os-list os-list--plain">
+          {data.next_actions.map((next) => (
+            <li>
+              {next.action}
+              <span class="os-list__meta">
+                {next.suggestion ? <a href={suggestionHref(next.suggestion)}>{next.suggestion}</a> : "unlinked"}
+                {next.due ? ` · ${next.due}` : ""}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  </div>
+
+  <section class="os-section os-prose">
+    <Content />
+  </section>
+
+  <nav class="os-pager">
+    {older ? <a href={logHref(older.data.id)}>← {older.data.date}</a> : <span />}
+    {newer ? <a href={logHref(newer.data.id)}>{newer.data.date} →</a> : <span />}
+  </nav>
+</ResearchOsLayout>

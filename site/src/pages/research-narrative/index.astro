@@ -1,0 +1,384 @@
+---
+// The research narrative. One continuous page, nine anchored sections, ending at the
+// hypothesis — the downstream design is deliberately not on this page.
+import ResearchLayout from "@layouts/ResearchLayout.astro";
+import ResearchSection from "@components/ResearchSection.astro";
+import PaperComparison from "@components/PaperComparison.astro";
+import EvidenceFlow from "@components/EvidenceFlow.astro";
+import HypothesisPanel from "@components/HypothesisPanel.astro";
+import CitationMarker from "@components/CitationMarker.astro";
+import ReferenceList from "@components/ReferenceList.astro";
+import KeyMessage from "@components/KeyMessage.astro";
+import MechanismFigure from "@components/MechanismFigure.astro";
+import { relatedWork } from "@data/relatedWork";
+import { siteMeta } from "@data/siteMeta";
+import { candidateLandscape } from "@data/week001";
+
+const summary = candidateLandscape.summary;
+const totalCalls = summary.total_calls.toLocaleString("en-US");
+const passSnvs = summary.pass_snvs.toLocaleString("en-US");
+---
+
+<ResearchLayout title={siteMeta.title} description={siteMeta.subtitle}>
+  <ResearchSection
+    id="overview"
+    index="01"
+    kicker="Research overview"
+    title={siteMeta.title}
+    lede={siteMeta.subtitle}
+  >
+    <p>
+      The argument below runs from the clinical problem, through what the supplied literature
+      establishes, to the tumor-only variant candidates produced so far, and stops at the hypothesis
+      those candidates motivate. No detection result is reported, because none has been produced.
+    </p>
+
+    <div class="overview-grid">
+      <article class="overview-card">
+        <h3>The problem</h3>
+        <p>
+          After treatment, a small number of tumor-derived molecules may remain in a sample that is
+          otherwise overwhelmingly non-tumor. Recognising those molecules is the MRD problem.
+        </p>
+      </article>
+      <article class="overview-card">
+        <h3>The supplied literature</h3>
+        <p>
+          Seven studies and technical documents define the working context: genome-wide signal
+          integration, learned background suppression, phased-variant detection, nanopore cell-free
+          DNA analysis, consensus long-read multimodal profiling, and native methylation
+          <CitationMarker refs={["mrdetect", "mrd-edge", "phased-seq", "ont-realtime", "nanorcs", "methyl-fragmentation", "ont-cfdna-methyl"]} />.
+        </p>
+      </article>
+      <article class="overview-card">
+        <h3>The starting point</h3>
+        <p>
+          Tumor-only calling with ClairS-TO v0.5.0 <CitationMarker refs="clairs-to" /> on an HCC1395
+          nanopore alignment produced {totalCalls} candidate records, of which {passSnvs} are PASS
+          SNV candidates.
+        </p>
+      </article>
+      <article class="overview-card">
+        <h3>The hypothesis</h3>
+        <p>
+          Long reads carry more than the allele at a site. Whether the phase context and the native
+          methylation state on the same molecule add discriminative value over SNV evidence alone is
+          the open question this project is set up to test.
+        </p>
+      </article>
+    </div>
+
+    <KeyMessage title="Work in progress" tone="boundary">
+      <p>
+        Everything below the ClairS-TO section is a research direction, not a finding. No sensitivity,
+        specificity, or limit-of-detection claim is made anywhere on this page, and no comparison
+        between the supplied studies' reported performance figures is drawn.
+      </p>
+    </KeyMessage>
+  </ResearchSection>
+
+  <ResearchSection
+    id="mrd-problem"
+    index="02"
+    kicker="Background"
+    title="What problem does MRD address?"
+  >
+    <p>
+      <strong>Minimal — or measurable — residual disease</strong> is the small amount of tumor that
+      can persist after treatment while remaining invisible to imaging and to routine clinical
+      assessment. A patient can appear disease-free and still carry a residual tumor burden that
+      determines what happens next.
+    </p>
+    <p>
+      Detecting that residue matters because it is the earliest available evidence about the outcome
+      of treatment. It can indicate that disease persists before it becomes clinically apparent, and
+      its absence is evidence — not proof — that treatment achieved what it was meant to achieve.
+      The measurement is therefore used to inform decisions rather than to describe biology for its
+      own sake.
+    </p>
+    <p>
+      The difficulty is one of proportion. Tumor-derived molecules in such a sample are heavily
+      outnumbered by molecules from normal tissue. The measurement is not a search for something
+      unusual in a neutral background; it is a search for a small number of specific molecules in a
+      background that is chemically identical to them in almost every respect and that arrives in
+      vast excess.
+    </p>
+  </ResearchSection>
+
+  <ResearchSection
+    id="detection-barriers"
+    index="03"
+    kicker="Barriers"
+    title="Why is MRD detection difficult?"
+    lede="Three barriers recur across every method in the supplied literature."
+  >
+    <div class="barrier-grid">
+      <article class="barrier-card">
+        <span class="barrier-card__index">1</span>
+        <h3>Limited tumor-derived molecules</h3>
+        <p>
+          At low tumor fraction, the expected number of tumor molecules covering any single position
+          becomes small. Evidence that would be convincing in aggregate can be reduced, at one locus,
+          to a single observation.
+        </p>
+      </article>
+      <article class="barrier-card">
+        <span class="barrier-card__index">2</span>
+        <h3>Sequencing errors can mimic true mutations</h3>
+        <p>
+          A sequencing or basecalling error produces exactly the observation a rare true mutation
+          produces: one read carrying an alternative allele. When true events are rare enough, errors
+          can outnumber them.
+        </p>
+      </article>
+      <article class="barrier-card">
+        <span class="barrier-card__index">3</span>
+        <h3>Single-modality evidence may be insufficient</h3>
+        <p>
+          If the only thing recorded about a molecule is which allele it carries, then a true
+          observation and a background observation are described by the same single fact, and no
+          amount of downstream processing can separate them.
+        </p>
+      </article>
+    </div>
+
+    <p>
+      Stated generally, every method in this space is trying to improve the same ratio:
+    </p>
+
+    <p class="display-ratio">
+      <span class="display-ratio__num">Tumor signal</span>
+      <span class="display-ratio__bar" aria-hidden="true"></span>
+      <span class="display-ratio__den">Background noise</span>
+    </p>
+
+    <KeyMessage title="Background is more than sequencing error" tone="boundary">
+      <p>
+        In a tumor-only setting the denominator also includes germline variation with no matched
+        normal available to subtract it, clonal haematopoiesis and other non-tumor somatic variation,
+        alignment and reference artefacts, and — for methylation evidence specifically — bias
+        introduced during library preparation <CitationMarker refs="ont-cfdna-methyl" />. Reducing
+        sequencing error alone does not make the denominator small.
+      </p>
+    </KeyMessage>
+  </ResearchSection>
+
+  <ResearchSection
+    id="related-work"
+    index="04"
+    kicker="Related work"
+    title="What have the supplied studies done?"
+    lede="Each study attacks the signal-to-background ratio at a different point in the same pipeline."
+  >
+    <p>
+      The table compares the supplied studies along the axes this project needs: the problem each
+      addresses, the evidence it measures, the strategy it proposes, its main contribution, and the
+      limitation that matters for a tumor-only long-read setting. Reported performance figures are
+      deliberately excluded — the studies use different assays, sample types, and cohorts, and
+      placing their numbers side by side would imply a comparison the underlying data does not
+      support.
+    </p>
+
+    <PaperComparison entries={relatedWork} />
+  </ResearchSection>
+
+  <ResearchSection
+    id="synthesis"
+    index="05"
+    kicker="Synthesis"
+    title="Cross-paper synthesis"
+    lede="Read together, the studies describe one strategy pursued along different axes."
+  >
+    <ul class="synthesis-list">
+      <li>
+        <strong>MRDetect increases genomic breadth</strong> — many weak observations, integrated
+        genome-wide, become one usable readout <CitationMarker refs="mrdetect" />.
+      </li>
+      <li>
+        <strong>MRD-EDGE enriches signal and suppresses noise</strong> — a learned model ranks
+        observations by how tumor-like they look before anything is aggregated
+        <CitationMarker refs="mrd-edge" />.
+      </li>
+      <li>
+        <strong>PhasED-Seq uses molecular linkage</strong> — requiring variants to co-occur in phase
+        on one molecule makes background fail twice on the same fragment
+        <CitationMarker refs="phased-seq" />.
+      </li>
+      <li>
+        <strong>NanoRCS improves read accuracy and combines modalities</strong> — consensus
+        construction raises per-molecule confidence, and several signal classes are estimated together
+        <CitationMarker refs="nanorcs" />.
+      </li>
+      <li>
+        <strong>Native nanopore sequencing offers additional molecular information</strong> — genomic,
+        fragment-level, and methylation properties are readable from the same native molecule without
+        a separate assay <CitationMarker refs={["ont-realtime", "ont-cfdna-methyl"]} />.
+      </li>
+      <li>
+        <strong>Methylation may be biologically relevant but is also technically fragile</strong> —
+        it is coupled to fragmentation rather than independent of it
+        <CitationMarker refs="methyl-fragmentation" />, and it is sensitive to library preparation
+        <CitationMarker refs="ont-cfdna-methyl" />.
+      </li>
+    </ul>
+
+    <p>
+      The common pattern is that improving the ratio means adding evidence per observation, whether
+      that evidence comes from more loci, a learned prior, a second linked variant, or a second
+      signal class. Long reads make a particular version of this possible: the allele, its phase
+      context, and its native methylation state can be observed on one molecule. The supplied studies
+      do not test that specific combination.
+    </p>
+
+    <KeyMessage title="The unresolved question" tone="open-question">
+      <p>
+        Within the supplied literature set, it remains unclear whether phase and native methylation
+        evidence add discriminative value to tumor-only long-read SNV candidates under
+        low-tumor-fraction conditions.
+      </p>
+      <p class="key-message__qualifier">
+        This is a statement about the seven documents indexed here, not about the research field. A
+        broader systematic search has not been completed, so no claim is made that the question is
+        unaddressed elsewhere.
+      </p>
+    </KeyMessage>
+  </ResearchSection>
+
+  <ResearchSection
+    id="clairs-to"
+    index="06"
+    kicker="Current output"
+    title="Current starting point: ClairS-TO"
+    lede="What has actually been produced so far, and what it does and does not establish."
+  >
+    <EvidenceFlow
+      title="Tumor-only candidate generation"
+      caption="Conceptual flow of the current output. Counts are call-set sizes, not counts of confirmed somatic mutations."
+      steps={[
+        { label: "HCC1395 tumor-only ONT BAM", note: "Long-read alignment, no matched normal used as input" },
+        { label: "ClairS-TO v0.5.0", note: "Tumor-only somatic candidate calling and filtering" },
+        { label: "Total candidate records", value: totalCalls },
+        { label: "PASS SNV candidates", value: passSnvs, emphasis: true },
+        { label: "Tumor-only candidate landscape", note: "The starting point for everything below" }
+      ]}
+    />
+
+    <p>
+      <code>PASS</code> is a label applied by the caller: it marks the candidates that satisfied
+      ClairS-TO's own criteria <CitationMarker refs="clairs-to" />. It is a retention decision, not a
+      biological verdict. The retained candidates are not automatically confirmed somatic mutations,
+      and the proportion retained is a property of the filtering, not a false-positive rate.
+    </p>
+    <p>
+      What ClairS-TO addresses is candidate calling and filtering in the absence of a matched normal.
+      That is a well-defined problem and it is the one solved here. It leaves open a different
+      question: given a candidate and the reads supporting it, how much confidence does a single
+      alternative-allele observation actually carry?
+    </p>
+
+    <KeyMessage title="What this output does not answer" tone="boundary">
+      <p>
+        The candidate landscape is the current research starting point. It does not tell us whether
+        additional phase or methylation evidence would improve recognition of tumor-derived signal,
+        because no such evidence has been attached to these candidates yet.
+      </p>
+    </KeyMessage>
+  </ResearchSection>
+
+  <ResearchSection
+    id="research-gap"
+    index="07"
+    kicker="Research gap"
+    title="From current output to the hypothesis"
+    lede="The reasoning that connects a candidate list to an open research question."
+  >
+    <EvidenceFlow
+      steps={[
+        { label: "ClairS-TO provides tumor-only SNV candidates" },
+        {
+          label:
+            "At low tumor fraction, isolated ALT observations may be difficult to distinguish from background"
+        },
+        {
+          label:
+            "Long reads may contain additional phase and native methylation information on the same molecule"
+        },
+        {
+          label: "The added discriminative value of these signals is currently unknown",
+          emphasis: true
+        }
+      ]}
+      caption="Conceptual reasoning chain. No step here asserts a measured effect."
+    />
+
+    <p>
+      Each step is a plausibility argument, not a result. The candidates exist; the difficulty at low
+      tumor fraction follows from the barriers in section 3; the additional information carried by
+      long reads is a property of the platform. Only the last step is genuinely open, and it is open
+      in a way that can be tested.
+    </p>
+
+    <KeyMessage title="Deliberately not specified here" tone="boundary">
+      <p>
+        How haplotypes would be assigned, how methylation evidence would be compared, how phase
+        blocks would be constructed, how the evidence would be combined into a score, and how the
+        alternatives would be evaluated are all design decisions. Making them now, before the
+        question is stated cleanly, would fix the answer to the shape of the first implementation.
+      </p>
+    </KeyMessage>
+  </ResearchSection>
+
+  <ResearchSection
+    id="hypothesis"
+    index="08"
+    kicker="Hypothesis"
+    title="Research hypothesis"
+  >
+    <HypothesisPanel
+      question="Does phase evidence and/or native methylation evidence improve the recognition of tumor-derived signal compared with SNV-only evidence?"
+      nullHypothesis="Adding phase or native methylation evidence does not improve tumor-signal recognition over SNV-only evidence."
+      alternativeHypothesis="Phase and/or native methylation evidence provides additional discriminative value beyond SNV-only evidence."
+      scopeNote="The next research stage will define how these evidence modalities should be represented and evaluated. That design is intentionally outside the current website scope."
+    />
+
+    <h3 class="figure-heading">Why these two modalities are candidates at all</h3>
+    <p>
+      The hypothesis rests on one physical fact and one statistical argument. The fact: a long read
+      spans enough sequence to carry the candidate allele, the alleles at the neighbouring
+      heterozygous sites, and the native methylation calls — all on one molecule, so the candidate
+      is observed <em>in cis</em> with its own haplotype background rather than merely near it. The
+      argument: those properties are produced by different processes, so the ways they can mislead
+      are not the same.
+    </p>
+
+    <MechanismFigure>
+      <strong>Mechanistic rationale, not evidence.</strong> A somatic variant arises on one
+      chromosome copy, so a genuinely tumor-derived read should carry it in cis with the same
+      neighbouring alleles every time; an error is free to land on a read from either haplotype, and
+      it does not alter that molecule&#39;s methylation state. Whether the separation drawn here
+      survives at low tumor fraction is exactly what the hypothesis leaves open.
+    </MechanismFigure>
+
+    <KeyMessage title="Why this remains a hypothesis" tone="boundary">
+      <p>
+        Both axes have known failure modes of their own. Methylation is biologically coupled to
+        fragmentation rather than independent of it <CitationMarker refs="methyl-fragmentation" />,
+        and it is sensitive to library preparation <CitationMarker refs="ont-cfdna-methyl" />.
+        Haplotype context does not exist until phasing succeeds, and phase-based suppression is
+        established for co-occurring variants <CitationMarker refs="phased-seq" /> — not for the
+        single-variant case examined here. Plausibility is a reason to test, not a result.
+      </p>
+    </KeyMessage>
+
+    <p class="hypothesis-followup">
+      Both outcomes are informative. If the null hypothesis survives, the result is that native
+      methylation and phase context are redundant with sequence evidence in this setting — a
+      substantive finding about long-read MRD, not a failed experiment. Working notes for the
+      preparatory work sit under <a href={siteMeta.researchNotesHref}>research notes</a>.
+    </p>
+  </ResearchSection>
+
+  <ResearchSection id="references" index="09" kicker="Bibliography" title="References">
+    <ReferenceList />
+  </ResearchSection>
+</ResearchLayout>

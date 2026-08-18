@@ -1,0 +1,26 @@
+id: SUG-2026-08-002
+meeting_date: null
+source: Seeded context — derived from the project brief, not from a recorded meeting
+record_kind: seeded_context
+suggestion: >-
+  Define "tumor recognition" as a measurable evaluation metric before comparing any methods.
+my_interpretation: >-
+  The phrase currently names an intuition, not a quantity. It must become something computable on a
+  defined unit — per candidate, per molecule, or per sample — with a stated positive class.
+why_it_matters: >-
+  Without a metric there is no way to say that one evidence configuration is better than another, so
+  no ablation can be scored and no hypothesis can be rejected.
+planned_actions:
+  - action: Choose the unit of evaluation and the positive class
+    expected_evidence: A decision record naming the unit, the positive class, and what supplies the labels
+    status: planned
+  - action: Specify the metric and its blank/background reference
+    expected_evidence: A written metric definition with the control condition it is measured against
+    status: planned
+status: captured
+linked_daily_logs: []
+evidence: []
+result: null
+reason_not_completed: Not started; depends on the label source being settled first.
+next_action: Draft the evaluation-unit decision and circulate it before implementation.
+target_week: 2026-W35

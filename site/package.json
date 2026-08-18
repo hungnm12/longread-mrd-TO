@@ -9,8 +9,14 @@
     "preview": "XDG_CONFIG_HOME=$PWD/.config ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "check": "XDG_CONFIG_HOME=$PWD/.config ASTRO_TELEMETRY_DISABLED=1 astro check",
     "validate:content": "node ./scripts/validate-content.mjs",
-    "lint": "npm run check && npm run validate:content",
-    "test": "vitest run"
+    "lint": "npm run check && npm run validate:content && npm run validate:research",
+    "test": "vitest run",
+    "validate:research": "node ./scripts/validate-research-os.mjs",
+    "new:log": "node ./scripts/new-record.mjs log",
+    "new:suggestion": "node ./scripts/new-record.mjs suggestion",
+    "new:evidence": "node ./scripts/new-record.mjs evidence",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:dry": "wrangler deploy --dry-run"
   },
   "dependencies": {
     "astro": "^5.12.0",
@@ -19,8 +25,11 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.13.10",
+    "js-yaml": "^5.3.0",
     "typescript": "^5.9.2",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "wrangler": "^4.123.0"
   }
 }

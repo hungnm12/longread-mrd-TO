@@ -1,5 +1,9 @@
 ---
+// Layout for the research-notes area — the working notebook that sits behind the main
+// narrative. The narrative itself uses ResearchLayout; these pages keep the sidebar index
+// because they are browsed by object type rather than read in order.
 import "@styles/global.css";
+import { siteMeta } from "@data/siteMeta";
 
 interface Props {
   title: string;
@@ -9,10 +13,15 @@ interface Props {
 const { title, description } = Astro.props;
 const currentPath = Astro.url.pathname;
 const nav = [
-  { href: "/", label: "Dashboard" },
-  { href: "/roadmap/", label: "Roadmap" },
-  { href: "/literature/", label: "Literature" },
-  { href: "/weeks/week-001/", label: "Week 001" }
+  { href: "/", label: "← Research narrative" },
+  { href: "/research-notes/", label: "Research notes index" },
+  { href: "/research-notes/modules/", label: "Research Guide" },
+  { href: "/research-notes/modules/part-1-what-mrd-methods-share/", label: "Part 1: What MRD Methods Share", nested: true },
+  { href: "/research-notes/modules/part-2-what-is-missing/", label: "Part 2: What Is Missing", nested: true },
+  { href: "/research-notes/modules/part-3-can-methylation-fill-the-gap/", label: "Part 3: Can Methylation Fill It?", nested: true },
+  { href: "/research-notes/weeks/week-001/", label: "Baseline: Candidate Landscape" },
+  { href: "/research-notes/literature/", label: "Literature Map" },
+  { href: "/research-notes/roadmap/", label: "Research Roadmap" }
 ];
 ---
 
@@ -21,27 +30,43 @@ const nav = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title} | MRD Research OS</title>
+    <title>{title} | Research notes</title>
     {description && <meta name="description" content={description} />}
   </head>
   <body>
-    <header class="site-header">
-      <div class="shell site-header__row">
-        <a class="site-title" href="/">MRD Long-read Research OS</a>
-        <nav class="site-nav" aria-label="Primary">
-          {nav.map((item) => (
-            <a href={item.href} aria-current={currentPath === item.href ? "page" : undefined}>
-              {item.label}
-            </a>
-          ))}
-        </nav>
+    <div class="app-shell">
+      <header class="site-header">
+        <div class="shell site-header__row">
+          <div class="site-brand">
+            <a class="site-title" href="/">{siteMeta.shortTitle}</a>
+            <p class="site-tagline">Research notes — working material behind the main narrative</p>
+          </div>
+        </div>
+      </header>
+      <div class="shell docs-shell">
+        <aside class="docs-sidebar">
+          <p class="docs-sidebar__eyebrow">Navigation</p>
+          <nav class="site-nav" aria-label="Research notes">
+            {nav.map((item) => (
+              <a
+                href={item.href}
+                class={item.nested ? "site-nav__nested" : undefined}
+                aria-current={currentPath === item.href ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </aside>
+        <main class="docs-main">
+          <slot />
+        </main>
       </div>
-    </header>
-    <main class="shell">
-      <slot />
-    </main>
+    </div>
     <footer class="shell footer">
-      Built as a static-first weekly research notebook. Public pages use redacted paths; full provenance stays in repository docs and manifests.
+      Working notes, kept for provenance. The reviewed research story is on the
+      <a href="/">main narrative page</a>. Public pages use redacted paths; full provenance stays in
+      repository docs and manifests.
     </footer>
   </body>
 </html>

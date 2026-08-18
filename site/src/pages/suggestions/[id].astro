@@ -1,0 +1,167 @@
+---
+// One suggestion, with its full trace: interpretation, planned actions, the daily logs that
+// worked on it, the evidence those logs produced, and the weekly reports that answered it.
+//
+// This page is what makes "traceable loop" checkable rather than aspirational: if the trace
+// is empty, the page says so in the same place it would otherwise show the chain.
+import ResearchOsLayout from "@layouts/ResearchOsLayout.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+import MissingLabel from "@components/MissingLabel.astro";
+import EvidenceLink from "@components/EvidenceLink.astro";
+import { getCollection } from "astro:content";
+import {
+  loadResearchOs,
+  logHref,
+  reportHref,
+  suggestionTone,
+  statusLabel
+} from "@utils/researchOs";
+
+export async function getStaticPaths() {
+  const suggestions = await getCollection("suggestions");
+  return suggestions.map((entry) => ({
+    params: { id: entry.data.id.toLowerCase() },
+    props: { suggestionId: entry.data.id }
+  }));
+}
+
+const { suggestionId } = Astro.props;
+const { suggestionById, evidenceById, logs, reports } = await loadResearchOs();
+const entry = suggestionById.get(suggestionId)!;
+const data = entry.data;
+
+// Logs are matched in both directions: the suggestion's own link list, plus any log that
+// names this suggestion. A one-directional link would let work go unattributed.
+const linkedLogs = logs.filter(
+  (log) => data.linked_daily_logs.includes(log.data.id) || log.data.linked_suggestions.includes(suggestionId)
+);
+const reportsAnswering = reports.filter((report) =>
+  report.data.suggestions_reviewed.includes(suggestionId)
+);
+const commitments = reports.flatMap((report) =>
+  report.data.next_commitments
+    .filter((commitment) => commitment.suggestion === suggestionId)
+    .map((commitment) => ({ ...commitment, report: report.data.id }))
+);
+---
+
+<ResearchOsLayout area="suggestions" title={`${data.id} — suggestion`} description={data.suggestion}>
+  <header class="os-page-head">
+    <p class="os-breadcrumb"><a href="/suggestions/">Suggestion tracker</a> / {data.id}</p>
+    <h1>{data.suggestion}</h1>
+    <p class="os-badges">
+      <StatusBadge status={data.status} tone={suggestionTone(data.status)} />
+      <span class="os-card__kind">{statusLabel(data.record_kind)}</span>
+      <span class="os-card__kind">Source: {data.source}</span>
+      {data.meeting_date && <span class="os-card__kind">Meeting {data.meeting_date}</span>}
+      {data.target_week && <span class="os-card__kind">Target {data.target_week}</span>}
+    </p>
+  </header>
+
+  <div class="os-grid">
+    <section class="os-panel os-panel--wide">
+      <h2>Interpretation</h2>
+      <p>{data.my_interpretation}</p>
+      <h2 class="os-panel__subhead">Why it matters</h2>
+      <p>{data.why_it_matters}</p>
+    </section>
+    <section class="os-panel">
+      <h2>Response</h2>
+      <dl class="os-card__fields">
+        <dt>Result</dt>
+        <dd>{data.result ?? <MissingLabel label="Not completed" detail="No result recorded" />}</dd>
+        <dt>Why incomplete</dt>
+        <dd>{data.reason_not_completed ?? "—"}</dd>
+        <dt>Next action</dt>
+        <dd>{data.next_action ?? <MissingLabel label="Not completed" detail="No next action recorded" />}</dd>
+      </dl>
+    </section>
+  </div>
+
+  <section class="os-section">
+    <h2>Planned actions</h2>
+    {data.planned_actions.length === 0 ? (
+      <MissingLabel label="Not completed" detail="No planned actions recorded for this suggestion" />
+    ) : (
+      <table class="os-table">
+        <thead>
+          <tr>
+            <th scope="col">Action</th>
+            <th scope="col">Expected evidence</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.planned_actions.map((action) => (
+            <tr>
+              <td>{action.action}</td>
+              <td>{action.expected_evidence}</td>
+              <td><StatusBadge status={action.status} tone={suggestionTone(action.status)} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+  </section>
+
+  <section class="os-section">
+    <h2>Evidence</h2>
+    <EvidenceLink
+      ids={data.evidence}
+      evidenceById={evidenceById}
+      emptyDetail="No artifact is attached to this suggestion yet"
+    />
+  </section>
+
+  <section class="os-section">
+    <h2>Trace</h2>
+    <div class="os-trace">
+      <article class="os-trace__step">
+        <h3>Daily logs</h3>
+        {linkedLogs.length === 0 ? (
+          <MissingLabel label="Not completed" detail="No daily log references this suggestion" />
+        ) : (
+          <ul class="os-list">
+            {linkedLogs.map((log) => (
+              <li><a href={logHref(log.data.id)}>{log.data.id}</a> — {log.data.date}</li>
+            ))}
+          </ul>
+        )}
+      </article>
+      <article class="os-trace__step">
+        <h3>Weekly reports answering it</h3>
+        {reportsAnswering.length === 0 ? (
+          <MissingLabel label="Not completed" detail="Not yet reviewed in a weekly report" />
+        ) : (
+          <ul class="os-list">
+            {reportsAnswering.map((report) => (
+              <li><a href={reportHref(report.data.id)}>{report.data.id}</a> — {report.data.period_label}</li>
+            ))}
+          </ul>
+        )}
+      </article>
+      <article class="os-trace__step">
+        <h3>Commitments made</h3>
+        {commitments.length === 0 ? (
+          <p class="os-empty">No weekly commitment references this suggestion.</p>
+        ) : (
+          <ul class="os-list">
+            {commitments.map((commitment) => (
+              <li>
+                {commitment.commitment}
+                <span class="os-list__meta">{commitment.target ?? "no target"} · <a href={reportHref(commitment.report)}>{commitment.report}</a></span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </article>
+    </div>
+  </section>
+
+  <section class="os-section">
+    <h2>Record</h2>
+    <p class="os-note">
+      Source file: <code>research/suggestions/{data.id}.yaml</code>
+    </p>
+  </section>
+</ResearchOsLayout>

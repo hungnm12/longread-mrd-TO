@@ -11,7 +11,8 @@ const collections = [
   "runs",
   "results",
   "decisions",
-  "glossary"
+  "glossary",
+  "modules"
 ];
 
 const refFields = {
@@ -33,7 +34,15 @@ const refFields = {
   experiments: ["research_questions", "hypotheses", "runs", "results"],
   runs: ["experiment_id"],
   results: ["experiment_id", "run_id", "weekly_reports"],
-  decisions: ["research_questions", "experiments", "results", "weeks"]
+  decisions: ["research_questions", "experiments", "results", "weeks"],
+  modules: [
+    "hypotheses",
+    "questions",
+    "papers",
+    "glossary_terms",
+    "previous_module",
+    "next_module"
+  ]
 };
 
 function listMarkdownFiles(dir) {
@@ -109,6 +118,32 @@ export function validateContent(root = process.cwd()) {
         problems.push(`Verified result ${entry.id} must set last_verified`);
       }
     }
+
+    if (entry.collection === "modules") {
+      // A teaching module is the easiest place for an unsupported claim to slip in, so the
+      // sections that bound its claims are required rather than encouraged.
+      for (const field of ["learning_objectives", "interpretation_boundaries", "open_questions"]) {
+        if (!Array.isArray(entry.data[field]) || entry.data[field].length === 0) {
+          problems.push(`Module ${entry.id} must declare a non-empty ${field}`);
+        }
+      }
+      // Modules describing published work must cite it. Modules that merely explain the
+      // project's own design need not, so the requirement is tied to evidence_level.
+      if (entry.data.evidence_level === "external_report" && (entry.data.sources ?? []).length === 0) {
+        problems.push(`Module ${entry.id} reports external work but lists no sources`);
+      }
+    }
+  }
+
+  const moduleParts = new Map();
+  for (const entry of allEntries.filter((e) => e.collection === "modules")) {
+    const part = entry.data.part;
+    if (moduleParts.has(part)) {
+      problems.push(
+        `Duplicate module part ${part} in ${entry.id} and ${moduleParts.get(part)}`
+      );
+    }
+    moduleParts.set(part, entry.id);
   }
 
   return { allEntries, problems };

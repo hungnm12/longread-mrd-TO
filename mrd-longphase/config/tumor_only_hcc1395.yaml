@@ -15,8 +15,11 @@ caller:
   qual_cutoff: 4
   disable_indels: true
 
+# Output paths are relative to the mrd-longphase/ workspace root, so the config stays
+# portable. The absolute paths recorded here before 2026-08-16 pointed at
+# ONT_MRD/mrd-longphase/, which no longer exists (the workspace moved under ONT_MRD/mrd/).
 output:
-  results_dir: /big8_disk/hung114/ONT_MRD/mrd-longphase/results/tumor_only/HCC1395
-  figures_dir: /big8_disk/hung114/ONT_MRD/mrd-longphase/figures/tumor_only
-  weekly_report: /big8_disk/hung114/ONT_MRD/mrd-longphase/reports/weekly/2026-08-13_hcc1395_phase1_tumor_only.md
-  change_log: /big8_disk/hung114/ONT_MRD/mrd-longphase/reports/change_log.tsv
+  results_dir: results/tumor_only/HCC1395
+  figures_dir: figures/tumor_only
+  weekly_report: reports/weekly/2026-08-13_hcc1395_phase1_tumor_only.md
+  change_log: reports/change_log.tsv

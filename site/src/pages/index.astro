@@ -1,116 +1,223 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro";
-import Badge from "@components/Badge.astro";
-import { candidateLandscape } from "@data/week001";
-import { researchRoadmap } from "@data/roadmap";
-import { loadCollections, entryHref } from "@utils/content";
+// Research dashboard.
+//
+// Answers one question on arrival: what am I investigating, what evidence do I have, and
+// what is unresolved? Everything on this page is derived from the record store — nothing is
+// typed in twice — so the dashboard cannot drift from the records it summarises.
+import ResearchOsLayout from "@layouts/ResearchOsLayout.astro";
+import StatusBadge from "@components/StatusBadge.astro";
+import MissingLabel from "@components/MissingLabel.astro";
+import EvidenceLink from "@components/EvidenceLink.astro";
+import {
+  isOpen,
+  isoWeek,
+  logHref,
+  osHealth,
+  reportHref,
+  researchOs,
+  suggestionHref,
+  suggestionTone,
+  evidenceHref,
+  loadResearchOs
+} from "@utils/researchOs";
 
-const { weeks, questions, hypotheses, results, decisions } = await loadCollections();
-const week = weeks[0];
-const question = questions[0];
-const hypothesis = hypotheses[0];
-const result = results[0];
-const decision = decisions[0];
+const { suggestions, logs, evidence, reports, evidenceById } = await loadResearchOs();
+
+const period = researchOs.current_period;
+const logsThisPeriod = logs.filter(
+  (log) => log.data.date >= period.start && log.data.date <= period.end
+);
+const evidenceThisPeriod = evidence.filter(
+  (record) => record.data.created_at >= period.start && record.data.created_at <= period.end
+);
+const openSuggestions = suggestions.filter(isOpen);
+const completedThisPeriod = logsThisPeriod.flatMap((log) =>
+  log.data.actions_completed
+    .filter((action) => action.status === "completed")
+    .map((action) => ({ log: log.data.id, ...action }))
+);
+const health = osHealth(suggestions, logs, evidence);
+const latestReport = reports.find((report) => report.data.id === researchOs.latest_report) ?? reports[0];
+const lastLog = logs[0];
 ---
 
-<BaseLayout
+<ResearchOsLayout
+  area="dashboard"
   title="Dashboard"
-  description="Current tumor-only MRD research question, evidence goal, blockers, and next decision."
+  description="Current research question, evidence and unresolved issues for the tumor-only long-read MRD project."
 >
-  <section class="hero">
-    <span class="eyebrow">Phase 1 research OS</span>
-    <h1>Week 1 stays focused on the tumor-only candidate landscape.</h1>
-    <p class="muted">
-      The current site state answers the five weekly questions from the brief: what is being
-      studied, why it matters, what evidence exists, what remains uncertain, and what the next
-      smallest decision should be.
+  <section class="os-strip">
+    <div class="os-strip__item">
+      <span class="os-label">Current phase</span>
+      <p>{researchOs.current_phase}</p>
+    </div>
+    <div class="os-strip__item">
+      <span class="os-label">Reporting period</span>
+      <p>{period.label} · {period.start} → {period.end}</p>
+    </div>
+    <div class="os-strip__item">
+      <span class="os-label">Next meeting</span>
+      <p>
+        {researchOs.next_meeting ?? (
+          <MissingLabel label="Not completed" detail={researchOs.next_meeting_note} />
+        )}
+      </p>
+    </div>
+    <div class="os-strip__item">
+      <span class="os-label">Latest weekly report</span>
+      <p>
+        {latestReport ? (
+          <a href={reportHref(latestReport.data.id)}>
+            {latestReport.data.id} — {latestReport.data.period_label} ({latestReport.data.status})
+          </a>
+        ) : (
+          <MissingLabel label="Missing evidence" detail="No weekly report has been compiled yet" />
+        )}
+      </p>
+    </div>
+  </section>
+
+  <div class="os-grid">
+    <section class="os-panel os-panel--wide">
+      <h1 class="os-question">{researchOs.research_question}</h1>
+      <p class="os-hypothesis">
+        <span class="os-label">Working hypothesis</span>
+        {researchOs.working_hypothesis}
+      </p>
+      <p class="os-note">{researchOs.phase_note}</p>
+    </section>
+
+    <section class="os-panel">
+      <h2>Completeness</h2>
+      <ul class="os-metrics">
+        <li>
+          <span class="os-metric__value">{openSuggestions.length}</span>
+          <span class="os-metric__label">suggestions awaiting action</span>
+        </li>
+        <li>
+          <span class="os-metric__value">{health.blockedSuggestions}</span>
+          <span class="os-metric__label">blocked</span>
+        </li>
+        <li>
+          <span class="os-metric__value">{health.suggestionsMissingEvidence.length}</span>
+          <span class="os-metric__label">claiming progress without evidence</span>
+        </li>
+        <li>
+          <span class="os-metric__value">{health.unverifiedEvidence}/{evidence.length}</span>
+          <span class="os-metric__label">evidence records not independently verified</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="os-section" id="unresolved">
+    <h2>Unresolved critical issues</h2>
+    <p class="os-section__lede">
+      These are the issues that currently block progress toward an evaluable MRD marker set. Each
+      one names the tracked suggestion that would resolve it.
     </p>
-    <div class="pill-list">
-      <Badge label="Tumor-only first" />
-      <Badge label="Preliminary evidence" tone="preliminary" />
-      <Badge label="Static-first build" />
-    </div>
-  </section>
-
-  <section class="grid grid--cards">
-    <article class="card metric">
-      <span class="muted">Current research question</span>
-      <div class="metric__value">{question.data.id}</div>
-      <a href={entryHref("questions", question.slug)}>{question.data.title}</a>
-    </article>
-    <article class="card metric">
-      <span class="muted">Current hypothesis</span>
-      <div class="metric__value">{hypothesis.data.id}</div>
-      <a href={entryHref("hypotheses", hypothesis.slug)}>{hypothesis.data.title}</a>
-    </article>
-    <article class="card metric">
-      <span class="muted">This week&apos;s evidence goal</span>
-      <div class="metric__value">Candidate landscape</div>
-      <span>{week.data.title}</span>
-    </article>
-    <article class="card metric">
-      <span class="muted">Next decision</span>
-      <div class="metric__value">{decision.data.id}</div>
-      <a href={entryHref("decisions", decision.slug)}>{decision.data.title}</a>
-    </article>
-  </section>
-
-  <section class="grid grid--cards" style="margin-top: 1rem;">
-    <article class="card">
-      <h2>Latest verified-ready evidence</h2>
-      <Badge label="Preliminary" tone="preliminary" />
-      <p>{result.data.observation}</p>
-      <p class="muted">{result.data.interpretation}</p>
-      <a href={entryHref("results", result.slug)}>Open result page</a>
-    </article>
-    <article class="card">
-      <h2>Current blockers</h2>
-      <ul class="list-clean">
-        {week.data.blockers.map((blocker) => <li>{blocker}</li>)}
-      </ul>
-    </article>
-    <article class="card">
-      <h2>Weekly readiness</h2>
-      <ul class="list-clean">
-        {week.data.readiness.map((item) => <li>{item}</li>)}
-      </ul>
-    </article>
-  </section>
-
-  <section class="content-panel" style="margin-top: 1rem;">
-    <h2>Current evidence snapshot</h2>
-    <div class="summary-grid">
-      <article class="card metric">
-        <span class="muted">Total ClairS-TO calls</span>
-        <div class="metric__value">{candidateLandscape.summary.total_calls.toLocaleString()}</div>
-      </article>
-      <article class="card metric">
-        <span class="muted">PASS SNVs retained</span>
-        <div class="metric__value">{candidateLandscape.summary.pass_snvs.toLocaleString()}</div>
-      </article>
-      <article class="card metric">
-        <span class="muted">PASS SNV proportion</span>
-        <div class="metric__value">{candidateLandscape.summary.pass_snv_fraction_pct}%</div>
-      </article>
-      <article class="card metric">
-        <span class="muted">Median depth / VAF / ALT</span>
-        <div class="metric__value">
-          {candidateLandscape.summary.median_depth} / {candidateLandscape.summary.median_vaf} / {candidateLandscape.summary.median_alt_support}
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section class="content-panel" style="margin-top: 1rem;">
-    <h2>Rolling roadmap</h2>
-    <div class="grid grid--cards">
-      {researchRoadmap.map((step) => (
-        <article class="card">
-          <Badge label={step.status} />
-          <h3>{step.title}</h3>
-          <p>{step.summary}</p>
+    <div class="os-issues">
+      {researchOs.critical_issues.map((issue) => (
+        <article class="os-issue">
+          <h3>{issue.title}</h3>
+          <p>{issue.detail}</p>
+          <p class="os-issue__links">
+            {issue.blocks.map((id) => <a href={suggestionHref(id)}>{id}</a>)}
+          </p>
         </article>
       ))}
     </div>
   </section>
-</BaseLayout>
+
+  <section class="os-section" id="awaiting-action">
+    <h2>Suggestions awaiting action</h2>
+    {openSuggestions.length === 0 ? (
+      <p class="os-empty">No open suggestions.</p>
+    ) : (
+      <table class="os-table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Suggestion</th>
+            <th scope="col">Status</th>
+            <th scope="col">Next action</th>
+            <th scope="col">Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          {openSuggestions.map((entry) => (
+            <tr>
+              <th scope="row"><a href={suggestionHref(entry.data.id)}>{entry.data.id}</a></th>
+              <td>{entry.data.suggestion}</td>
+              <td><StatusBadge status={entry.data.status} tone={suggestionTone(entry.data.status)} /></td>
+              <td>{entry.data.next_action ?? <MissingLabel label="Not completed" detail="No next action recorded" />}</td>
+              <td>{entry.data.target_week ?? "—"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+  </section>
+
+  <div class="os-grid">
+    <section class="os-panel os-panel--wide" id="this-week">
+      <h2>Work completed this period</h2>
+      {completedThisPeriod.length === 0 ? (
+        <p class="os-empty">
+          Nothing recorded in {period.label} yet.
+          {lastLog && (
+            <> Most recent log: <a href={logHref(lastLog.data.id)}>{lastLog.data.id}</a> ({lastLog.data.date}).</>
+          )}
+        </p>
+      ) : (
+        <ul class="os-work">
+          {completedThisPeriod.map((action) => (
+            <li>
+              <p class="os-work__action">{action.action}</p>
+              <p class="os-work__meta">
+                <a href={logHref(action.log)}>{action.log}</a>
+                <EvidenceLink
+                  ids={action.evidence}
+                  evidenceById={evidenceById}
+                  emptyDetail={action.evidence_note}
+                />
+              </p>
+              {action.observation && <p class="os-work__observation">{action.observation}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+
+    <section class="os-panel" id="evidence-this-week">
+      <h2>Evidence generated this period</h2>
+      {evidenceThisPeriod.length === 0 ? (
+        <p class="os-empty">No new evidence recorded in {period.label}.</p>
+      ) : (
+        <ul class="os-list">
+          {evidenceThisPeriod.map((record) => (
+            <li>
+              <a href={evidenceHref(record.data.id)}>{record.data.id}</a> — {record.data.title}
+            </li>
+          ))}
+        </ul>
+      )}
+      <h2 class="os-panel__subhead">Recent daily logs</h2>
+      <ul class="os-list">
+        {logs.slice(0, 5).map((log) => (
+          <li>
+            <a href={logHref(log.data.id)}>{log.data.date}</a>
+            <span class="os-list__meta">{isoWeek(log.data.date)}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+
+  <section class="os-section" id="guardrails">
+    <h2>Interpretation guardrails</h2>
+    <ul class="os-guardrails">
+      {researchOs.guardrails.map((rule) => <li>{rule}</li>)}
+    </ul>
+  </section>
+</ResearchOsLayout>

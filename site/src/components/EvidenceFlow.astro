@@ -1,0 +1,40 @@
+---
+// A conceptual flow diagram: named steps joined by arrows.
+//
+// It can render a label, an optional note, and an optional count — and nothing else. There
+// is no geometry that scales with a value, so the diagram cannot imply a measurement it
+// does not have (docs/research/05_claim_boundaries.md §4).
+interface Step {
+  label: string;
+  note?: string;
+  /** Shown verbatim; supply pre-formatted text such as "48,819". */
+  value?: string;
+  /** Marks the step this project contributes, versus inherited upstream steps. */
+  emphasis?: boolean;
+}
+
+interface Props {
+  title?: string;
+  caption?: string;
+  steps: Step[];
+}
+
+const { title, caption, steps } = Astro.props;
+---
+
+<figure class="evidence-flow">
+  {title && <figcaption class="evidence-flow__title">{title}</figcaption>}
+  <ol class="evidence-flow__steps">
+    {steps.map((step, index) => (
+      <li class={`evidence-flow__step${step.emphasis ? " evidence-flow__step--emphasis" : ""}`}>
+        <div class="evidence-flow__box">
+          <span class="evidence-flow__label">{step.label}</span>
+          {step.value && <span class="evidence-flow__value">{step.value}</span>}
+          {step.note && <span class="evidence-flow__note">{step.note}</span>}
+        </div>
+        {index < steps.length - 1 && <span class="evidence-flow__arrow" aria-hidden="true">↓</span>}
+      </li>
+    ))}
+  </ol>
+  {caption && <p class="evidence-flow__caption">{caption}</p>}
+</figure>

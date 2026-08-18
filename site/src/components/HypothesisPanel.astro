@@ -1,0 +1,30 @@
+---
+// The research question with its null and alternative hypotheses.
+//
+// All three are rendered together and none is optional: a stated alternative without the
+// null it is tested against is a claim, not a hypothesis.
+interface Props {
+  question: string;
+  nullHypothesis: string;
+  alternativeHypothesis: string;
+  scopeNote?: string;
+}
+
+const { question, nullHypothesis, alternativeHypothesis, scopeNote } = Astro.props;
+---
+
+<div class="hypothesis-panel">
+  <article class="hypothesis-panel__item hypothesis-panel__item--question">
+    <h3>Research question</h3>
+    <blockquote>{question}</blockquote>
+  </article>
+  <article class="hypothesis-panel__item">
+    <h3>Null hypothesis (H<sub>0</sub>)</h3>
+    <blockquote>{nullHypothesis}</blockquote>
+  </article>
+  <article class="hypothesis-panel__item">
+    <h3>Alternative hypothesis (H<sub>1</sub>)</h3>
+    <blockquote>{alternativeHypothesis}</blockquote>
+  </article>
+  {scopeNote && <p class="hypothesis-panel__scope">{scopeNote}</p>}
+</div>

@@ -1,0 +1,40 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+const modules = (await getCollection("modules")).sort((a, b) => a.data.part - b.data.part);
+---
+
+<BaseLayout
+  title="Research guide"
+  description="A three-part guide to tumor-only long-read MRD through haplotype-conditioned native methylation evidence."
+>
+  <header class="page">
+    <p class="eyebrow">Research guide</p>
+    <h1>Tumor-only long-read MRD through haplotype-conditioned native methylation</h1>
+    <p class="page__content">
+      Three modules, read in order. They set up the research question this thesis actually
+      asks: <em>after accounting for sequence and haplotype context, does native methylation
+      provide incremental evidence for detecting tumor-derived molecules at low tumor
+      fractions?</em>
+    </p>
+    <p class="muted">
+      No module shows a measured result yet. Where a result belongs, the page shows an
+      explicit pending-experiment state rather than an illustrative number.
+    </p>
+  </header>
+
+  <section class="tutorial-grid">
+    {modules.map((module) => (
+      <article class="tutorial-card">
+        <p class="tutorial-card__step">Part {module.data.part}</p>
+        <h2><a href={`/research-notes/modules/${module.slug}/`}>{module.data.title}</a></h2>
+        <p>{module.data.subtitle}</p>
+        <ul class="list-clean">
+          {module.data.learning_objectives.slice(0, 3).map((objective) => <li>{objective}</li>)}
+        </ul>
+        <p class="muted">~{module.data.reading_time_minutes} min · {module.data.evidence_level}</p>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

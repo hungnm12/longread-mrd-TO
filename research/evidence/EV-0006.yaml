@@ -1,0 +1,20 @@
+id: EV-0006
+created_at: 2026-08-16
+type: document
+title: Research scope, paper-pattern map and gap statement
+description: >-
+  The scope contract, the methodology map over the supplied literature, and the candidate research
+  gap — including the explicit statement that the gap is scoped to the indexed documents only.
+path_or_url: docs/research/02_research_gap.md
+generated_by: Manual write-up
+input_data:
+  - docs/research/00_scope.md
+  - docs/research/01_paper_patterns.md
+linked_log: LOG-2026-08-16
+linked_suggestion: null
+linked_claims:
+  - The gap statement is scoped to the seven indexed documents and is marked CANDIDATE
+verification_status: file_present
+verified_by: null
+verified_on: null
+notes: A written argument, not a measurement. It supports scoping decisions only.

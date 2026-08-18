@@ -1,0 +1,77 @@
+---
+// Daily log index, grouped by ISO week.
+//
+// The per-row flags are the useful part: a day whose completed actions carry no evidence is
+// marked here, not buried on the detail page.
+import ResearchOsLayout from "@layouts/ResearchOsLayout.astro";
+import MissingLabel from "@components/MissingLabel.astro";
+import { actionsWithoutEvidence, isoWeek, loadResearchOs, logHref } from "@utils/researchOs";
+
+const { logs } = await loadResearchOs();
+
+const weeks = new Map<string, typeof logs>();
+for (const log of logs) {
+  const week = isoWeek(log.data.date);
+  weeks.set(week, [...(weeks.get(week) ?? []), log]);
+}
+const grouped = [...weeks.entries()].sort((a, b) => b[0].localeCompare(a[0]));
+---
+
+<ResearchOsLayout
+  area="logs"
+  title="Daily logs"
+  description="Daily research logs separating actions, evidence, observations, interpretation and decisions."
+>
+  <header class="os-page-head">
+    <h1>Daily logs</h1>
+    <p class="os-section__lede">
+      {logs.length} logs. Each records what was performed, what artifact it produced, what the
+      artifact shows, what that is taken to mean, and what changes as a result — kept apart on
+      purpose, because collapsing them is how an activity becomes a claim.
+    </p>
+    <p class="os-note">
+      New log: <code>cd site &amp;&amp; npm run new:log -- 2026-08-18</code>, or ask the
+      <code>daily-work-summary</code> skill to write it from your notes.
+    </p>
+  </header>
+
+  {grouped.map(([week, entries]) => (
+    <section class="os-section">
+      <h2>{week}</h2>
+      <table class="os-table">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Research question</th>
+            <th scope="col">Actions</th>
+            <th scope="col">Evidence</th>
+            <th scope="col">Flags</th>
+          </tr>
+        </thead>
+        <tbody>
+          {entries.map((log) => {
+            const unevidenced = actionsWithoutEvidence(log);
+            return (
+              <tr>
+                <th scope="row"><a href={logHref(log.data.id)}>{log.data.date}</a></th>
+                <td>{log.data.research_question}</td>
+                <td>{log.data.actions_completed.length}</td>
+                <td>{log.data.evidence.length}</td>
+                <td>
+                  {unevidenced.length > 0 ? (
+                    <MissingLabel
+                      label="Missing evidence"
+                      detail={`${unevidenced.length} completed action(s) with no artifact`}
+                    />
+                  ) : (
+                    "—"
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </section>
+  ))}
+</ResearchOsLayout>

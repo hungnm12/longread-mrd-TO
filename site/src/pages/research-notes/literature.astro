@@ -3,8 +3,17 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import Badge from "@components/Badge.astro";
 import { getCollection } from "astro:content";
 import { entryHref } from "@utils/content";
+import { citationNumber } from "@data/references";
+import { paperIdToRefKey } from "@data/relatedWork";
 
 const papers = await getCollection("papers");
+
+// Readers get the citation number used on the narrative page, not the local PDF filename:
+// internal file identifiers are provenance, and provenance stays in the repository.
+function citationLabel(paperId: string): string | null {
+  const key = paperIdToRefKey[paperId];
+  return key ? `Cited on the narrative page as [${citationNumber(key)}]` : null;
+}
 ---
 
 <BaseLayout title="Literature Matrix" description="Seed literature for the MRD research map.">
@@ -34,7 +43,9 @@ const papers = await getCollection("papers");
             <td>{paper.data.id}</td>
             <td>
               <a href={entryHref("papers", paper.slug)}>{paper.data.title}</a>
-              <div class="muted">{paper.data.local_filename}</div>
+              {citationLabel(paper.data.id) && (
+                <div class="muted">{citationLabel(paper.data.id)}</div>
+              )}
             </td>
             <td>{paper.data.strategy}</td>
             <td>{paper.data.signal_modalities.join(", ")}</td>

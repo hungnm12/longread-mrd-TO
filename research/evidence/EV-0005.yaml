@@ -1,0 +1,22 @@
+id: EV-0005
+created_at: 2026-08-13
+type: document
+title: Phase 1 tumor-only candidate landscape report
+description: >-
+  Weekly write-up of the descriptive candidate landscape, including the interpretation boundaries
+  and the explicit statement that the retained set is not a confirmed somatic set.
+path_or_url: mrd-longphase/reports/weekly/2026-08-13_hcc1395_phase1_tumor_only.md
+generated_by: Manual write-up
+input_data:
+  - research/manifests/week-001-candidate-landscape.json
+linked_log: LOG-2026-08-13
+linked_suggestion: SUG-2026-08-005
+linked_claims:
+  - The candidate count defines the retained analysis population, not a confirmed somatic set
+  - VAF-depth correlation -0.419; ALT-support-depth correlation 0.328
+verification_status: file_present
+verified_by: null
+verified_on: null
+notes: >-
+  The report contains absolute input paths; those stay in the repository and are not rendered on the
+  site.

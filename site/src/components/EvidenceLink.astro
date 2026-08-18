@@ -1,0 +1,35 @@
+---
+// Renders an evidence id as a traceable link, or as an explicit gap when there is none.
+//
+// A dangling id is shown as unresolved rather than dropped: a report that references
+// evidence which does not exist is a problem the reader must see.
+import MissingLabel from "@components/MissingLabel.astro";
+import { evidenceHref, type EvidenceRecord } from "@utils/researchOs";
+
+interface Props {
+  ids: string[];
+  evidenceById: Map<string, EvidenceRecord>;
+  /** Shown when the list is empty. */
+  emptyDetail?: string | null;
+}
+
+const { ids, evidenceById, emptyDetail = null } = Astro.props;
+---
+
+{ids.length === 0 ? (
+  <MissingLabel label="Missing evidence" detail={emptyDetail} />
+) : (
+  <span class="evidence-links">
+    {ids.map((id) => {
+      const record = evidenceById.get(id);
+      return record ? (
+        <a class={`evidence-chip evidence-chip--${record.data.verification_status}`} href={evidenceHref(id)}>
+          <span class="evidence-chip__id">{id}</span>
+          <span class="evidence-chip__type">{record.data.type.replace(/_/g, " ")}</span>
+        </a>
+      ) : (
+        <span class="evidence-chip evidence-chip--missing">{id} — unresolved</span>
+      );
+    })}
+  </span>
+)}

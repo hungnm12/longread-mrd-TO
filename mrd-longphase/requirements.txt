@@ -1,0 +1,40 @@
+# Python dependencies for the mrd-longphase analysis workspace.
+#
+# Versions are pinned to what is actually installed on the analysis server as of
+# 2026-08-16, so a fresh environment reproduces the one the results came from rather
+# than whatever is current. Verify with:
+#
+#   python3 workflow/tools/report_environment.py
+#
+# ── Currently installed and used ────────────────────────────────────────────────
+pysam==0.24.0            # BAM/VCF I/O, MM/ML modified-base parsing
+numpy==2.2.6             # array maths; logistic regression and likelihood ratio
+matplotlib==3.10.8       # QC figures (Agg backend only, never interactive)
+PyYAML>=6.0              # experiment and dataset configuration
+
+# ── Required by phases not yet run ──────────────────────────────────────────────
+# These are NOT installed on the server today (docs/repo_audit.md §11). Nothing in
+# src/ imports them, and the code paths that would need them fall back to plain
+# Python — but install them before the phases noted below.
+#
+# scikit-learn>=1.5      # Phase 5 alternatives to the hand-written models.
+#                        # Not required: src/models/baselines.py implements logistic
+#                        # regression and a likelihood ratio on numpy alone, precisely
+#                        # so H3 can run without adding this dependency.
+# pyarrow>=17            # Parquet writer for joint-molecule partitions. Only needed if
+#                        # the TSV format becomes an I/O bottleneck; see the storage
+#                        # trade-off in docs/joint_molecule_schema.md §3.
+# pytest>=8              # Optional. The test suite uses stdlib unittest and runs with
+#                        # `python3 -m unittest`, so pytest is a convenience, not a need.
+
+# ── External binaries (NOT pip-installable; recorded here for completeness) ─────
+# samtools   1.13        present on PATH
+# bcftools   1.13        present on PATH
+# tabix                  present on PATH
+# whatshap               present at ~/.local/bin/whatshap
+# longphase              NOT on PATH — binary at
+#                        week1/experiment/external/longphase_develop/longphase
+#                        Export LONGPHASE=<path> before running the phasing stage.
+# modkit                 absent. Not required: MM/ML tags are parsed directly through
+#                        pysam's modified_bases API.
+# ClairS-TO  0.5.0       week1/experiment/external/ClairS_TO_latest

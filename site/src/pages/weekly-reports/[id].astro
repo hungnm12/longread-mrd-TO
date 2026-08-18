@@ -1,0 +1,312 @@
+---
+// A weekly report, rendered as a slide deck.
+//
+// Slide order follows the meeting order: the response to previous suggestions comes second,
+// immediately after the framing slide, because that is what the meeting opens with. Slides
+// are generated from the record store — work, results, decisions and commitments all carry
+// links back to the log or evidence they came from.
+import ResearchOsLayout from "@layouts/ResearchOsLayout.astro";
+import ReportDeck from "@components/ReportDeck.astro";
+import ReportSlide from "@components/ReportSlide.astro";
+import ResponseMatrix from "@components/ResponseMatrix.astro";
+import MissingLabel from "@components/MissingLabel.astro";
+import EvidenceLink from "@components/EvidenceLink.astro";
+import { getCollection, render } from "astro:content";
+import {
+  buildResponseRow,
+  loadResearchOs,
+  logHref,
+  suggestionHref
+} from "@utils/researchOs";
+
+export async function getStaticPaths() {
+  const reports = await getCollection("weeklyReports");
+  return reports.map((entry) => ({
+    params: { id: entry.data.id.toLowerCase() },
+    props: { reportId: entry.data.id }
+  }));
+}
+
+const { reportId } = Astro.props;
+const { reportById, suggestionById, logById, evidenceById } = await loadResearchOs();
+const entry = reportById.get(reportId)!;
+const data = entry.data;
+const { Content } = await render(entry);
+
+const reviewed = data.suggestions_reviewed
+  .map((id) => suggestionById.get(id))
+  .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+// Suggestions reviewed in this report that have no evidence behind their claimed progress.
+// Computed here rather than trusted from the record, so the deck cannot under-report it.
+const unevidenced = reviewed
+  .map((suggestion) => buildResponseRow(suggestion, logById))
+  .filter((row) => row.missingEvidence || (row.whatWasDone.length === 0 && row.status !== "captured"));
+
+const slides = [
+  "framing",
+  "response",
+  "work",
+  "configuration",
+  "results",
+  "interpretation",
+  "difficulties",
+  "decisions",
+  "commitments",
+  "gaps",
+  "appendix"
+];
+const slideNumber = (id: string) => slides.indexOf(id) + 1;
+---
+
+<ResearchOsLayout area="reports" title={`${data.id} — ${data.title}`} description={data.research_question}>
+  <ReportDeck
+    reportId={data.id}
+    title={`${data.id} — ${data.title}`}
+    subtitle={`${data.period_start} → ${data.period_end} · ${data.status}`}
+  >
+    <ReportSlide id="framing" index={slideNumber("framing")} kicker={data.period_label} title={data.title} provenance={`Phase: ${data.research_phase}`}>
+      <dl class="deck-facts">
+        <dt>Reporting period</dt>
+        <dd>{data.period_start} → {data.period_end}</dd>
+        <dt>Research phase</dt>
+        <dd>{data.research_phase}</dd>
+        <dt>Research question</dt>
+        <dd>{data.research_question}</dd>
+        <dt>Hypothesis</dt>
+        <dd>
+          {data.hypothesis}
+          {data.hypothesis_ref && <span class="deck-ref">{data.hypothesis_ref}</span>}
+        </dd>
+        <dt>Meeting date</dt>
+        <dd>{data.meeting_date ?? <MissingLabel label="Not completed" detail="Meeting date not recorded" />}</dd>
+      </dl>
+      {data.record_kind === "seeded_context" && (
+        <p class="deck-note">
+          This report was compiled from seeded context records rather than from a recorded meeting.
+        </p>
+      )}
+    </ReportSlide>
+
+    <ReportSlide
+      id="response"
+      index={slideNumber("response")}
+      kicker="Opens the meeting"
+      title="Response to previous suggestions"
+      provenance="Derived from research/suggestions and the linked daily logs"
+    >
+      {reviewed.length === 0 ? (
+        <MissingLabel label="Not completed" detail="No suggestions were reviewed in this report" />
+      ) : (
+        <ResponseMatrix suggestions={reviewed} logById={logById} evidenceById={evidenceById} compact />
+      )}
+    </ReportSlide>
+
+    <ReportSlide id="work" index={slideNumber("work")} title="Work actually completed" provenance={data.logs_in_period.join(", ")}>
+      {data.work_completed.length === 0 ? (
+        <MissingLabel label="Not completed" detail="No completed work recorded for this period" />
+      ) : (
+        <ul class="deck-list">
+          {data.work_completed.map((item) => (
+            <li>
+              <span class="deck-list__main">{item.summary}</span>
+              <span class="deck-list__meta">
+                {item.log && <a href={logHref(item.log)}>{item.log}</a>}
+                <EvidenceLink ids={item.evidence} evidenceById={evidenceById} emptyDetail={null} />
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </ReportSlide>
+
+    <ReportSlide id="configuration" index={slideNumber("configuration")} title="Configuration and provenance">
+      {data.configuration.length === 0 ? (
+        <MissingLabel label="Missing evidence" detail="No experimental configuration recorded" />
+      ) : (
+        <dl class="deck-facts">
+          {data.configuration.map((row) => (
+            <>
+              <dt>{row.label}</dt>
+              <dd>{row.value}</dd>
+            </>
+          ))}
+        </dl>
+      )}
+    </ReportSlide>
+
+    <ReportSlide id="results" index={slideNumber("results")} title="Results with linked evidence">
+      {data.results.length === 0 ? (
+        <MissingLabel label="Missing evidence" detail="No result recorded for this period" />
+      ) : (
+        <table class="deck-table">
+          <thead>
+            <tr>
+              <th scope="col">Claim</th>
+              <th scope="col">Observation</th>
+              <th scope="col">Evidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.results.map((result) => (
+              <tr>
+                <th scope="row">{result.claim}</th>
+                <td>{result.observation}</td>
+                <td><EvidenceLink ids={result.evidence} evidenceById={evidenceById} emptyDetail={null} /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </ReportSlide>
+
+    <ReportSlide
+      id="interpretation"
+      index={slideNumber("interpretation")}
+      title="Interpretation"
+      provenance="Interpretation is separated from observation on purpose"
+    >
+      {data.results.length === 0 ? (
+        <MissingLabel label="Requires researcher interpretation" detail={null} />
+      ) : (
+        <ul class="deck-list">
+          {data.results.map((result) => (
+            <li>
+              <span class="deck-list__main">{result.interpretation}</span>
+              <span class="deck-list__meta">for: {result.claim}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </ReportSlide>
+
+    <ReportSlide id="difficulties" index={slideNumber("difficulties")} title="Difficulties, failures and unresolved questions">
+      {data.difficulties.length === 0 ? (
+        <p class="deck-note">Nothing recorded — which is itself worth questioning at the meeting.</p>
+      ) : (
+        <ul class="deck-list">
+          {data.difficulties.map((item) => (
+            <li>
+              <span class="deck-list__main">{item.title}</span>
+              <span class="deck-list__meta">{item.status}</span>
+              <span class="deck-list__detail">{item.detail}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </ReportSlide>
+
+    <ReportSlide id="decisions" index={slideNumber("decisions")} title="Research decisions made this period">
+      {data.decisions.length === 0 ? (
+        <MissingLabel label="Not completed" detail="No decision recorded for this period" />
+      ) : (
+        <ul class="deck-list">
+          {data.decisions.map((decision) => (
+            <li>
+              <span class="deck-list__main">{decision.decision}</span>
+              <span class="deck-list__detail">Why: {decision.rationale}</span>
+              {decision.log && <span class="deck-list__meta"><a href={logHref(decision.log)}>{decision.log}</a></span>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </ReportSlide>
+
+    <ReportSlide id="commitments" index={slideNumber("commitments")} title="Next-period commitments" provenance="Each commitment maps back to a suggestion">
+      {data.next_commitments.length === 0 ? (
+        <MissingLabel label="Not completed" detail="No commitment recorded for the next period" />
+      ) : (
+        <table class="deck-table">
+          <thead>
+            <tr>
+              <th scope="col">Commitment</th>
+              <th scope="col">Answers</th>
+              <th scope="col">Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.next_commitments.map((commitment) => (
+              <tr>
+                <th scope="row">{commitment.commitment}</th>
+                <td>
+                  {commitment.suggestion ? (
+                    <a href={suggestionHref(commitment.suggestion)}>{commitment.suggestion}</a>
+                  ) : (
+                    <MissingLabel label="Not completed" detail="Not mapped to a suggestion" />
+                  )}
+                </td>
+                <td>{commitment.target ?? "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </ReportSlide>
+
+    <ReportSlide id="gaps" index={slideNumber("gaps")} title="Known gaps in this report" provenance="Labelled gaps are declared, plus gaps computed from the tracker">
+      <ul class="deck-list">
+        {data.known_gaps.map((gap) => (
+          <li>
+            <MissingLabel label={gap.label} detail={null} />
+            <span class="deck-list__detail">{gap.detail}</span>
+          </li>
+        ))}
+        {unevidenced.map((row) => (
+          <li>
+            <MissingLabel label="Missing evidence" detail={null} />
+            <span class="deck-list__detail">
+              <a href={suggestionHref(row.id)}>{row.id}</a> — status “{row.status}” with
+              {row.whatWasDone.length === 0 ? " no work recorded in any daily log" : " no evidence attached"}.
+            </span>
+          </li>
+        ))}
+        {data.known_gaps.length === 0 && unevidenced.length === 0 && (
+          <li><span class="deck-list__detail">No gaps were detected or declared.</span></li>
+        )}
+      </ul>
+    </ReportSlide>
+
+    <ReportSlide id="appendix" index={slideNumber("appendix")} title="Appendix — commands, evidence paths and citations">
+      <div class="deck-columns">
+        <div>
+          <h3>Commands</h3>
+          {data.appendix_commands.length === 0 ? <p class="deck-note">None recorded.</p> : (
+            <ul class="deck-list deck-list--tight">
+              {data.appendix_commands.map((command) => <li><code>{command}</code></li>)}
+            </ul>
+          )}
+        </div>
+        <div>
+          <h3>Evidence paths</h3>
+          <ul class="deck-list deck-list--tight">
+            {[...new Set([
+              ...data.work_completed.flatMap((item) => item.evidence),
+              ...data.results.flatMap((result) => result.evidence)
+            ])].map((id) => {
+              const record = evidenceById.get(id);
+              return <li>{id} — <code>{record ? record.data.path_or_url : "unresolved"}</code></li>;
+            })}
+          </ul>
+        </div>
+        <div>
+          <h3>Citations</h3>
+          {data.appendix_citations.length === 0 ? <p class="deck-note">None cited.</p> : (
+            <ul class="deck-list deck-list--tight">
+              {data.appendix_citations.map((citation) => <li>{citation}</li>)}
+            </ul>
+          )}
+        </div>
+      </div>
+    </ReportSlide>
+  </ReportDeck>
+
+  <section class="os-section os-prose no-print">
+    <h2>Report note</h2>
+    <Content />
+    <p class="os-note">
+      Source record: <code>research/weekly-reports/{data.id}.md</code>. Presentation mode: press
+      <kbd>p</kbd>, navigate with <kbd>←</kbd>/<kbd>→</kbd>, <kbd>f</kbd> for fullscreen,
+      <kbd>Esc</kbd> to exit. Print or export to PDF with the toolbar button.
+    </p>
+  </section>
+</ResearchOsLayout>

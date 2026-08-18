@@ -1,0 +1,48 @@
+{
+  "current_phase": "Phase 1 — tumor-only candidate characterization (descriptive)",
+  "phase_note": "Descriptive characterization is complete for the pure-tumor sample. Evaluation design has not started.",
+  "research_question": "What information is still missing before tumor-only ClairS-TO candidates can be evaluated as reliable MRD markers?",
+  "working_hypothesis": "PASS plus adequate depth and ALT support reduces technical noise but does not by itself establish somatic status; an explicit SNV-only baseline and a defined recognition metric are required before any incremental-evidence claim can be tested.",
+  "hypothesis_ref": "HYP-001",
+  "next_meeting": null,
+  "next_meeting_note": "Not recorded yet. Set `next_meeting` in research/research-os.json after the date is agreed.",
+  "current_period": {
+    "label": "2026-W34",
+    "start": "2026-08-17",
+    "end": "2026-08-23"
+  },
+  "latest_report": "WR-2026-W33",
+  "critical_issues": [
+    {
+      "id": "ISSUE-01",
+      "title": "Candidate composition is unknown",
+      "detail": "The somatic, germline and technical-artifact composition of the 48,819 PASS SNV candidates has not been determined.",
+      "blocks": ["SUG-2026-08-001"]
+    },
+    {
+      "id": "ISSUE-02",
+      "title": "“Tumor recognition” is not yet an evaluation metric",
+      "detail": "No measurable definition of tumor-signal recognition exists, so no method can currently be scored against another.",
+      "blocks": ["SUG-2026-08-002"]
+    },
+    {
+      "id": "ISSUE-03",
+      "title": "No SNV-only baseline is specified",
+      "detail": "Incremental value of any additional evidence modality is undefined until the SNV-only baseline is fixed.",
+      "blocks": ["SUG-2026-08-003"]
+    },
+    {
+      "id": "ISSUE-04",
+      "title": "Phase and methylation contribution is untested",
+      "detail": "Phase and native methylation evidence may be complementary, redundant or unhelpful. This must be tested through an ablation, not assumed.",
+      "blocks": ["SUG-2026-08-004"]
+    }
+  ],
+  "guardrails": [
+    "PASS is a caller retention label, not confirmed somatic truth.",
+    "Filtered is not equivalent to false positive.",
+    "VAF is not tumor fraction.",
+    "High coverage in the source sample is not low-tumor-fraction sensitivity.",
+    "No claim that phase or methylation improves tumor recognition before a baseline, an evaluation metric and an ablation exist."
+  ]
+}

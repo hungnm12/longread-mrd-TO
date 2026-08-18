@@ -1,0 +1,32 @@
+id: SUG-2026-08-005
+meeting_date: null
+source: Seeded context — reconstructed from repository history, not from a recorded meeting
+record_kind: seeded_context
+suggestion: >-
+  Characterize the tumor-only candidate landscape descriptively before making any somatic claim.
+my_interpretation: >-
+  Report what the caller retained and how those candidates are distributed, and stop there: no
+  somatic labelling, no sensitivity claim, no comparison against a truth set.
+why_it_matters: >-
+  This is the baseline description everything later is measured against, and it is the point where
+  overclaiming is easiest and least visible.
+planned_actions:
+  - action: Run tumor-only ClairS-TO on the HCC1395 long-read alignment and summarize the retained candidates
+    expected_evidence: A candidate-landscape summary with counts and distributions
+    status: completed
+  - action: Produce quality-control figures for depth, VAF and ALT support
+    expected_evidence: Figure set under the tumor-only figures directory
+    status: completed
+status: completed
+linked_daily_logs: [LOG-2026-08-13]
+evidence: [EV-0001, EV-0002, EV-0003, EV-0004, EV-0005]
+result: >-
+  48,819 PASS SNV candidates were retained from 3,169,996 total ClairS-TO records (1.54% of records).
+  Candidate depth is centered at a median of 80x (IQR 59-106), VAF at 0.461 (IQR 0.292-0.779), and
+  ALT support at 35 reads (IQR 24-53). These are caller-retained candidates, not confirmed somatic
+  variants.
+reason_not_completed: null
+next_action: >-
+  Use these distributions as the fixed descriptive baseline; do not re-derive them when composition
+  work starts.
+target_week: 2026-W33
