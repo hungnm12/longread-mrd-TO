@@ -28,6 +28,10 @@ readable account of it.
    remote only.
 4. Report the entry path, the journal commit, and anything the redactor removed.
 
+5. When an HTML copy is wanted — for printing, emailing, or reading offline — render it with
+   `scripts/render_markdown_html.py --daily`. Rendering is not publishing; it produces a local
+   file and pushes nothing.
+
 ## Does not
 
 - **Push to this repository's remote.** The only remote it touches is `target.remote` in

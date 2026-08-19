@@ -38,3 +38,4 @@ PyYAML>=6.0              # experiment and dataset configuration
 # modkit                 absent. Not required: MM/ML tags are parsed directly through
 #                        pysam's modified_bases API.
 # ClairS-TO  0.5.0       week1/experiment/external/ClairS_TO_latest
+markdown>=3.5        # scripts/render_markdown_html.py

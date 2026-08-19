@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily report — 2026-08-19</title>
+<style>
+:root {
+  --bg: #f7f3eb; --panel: #fffdf8; --ink: #1f1b16; --muted: #695f56; --line: #d4c8bb;
+  --accent: #1f5c4e; --accent-soft: #d8ebe5; --warning: #8d5c14; --warning-soft: #f7ebc7;
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --sans: "Segoe UI", Calibri, system-ui, sans-serif;
+  --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans);
+  line-height: 1.6; font-size: 16px;
+}
+.page { width: min(52rem, calc(100% - 3rem)); margin: 0 auto; padding: 2.5rem 0 4rem; }
+.masthead {
+  border-bottom: 2px solid var(--accent); padding-bottom: 0.9rem; margin-bottom: 2rem;
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; align-items: baseline;
+  justify-content: space-between;
+}
+.masthead__project { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--accent); }
+.masthead__meta { font-size: 0.82rem; color: var(--muted); }
+h1 { font-family: var(--serif); font-size: 2.1rem; line-height: 1.2; margin: 0 0 1.2rem; }
+h2 {
+  font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--accent); margin: 2.2rem 0 0.6rem; padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--line);
+}
+h3 { font-family: var(--serif); font-size: 1.15rem; margin: 1.5rem 0 0.5rem; }
+p { margin: 0 0 0.9rem; }
+/* The lead paragraph is the day's summary; it earns larger type. */
+h1 + p { font-size: 1.1rem; color: var(--ink); border-left: 3px solid var(--accent-soft);
+  padding-left: 1rem; }
+ul, ol { margin: 0 0 1rem; padding-left: 1.3rem; }
+li { margin-bottom: 0.35rem; }
+li > ul { margin-top: 0.35rem; }
+blockquote {
+  margin: 0 0 1rem; padding: 0.7rem 1.1rem; background: var(--panel);
+  border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 8px;
+  font-family: var(--serif); font-size: 1.02rem;
+}
+code { font-family: var(--mono); font-size: 0.88em; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0.05rem 0.3rem; }
+pre { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 0.9rem 1.1rem; overflow-x: auto; }
+pre code { border: none; background: none; padding: 0; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; margin: 0 0 1.2rem; }
+th, td { border-bottom: 1px solid var(--line); padding: 0.5rem 0.6rem; text-align: left;
+  vertical-align: top; }
+th { font-family: var(--mono); font-size: 0.74rem; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--muted); }
+hr { border: none; border-top: 1px solid var(--line); margin: 2rem 0 1.2rem; }
+a { color: var(--accent); }
+em { color: var(--muted); }
+.footer { margin-top: 2.5rem; padding-top: 0.9rem; border-top: 1px solid var(--line);
+  font-size: 0.82rem; color: var(--muted); }
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .page { width: 100%; padding: 0; }
+  h2 { break-after: avoid; }
+  blockquote, pre, table { break-inside: avoid; }
+  .no-print { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <span class="masthead__project">Tumor-only long-read MRD — daily report</span>
+    <span class="masthead__meta">2026-08-19 · from the journal entry · rendered 2026-08-19</span>
+  </header>
+  <h1>2026-08-19</h1>
+  <p>Compared the published MRD methods along one grid — signal used, problem solved, position in a detector, shared idea, unique idea, limitation — and surveyed what this server actually offers. Then parked the direction that combined SNV candidates with haplotype phase and native methylation: it is one idea at one position, and the project needs its full problem set written down first.</p>
+  <h2>Focus</h2>
+  <blockquote>
+  <p>How do the supplied methods differ in signal, position and limitation, and where could a native long-read platform add something?</p>
+  </blockquote>
+  <h2>What was done</h2>
+  <ul>
+  <li>Paused the site and research-OS implementation stream; no further site features are being added for now<ul>
+  <li>Showed: The site and its record store are complete and deployed, so pausing leaves no half-finished route.</li>
+  </ul>
+  </li>
+  <li>Surveyed the server and wrote the knowledge base — ONT capabilities, datasets, tools, constraints, method synthesis, open questions<ul>
+  <li>Showed: Every sampled read carries 5mC and 5hmC and none carries HP/PS; the dilution series holds 14 BAMs (5 blanks, 3 replicates per level) rather than one per level; the BAM header records no basecaller or read group; ClairS-TO&rsquo;s wrapper does not start because <code>python</code> is absent from PATH; there is no GPU on this host.</li>
+  </ul>
+  </li>
+  <li>Built a seven-dimension comparison matrix over the supplied literature<ul>
+  <li>Showed: Every method makes each molecule count for more before aggregating — more loci, a learned prior, a second linked variant, a consensus, or a second signal class. The differences sit in which of those five, not in the overall strategy.</li>
+  </ul>
+  </li>
+  </ul>
+  <h2>What the output showed</h2>
+  <ul>
+  <li>The dilution series has 3 replicates per tumor-bearing level and 5 blanks, which contradicts the research contract&rsquo;s &ldquo;1 replicate&rdquo; assumption and its conclusion that no limit-of-blank estimate is possible.</li>
+  <li>Native 5mC and 5hmC are present on every sampled read of both the pure tumor BAM and the 0.01% dilution; HP and PS are absent everywhere, so phasing is unstarted work rather than missing data.</li>
+  <li>Background suppression is the least crowded position in the matrix: PhasED-Seq by linkage and MRD-EDGE by learned ranking, both under constraints that do not hold in a tumor-only long-read setting.</li>
+  <li>PhasED-Seq&rsquo;s requirement of two somatic variants on one fragment becomes least satisfiable exactly at the tumor fractions that matter.</li>
+  <li>NanoRCS raises per-read accuracy through amplification-based consensus, which is the opposite trade from keeping the molecule native for methylation.</li>
+  </ul>
+  <h2>What I take it to mean</h2>
+  <p>The matrix supports the framing already recorded rather than changing it: the open position is per-molecule background suppression using evidence that is native to the molecule. It also sharpens one contrast worth keeping — accuracy through amplification and modality through native sequencing are competing designs, not complementary ones.</p>
+  <h2>What did not work</h2>
+  <ul>
+  <li><strong>No row in the matrix is backed by a source PDF; all entries derive from indexed summaries</strong><ul>
+  <li>Impact: The matrix cannot yet be cited as thesis evidence</li>
+  <li>Handling: Marked unverified in the document header, with the inferred entries flagged individually</li>
+  </ul>
+  </li>
+  <li><strong>Whether rolling-circle consensus preserves native base modifications is an inference, not a checked fact</strong><ul>
+  <li>Impact: One limitation cell may be wrong</li>
+  <li>Handling: Flagged in the document as [unverified] pending the source PDF</li>
+  </ul>
+  </li>
+  </ul>
+  <h2>Decisions</h2>
+  <ul>
+  <li><strong>Pause the website and research-OS implementation stream</strong> — The site, record store and reporting tooling are complete and deployed; further work there does not advance the research question</li>
+  <li><strong>Treat the signal matrix as the working comparison for method positioning</strong> — It states each method&rsquo;s position and limitation in the terms this project needs, rather than paper by paper</li>
+  <li><strong>Park the SNV + haplotype phase + native methylation direction and clear it from the active state</strong> — Removing the matrix row was not enough — the direction still occupied the scope contract, the hypotheses, the dashboard question and the orchestration state, so every question asked kept forming around it. Its documents moved intact to research/parked/snv-phase-methylation/ with resume conditions; the descriptive candidate landscape and the environment survey stand on their own.</li>
+  <li><strong>Remove this project&rsquo;s own row from the signal matrix and leave its placement pending</strong> — A single row framed the project as one idea at one grid cell — per-molecule background suppression for the single-variant tumor-only case. The project is expected to address several of the problems in the table at once, so placing one row now would fix the wrong shape before the broader scope is written.</li>
+  </ul>
+  <h2>Next</h2>
+  <ul>
+  <li>Verify the flagged matrix entries against source PDFs, starting with the consensus/methylation trade-off</li>
+  <li>Use the matrix&rsquo;s background-suppression row to sharpen the evaluation-metric definition</li>
+  <li>Measure the feasibility funnel and run LongPhase on one region of one dilution BAM (open questions B1, B2)</li>
+  <li>Decide whether to correct the research contract&rsquo;s replicate assumption in docs/research/00_scope.md and 01_paper_patterns.md</li>
+  <li>Write the project&rsquo;s scope statement — the full problem set, not one position. Reserved for the researcher; everything else waits on it</li>
+  <li>Superseded — was &ldquo;write the broader project scope statement before the project re-enters the matrix&rdquo;</li>
+  </ul>
+  <h2>Evidence produced</h2>
+  <ul>
+  <li><code>EV-0007</code> — Signal matrix over the supplied literature (document)</li>
+  </ul>
+  <h2>Note</h2>
+  <p>Comparison and scoping only. No data was processed and no measurement was produced; the artifact
+  is a document, and every row in it remains unverified against source PDFs.</p>
+  <hr>
+  <p><em>Published from a private research repository. Observations are what an artifact showed; interpretations are the researcher&rsquo;s reading of them.</em></p>
+  <p class="footer">Observations are what an artifact showed; interpretations are the researcher&#x27;s reading of them. Internal paths and dataset locations are redacted.</p>
+</div>
+</body>
+</html>

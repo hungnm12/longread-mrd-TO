@@ -65,6 +65,9 @@ python3 scripts/build_research_deck.py   # → outputs/accepted/mrd-research-rep
 # the public journal — a separate repository, configured in configs/journal.yaml
 python3 scripts/publish_daily_journal.py                 # dry run, latest day
 python3 scripts/publish_daily_journal.py 2026-08-19 --write --push
+
+# a daily report as standalone HTML (print to PDF from the browser)
+python3 scripts/render_markdown_html.py --daily            # → outputs/accepted/daily-html/
 ```
 
 Environment check before any run:
