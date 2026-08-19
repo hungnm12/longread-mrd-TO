@@ -1,0 +1,27 @@
+id: EV-0010
+created_at: 2026-08-19
+type: analysis_result
+title: Same-molecule ALT co-occurrence of PASS SNV candidate pairs, pure tumor
+description: >-
+  Per-pair read classification for 1,000 sampled candidate pairs within 20 kb: reads covering both
+  positions, and how many carried ALT-ALT, ALT-REF, REF-ALT, REF-REF, with a SEQC2 stratum attached
+  after counting. Produced by EXP-G1-001.
+path_or_url: outputs/active/results/linkage/cooccurrence_pure_tumor.summary.json
+generated_by: scripts/workflow/linkage/measure_cooccurrence.py
+input_data:
+  - outputs/active/results/tumor_only/HCC1395/candidate_pass_snvs.tsv
+  - HCC1395 pure tumor ONT BAM (read-only source path, kept out of the public site)
+  - SEQC2 high-confidence somatic SNVs (evaluation only, applied after counting)
+linked_log: LOG-2026-08-19
+linked_suggestion: null
+linked_claims:
+  - 67.9% of 999 evaluable candidate pairs had at least one read carrying both ALT alleles
+  - 662 pairs had two or more ALT-ALT reads
+  - Co-occurrence was less frequent among confirmed-somatic pairs (65.1%) than among pairs where neither candidate is confirmed somatic (78.6%)
+verification_status: file_present
+verified_by: null
+verified_on: null
+notes: >-
+  Pure tumor at 100% tumor fraction, the most favourable case. Seeded sampling (seed 20260819),
+  MAPQ >= 20, base quality >= 10. The per-pair table sits beside the summary as
+  cooccurrence_pure_tumor.tsv.

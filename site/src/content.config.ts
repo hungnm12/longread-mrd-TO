@@ -618,7 +618,10 @@ const designGaps = defineCollection({
     confounding_risks: z.array(z.string()).default([]),
     falsification: z.string(),
     status: z.string(),
-    note: z.string().optional()
+    note: z.string().optional(),
+    // Set once a gap's premise has been measured rather than argued.
+    evidence: z.array(z.string()).default([]),
+    tracking: z.string().optional()
   })
 });
 

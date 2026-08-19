@@ -39,18 +39,22 @@ gaps:
     required_ont_capability: [read-span, same-molecule-cooccurrence, snv-calls]
     required_data: Dilution series with blanks; candidate set; per-read labels for evaluation only
     feasibility: >-
-      Measurable now. 34.8% of PASS candidates have another PASS candidate within 10 kb and 21.3%
-      within 5 kb, against a median read of ~11.3 kb. The first experiment is counting how often
-      two candidates are actually co-observed on one read, per tumor fraction.
+      Premise measured (EXP-G1-001, FIND-0001). Proximity: 34.8% of PASS candidates have another
+      within 10 kb. Co-observation: 67.9% of 999 sampled pairs had at least one read carrying both
+      ALT alleles in the pure tumor sample, 662 pairs with two or more such reads. What remains is
+      the same statistic at low tumor fraction and against the blanks.
     confounding_risks:
+      - "OBSERVED, not hypothetical: co-occurrence is more common among pairs where neither candidate is a confirmed somatic SNV (78.6%) than where both are (65.1%), which is what germline heterozygous variants in cis would produce."
       - Candidate pairs in close proximity may be enriched for the same artifact class, so co-occurrence could mark a shared error mode rather than shared origin.
-      - Nearby candidates may be germline haplotype structure rather than somatic events; composition is unknown.
-      - Distance availability is an upper bound and is not co-observation.
+      - SEQC2 covers high-confidence regions only, so "not in SEQC2" is not "not somatic" and the stratification is weaker than it looks.
+      - Pure tumor is the most favourable case by construction; nothing here measures low tumor fraction.
     falsification: >-
       Count co-observed candidate pairs per dilution. If the count at 0.1% and 0.01% is
       indistinguishable from the blanks, linkage carries no usable signal at those fractions and
       the direction dies on this data.
-    status: candidate
+    status: premise-measured
+    evidence: [EXP-G1-001, FIND-0001, EV-0010]
+    tracking: research/design-space/gaps.md#g1
 
   - id: G2
     title: Haplotype-conditioned native methylation on the same molecule
@@ -132,7 +136,8 @@ gaps:
     feasibility: >-
       This is the composition question (SUG-2026-08-001) in design-space terms, and it is a
       precondition for every other gap: no recognition metric is definable over a set of unknown
-      composition.
+      composition. Promoted from foundational to operative by FIND-0001, where co-occurrence was
+      higher among unconfirmed pairs than among confirmed-somatic ones.
     confounding_risks:
       - Estimating composition with the same population resources that produced the candidates is circular for the germline fraction.
       - SEQC2 may be used to evaluate composition but never to select candidates.

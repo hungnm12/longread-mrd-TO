@@ -3821,3 +3821,14 @@ body.deck-presenting {
     grid-template-columns: 1fr;
   }
 }
+
+.gap-card__evidence {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+
+.gap-card__status--premise {
+  background: var(--warning-soft);
+  color: var(--warning);
+}

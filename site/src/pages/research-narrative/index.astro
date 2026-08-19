@@ -510,6 +510,12 @@ const capabilityGroups = statusOrder.map((status) => ({
             </dd>
             <dt>How it would be falsified</dt>
             <dd class="gap-card__falsify">{gap.data.falsification}</dd>
+            {gap.data.evidence.length > 0 && (
+              <>
+                <dt>Evidence so far</dt>
+                <dd class="gap-card__evidence">{gap.data.evidence.join(" · ")}</dd>
+              </>
+            )}
           </dl>
           {gap.data.note && <p class="gap-card__note">{gap.data.note}</p>}
         </article>

@@ -1,0 +1,76 @@
+# Registered BEFORE execution. Thresholds fixed here may not be changed after results are seen.
+# Schema: orchestration/schemas/experiment.schema.yaml
+
+id: EXP-G1-001
+title: Do two PASS SNV candidates actually appear as ALT on the same molecule?
+hypothesis: >-
+  G1 (research/design-space/gaps.yaml). The gap so far rests on genomic proximity only — 34.8% of
+  PASS candidates have another PASS candidate within 10 kb. Proximity is an opportunity, not an
+  observation. This experiment asks whether the co-occurrence exists on actual reads.
+question: >-
+  In the pure tumor sample, among candidate pairs close enough to share a read, how often does a
+  single read carry the ALT allele at BOTH positions?
+
+unit_of_analysis: >-
+  One candidate pair — two PASS SNV candidates on the same contig within the pair window. Counts
+  of reads are per pair.
+
+inputs:
+  - path: outputs/active/results/tumor_only/HCC1395/candidate_pass_snvs.tsv
+    role: Candidate positions and their ALT alleles
+    read_only: true
+  - path: /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395.bam
+    role: Read evidence — pure tumor, the most favourable case
+    read_only: true
+  - path: /big8_disk/data/HCC1395/SEQC2/high-confidence_sSNV_in_HC_regions_v1.2.1.vcf.gz
+    role: EVALUATION ONLY — stratify results by whether a candidate is a known somatic SNV
+    read_only: true
+
+method: >-
+  Sample candidate pairs whose positions are within the pair window, seeded for reproducibility.
+  For each pair, fetch reads overlapping both positions from the pure tumor BAM and classify each
+  read as ALT-ALT, ALT-REF, REF-ALT, REF-REF or other, using the aligned base at each position.
+  Report per-pair counts, then stratify by SEQC2 membership of the two candidates. No filtering,
+  reweighting or model is involved.
+
+parameters:
+  pair_window_bp: 20000          # beyond the observed max read length, so nothing is excluded a priori
+  sample_pairs: 1000
+  seed: 20260819
+  min_base_quality: 10
+  min_mapping_quality: 20
+
+thresholds:
+  # Fixed now. Read as: what would make this direction worth pursuing, and what would kill it.
+  success_pairs_with_alt_alt_pct: 5.0     # ≥5% of sampled pairs show ≥1 ALT-ALT read
+  success_pairs_with_support_2plus: 100   # ≥100 pairs with ≥2 ALT-ALT reads
+  failure_pairs_with_alt_alt_pct: 1.0     # <1% means the opportunity is negligible even at TF=100%
+
+success_criteria:
+  - At least 5% of sampled pairs have one or more reads carrying both ALT alleles.
+  - At least 100 pairs have two or more such reads, so the observation is not a single-read artifact.
+  - ALT-ALT co-occurrence is measurably more common among pairs where both candidates are SEQC2 somatic than among pairs where neither is.
+
+failure_criteria:
+  - Fewer than 1% of pairs show any ALT-ALT read — proximity does not translate into co-observation.
+  - ALT-ALT rate is indistinguishable between SEQC2-somatic pairs and non-SEQC2 pairs, which would suggest the co-occurrence reflects germline haplotype structure or shared artifact rather than somatic linkage.
+
+controls:
+  - "REF-REF, ALT-REF and REF-ALT counts on the same reads — the denominators that make ALT-ALT interpretable."
+  - "SEQC2 stratification, used only to interpret the result, never to select pairs."
+  - "Reads covering both positions are counted separately from reads covering one, so coverage is not confused with co-occurrence."
+
+leakage_guard: >-
+  SEQC2 is read after the measurement is computed and is used only to stratify the report. No
+  candidate is selected, filtered or weighted by truth membership. The matched normal is not used.
+
+status: complete
+run_records: [outputs/active/results/linkage/cooccurrence_pure_tumor.summary.json]
+result: >-
+  Two of three criteria passed: 67.9% of evaluable pairs showed an ALT-ALT read (threshold 5%) and
+  662 pairs had two or more (threshold 100). The somatic-specificity criterion failed in the
+  opposite direction to the prediction — 65.1% for confirmed-somatic pairs versus 78.6% where
+  neither is confirmed. See research/findings/FIND-0001.md.
+notes: >-
+  Pure tumor is the most favourable case by construction; a positive result here is a necessary
+  condition for G1, not a sufficient one. It says nothing yet about low tumor fraction.

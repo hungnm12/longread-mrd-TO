@@ -1,0 +1,41 @@
+{
+  "experiment": "EXP-G1-001",
+  "label": "pure_tumor",
+  "bam": "/big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395.bam",
+  "parameters": {
+    "pair_window_bp": 20000,
+    "sample_pairs": 1000,
+    "seed": 20260819,
+    "min_base_quality": 10,
+    "min_mapping_quality": 20
+  },
+  "candidates_total": 48819,
+  "pairs_within_window": 29074,
+  "pairs_sampled": 1000,
+  "pairs_evaluable": 999,
+  "pairs_with_alt_alt": 678,
+  "pairs_with_alt_alt_pct": 67.87,
+  "pairs_with_alt_alt_support_2plus": 662,
+  "reads_covering_both": 50756,
+  "reads_alt_alt": 12143,
+  "reads_alt_ref": 8810,
+  "reads_ref_alt": 9047,
+  "reads_ref_ref": 20382,
+  "by_seqc2_stratum": {
+    "both": {
+      "pairs_evaluable": 341,
+      "pairs_with_alt_alt": 222,
+      "pct": 65.1
+    },
+    "one": {
+      "pairs_evaluable": 256,
+      "pairs_with_alt_alt": 140,
+      "pct": 54.69
+    },
+    "neither": {
+      "pairs_evaluable": 402,
+      "pairs_with_alt_alt": 316,
+      "pct": 78.61
+    }
+  }
+}
