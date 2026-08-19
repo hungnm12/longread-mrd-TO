@@ -1,4 +1,4 @@
-import summary from "../../../research/manifests/week-001-candidate-landscape.json";
+import summary from "../../../data/manifests/week-001-candidate-landscape.json";
 
 const totalCalls = summary.summary.total_calls;
 const passSnvs = summary.summary.pass_snvs;
@@ -7,9 +7,9 @@ const filteredCalls = totalCalls - passSnvs;
 export const candidateLandscape = {
   ...summary,
   displaySources: [
-    "mrd-longphase/results/tumor_only/HCC1395/variant_summary.tsv",
-    "mrd-longphase/results/tumor_only/HCC1395/qc_stats.txt",
-    "mrd-longphase/reports/weekly/2026-08-13_hcc1395_phase1_tumor_only.md"
+    "outputs/active/results/tumor_only/HCC1395/variant_summary.tsv",
+    "outputs/active/results/tumor_only/HCC1395/qc_stats.txt",
+    "outputs/accepted/reports/weekly/2026-08-13_hcc1395_phase1_tumor_only.md"
   ],
   funnel: [
     { label: "Total ClairS-TO calls", count: totalCalls, pct: 100 },

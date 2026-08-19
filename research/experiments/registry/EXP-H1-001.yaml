@@ -1,0 +1,137 @@
+# Pre-registration for the project's first experiment under the new research direction.
+# PRE-RUN block only. The POST-RUN block stays null until the experiment has actually run.
+
+id: EXP-H1-001
+title: Joint-molecule observation feasibility across the HCC1395 ONT dilution series
+research_question: >-
+  After accounting for sequence and haplotype context, does native methylation provide
+  incremental evidence for detecting tumor-derived molecules at low tumor fractions?
+  This experiment answers only the prerequisite: are there enough molecules carrying all
+  three signals at once for that question to be testable?
+hypothesis: H1
+status: blocked
+
+blocked_on:
+  - >-
+    Haplotagging has not been run. No BAM in this project carries HP/PS
+    (docs/repo_audit.md §14.3), so the haplotagged stage of the funnel is currently
+    empty by construction, not by measurement.
+  - >-
+    `longphase` is not on PATH. The binary exists at
+    week1/experiment/external/longphase_develop/longphase but is unregistered.
+  - >-
+    Acceptance thresholds in config/experiments/h1_feasibility.yaml are still null.
+    They must be set and committed before this runs.
+
+inputs:
+  - path: /bip7_disk/pingting114/mixed_bam/HCC1395/TF1e-2_25x/TF1e-2_25x.rep1.bam
+    role: mixture_bam
+    dilution: "1e-2"
+    read_only: true
+  - path: /bip7_disk/pingting114/mixed_bam/HCC1395/TF1e-3_25x/TF1e-3_25x.rep1.bam
+    role: mixture_bam
+    dilution: "1e-3"
+    read_only: true
+  - path: /bip7_disk/pingting114/mixed_bam/HCC1395/TF1e-4_25x/TF1e-4_25x.rep1.bam
+    role: mixture_bam
+    dilution: "1e-4"
+    read_only: true
+  - path: /bip7_disk/pingting114/mixed_bam/HCC1395/TF0_25x/TF0_25x.rep1.bam
+    role: control_bam
+    dilution: "0"
+    read_only: true
+  - path: results/tumor_only/HCC1395/candidate_pass_snvs.tsv
+    role: candidate_loci
+    note: 48,819 ClairS-TO tumor-only PASS SNVs from the Week 1 characterization
+  - path: /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395.bam
+    role: evaluation_label_source_tumor
+    read_only: true
+    evaluation_only: true
+  - path: /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395BL.bam
+    role: evaluation_label_source_normal
+    read_only: true
+    evaluation_only: true
+
+input_checksums:
+  input_manifest_id: null   # emitted by the run; sha1 over resolved paths + config
+  note: >-
+    Inputs are 80-300 GB read-only files owned by other users. Size and mtime are recorded
+    in the run manifest instead of a content digest; see src/joint_evidence/writer.py.
+
+configuration:
+  config_file: config/experiments/h1_feasibility.yaml
+  dataset: config/datasets/hcc1395_dilution.yaml
+  thresholds:
+    T_H1_min_molecules: null
+    T_H1_min_stage_survival: null
+    T_H1_min_candidates: null
+
+software_versions: null   # captured at run time by src.provenance.collect_tool_versions
+
+method: >-
+  1. Phase and haplotag each dilution BAM (LongPhase or WhatsHap; tool and parameters to be
+     recorded in research/decisions/decision-log.md before running).
+  2. For each sample, run workflow/joint_molecule/extract_joint_molecules.py over the
+     candidate loci, region-partitioned, emitting one record per (read, candidate) whether
+     usable or not.
+  3. Attach evaluation-only per-read source labels by read-name membership against the two
+     source BAMs.
+  4. Run workflow/feasibility_funnel/report_funnel.py to produce the stage counts and
+     distributions, stratified by sample, dilution, chromosome, region, candidate, phase set
+     and haplotype family.
+
+baselines:
+  - name: no_haplotype_requirement
+    role: >-
+      Re-run with require_haplotype=false to measure how much yield the haplotype
+      requirement itself costs, separating "haplotagging failed" from "no reads there".
+  - name: pure_tumor_100x
+    role: >-
+      The 100x pure tumor BAM as an upper bound on achievable joint yield. Not comparable
+      to the 25x mixtures on absolute counts; used only to bound what depth allows.
+
+metrics:
+  - joint_yield
+  - n_joint_per_dilution
+  - n_joint_per_candidate
+  - haplotag_rate
+  - meth_informative_rate
+  - phase_block_n50
+  - cpgs_per_read
+  - methylation_missingness
+  - cpg_distance_to_read_end
+  - exclusion_reason_histogram
+
+acceptance_condition: >-
+  n_joint at the 1e-2 level >= T_H1_min_molecules, AND no single funnel stage drops below
+  T_H1_min_stage_survival, AND at least T_H1_min_candidates candidate loci contribute one
+  or more joint molecules. All three thresholds must be set before the run.
+
+rejection_condition: >-
+  n_joint at 1e-2 falls below T_H1_min_molecules, or haplotagging yield is so low that
+  haplotype context is unavailable for the majority of candidate-overlapping reads.
+
+expected_outcomes: >-
+  PREDICTION, recorded before running. Methylation coverage should be near-universal: 100%
+  of 200 sampled reads carried MM/ML in every dilution BAM during the audit. The binding
+  constraint is therefore expected to be haplotagging, not methylation — at ~25x coverage,
+  phase blocks should be short and a substantial fraction of reads should fail to haplotag
+  in regions of low heterozygous density. Absolute joint counts are expected to fall sharply
+  from 1e-2 to 1e-4, but note that the funnel counts molecules at candidate loci regardless
+  of source, so the drop should be far less than 100-fold — most molecules at any dilution
+  are normal-derived. The genuinely uncertain quantity is the *tumor-derived* joint count at
+  1e-4, which may be too small to support H2.
+
+split:
+  level: null
+  held_out: null
+  rationale: >-
+    Not applicable — H1 is a counting exercise with no model fitted. The split is declared
+    at H3, before any model is fit, and recorded in research/decisions/decision-log.md.
+
+# ══ POST-RUN — do not fill until the experiment has run ══════════════════════════════
+actual_results: null
+uncertainties: null
+decision: null
+next_experiment: null
+artifacts: []

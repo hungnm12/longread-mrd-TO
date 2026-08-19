@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { describe, expect, test } from "vitest";
-import summary from "../../research/manifests/week-001-candidate-landscape.json";
+import summary from "../../data/manifests/week-001-candidate-landscape.json";
 import { validateContent } from "../scripts/validate-content.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));

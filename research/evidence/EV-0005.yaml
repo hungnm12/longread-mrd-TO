@@ -5,10 +5,10 @@ title: Phase 1 tumor-only candidate landscape report
 description: >-
   Weekly write-up of the descriptive candidate landscape, including the interpretation boundaries
   and the explicit statement that the retained set is not a confirmed somatic set.
-path_or_url: mrd-longphase/reports/weekly/2026-08-13_hcc1395_phase1_tumor_only.md
+path_or_url: outputs/accepted/reports/weekly/2026-08-13_hcc1395_phase1_tumor_only.md
 generated_by: Manual write-up
 input_data:
-  - research/manifests/week-001-candidate-landscape.json
+  - data/manifests/week-001-candidate-landscape.json
 linked_log: LOG-2026-08-13
 linked_suggestion: SUG-2026-08-005
 linked_claims:

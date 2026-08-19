@@ -1,0 +1,19 @@
+# Shape of a research idea (research/ideas/<id>.md frontmatter).
+# An idea is a proposal that has not yet earned an experiment.
+version: 1
+required:
+  id:            {type: string, pattern: "^IDEA-[0-9]{4}$"}
+  title:         {type: string}
+  created:       {type: date}
+  origin:        {type: string, note: "Who or what produced it — agent, meeting, paper, observation"}
+  claim:         {type: string, note: "What would be true if the idea holds"}
+  why_now:       {type: string}
+  # Both required: an idea that cannot fail is not an idea.
+  would_confirm: {type: string}
+  would_refute:  {type: string}
+  cost:          {type: string, enum: [hours, days, weeks], note: "Rough execution cost"}
+  status:        {type: string, enum: [captured, triaged, accepted, parked, rejected]}
+optional:
+  depends_on:    {type: array, items: string, note: "IDEA / SUG / EXP ids"}
+  critique:      {type: array, items: {by: string, weakest_assumption: string, verdict: string}}
+  reason_parked: {type: string, required_when: "status in [parked, rejected]"}

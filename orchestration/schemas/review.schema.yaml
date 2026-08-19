@@ -1,0 +1,20 @@
+# Shape of a review (appended to the reviewed record, or research/decisions/<id>.md).
+version: 1
+required:
+  id:            {type: string, pattern: "^REV-[0-9]{4}$"}
+  target:        {type: string, note: "FIND / EXP / IDEA id under review"}
+  reviewer:      {type: string, note: "Agent or person"}
+  performed:     {type: date}
+  checks:
+    type: array
+    items:
+      question:  {type: string}
+      answer:    {type: string}
+      concern:   {type: string, optional: true}
+  strongest_objection: {type: string, note: "Required — the best argument against the claim"}
+  verdict:       {type: string, enum: [accept, revise, reject]}
+required_when_revise_or_reject:
+  required_change: {type: string}
+rules:
+  - The reviewer states the strongest objection even when accepting.
+  - Only pi-reviewer may issue verdict "accept".

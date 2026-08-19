@@ -53,11 +53,11 @@ venv/
 *.csi
 
 # Generated intermediate outputs
-mrd-longphase/results/joint_evidence/
-mrd-longphase/results/feasibility/
-mrd-longphase/results/ablation/
-mrd-longphase/results/**/regions/
-mrd-longphase/results/**/_complete/
+outputs/active/results/joint_evidence/
+outputs/active/results/feasibility/
+outputs/active/results/ablation/
+outputs/active/results/**/regions/
+outputs/active/results/**/_complete/
 *.parquet
 *.tsv.gz
 
@@ -79,11 +79,15 @@ mrd-longphase/results/**/_complete/
 # otherwise swallow. Kept because they are the evidence the site and reports
 # cite, and they are all well under a megabyte.
 # ---------------------------------------------------------------------------
-!mrd-longphase/results/tumor_only/**/*.tsv
-!mrd-longphase/results/tumor_only/**/*.txt
-!mrd-longphase/reports/**/*.tsv
-!mrd-longphase/tests/fixtures/**
+!outputs/active/results/tumor_only/**/*.tsv
+!outputs/active/results/tumor_only/**/*.txt
+!outputs/accepted/reports/**/*.tsv
+!tests/fixtures/**
 !research/**
 
 # Wrangler local state
 site/.wrangler/
+
+# Scratch output lane — nothing here is tracked
+outputs/temporary/*
+!outputs/temporary/.gitkeep

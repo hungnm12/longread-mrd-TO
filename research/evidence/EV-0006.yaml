@@ -5,11 +5,11 @@ title: Research scope, paper-pattern map and gap statement
 description: >-
   The scope contract, the methodology map over the supplied literature, and the candidate research
   gap — including the explicit statement that the gap is scoped to the indexed documents only.
-path_or_url: docs/research/02_research_gap.md
+path_or_url: research/knowledge/research-gap.md
 generated_by: Manual write-up
 input_data:
-  - docs/research/00_scope.md
-  - docs/research/01_paper_patterns.md
+  - research/knowledge/scope.md
+  - research/knowledge/methods/paper-patterns.md
 linked_log: LOG-2026-08-16
 linked_suggestion: null
 linked_claims:

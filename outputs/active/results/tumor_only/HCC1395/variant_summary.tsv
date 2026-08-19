@@ -1,0 +1,10 @@
+Metric	Value
+Total ClairS-TO calls	3169996
+PASS calls	48819
+PASS SNVs	48819
+PASS indels (indel calling disabled in run)	0
+PASS SNV proportion (%)	1.54
+Preliminary candidate SNVs	48819
+Median depth	80
+Median VAF	0.461
+Median ALT support	35

@@ -1,0 +1,40 @@
+# Current process state. Updated by the orchestrator when a stage changes.
+#
+# The research question, hypothesis and reporting period live in research/research-os.json,
+# which the website reads — this file holds the orchestration view and points there rather
+# than restating it.
+
+version: 1
+updated: 2026-08-19
+source_of_truth_for_research_state: research/research-os.json
+
+phase: Phase 1 — tumor-only candidate characterization (descriptive)
+
+active_stage: capture
+paused_streams:
+  - id: site-and-research-os
+    since: 2026-08-19
+    reason: >-
+      Site, record store and reporting tooling are complete and deployed; further work there
+      does not advance the research question.
+    resume_trigger: A reporting need the current site cannot serve.
+
+open_items:
+  suggestions_open: 4          # research/suggestions/ — see the tracker for detail
+  suggestions_blocked: 1
+  findings_pending_review: 0
+  experiments_registered: 1    # EXP-H1-001
+  experiments_executed: 0
+
+blocking_question: >-
+  How many reads at a candidate locus carry allele, phase and methylation together at 1%,
+  0.1% and 0.01% tumor fraction? Until this has a number, the research question may be
+  untestable on this data. See research/knowledge/open-questions.md B1.
+
+next_action:
+  stage: qc
+  item: Feasibility funnel and LongPhase block statistics on one region of one dilution BAM
+  owner: data-qc
+  precondition: LongPhase 2.0.2 invocation confirmed working from scripts/
+
+last_weekly_report: WR-2026-W33

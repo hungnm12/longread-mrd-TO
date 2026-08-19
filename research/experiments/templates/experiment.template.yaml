@@ -1,0 +1,84 @@
+# Experiment manifest template.
+#
+# Copy to experiments/registry/<ID>.yaml, fill the PRE-RUN block, run the experiment, then
+# fill the POST-RUN block. Nothing else.
+#
+# ─────────────────────────────────────────────────────────────────────────────────────
+#  THE ONE RULE: `actual_results` IS NEVER FILLED BEFORE THE EXPERIMENT HAS RUN.
+#
+#  Neither are `decision` or `uncertainties`. Writing an expected number into
+#  `actual_results` — even as a placeholder, even "to be replaced later" — produces a
+#  fabricated result, which research/knowledge/claim-boundaries.md §4 prohibits absolutely.
+#  Leave them null. A null is a valid research artifact; an invented number is not.
+# ─────────────────────────────────────────────────────────────────────────────────────
+
+# ══ PRE-RUN — complete and commit BEFORE running ═════════════════════════════════════
+
+id:                    # EXP-<HYPOTHESIS>-<NNN>, e.g. EXP-H1-001
+title:
+research_question:     # the RQ this serves; see research/knowledge/scope.md
+hypothesis:            # H1 | H2 | H3 | H4
+status: planned        # planned | running | observed | verified | rejected | blocked
+
+inputs:                # every path the run reads; read-only sources marked as such
+  # - path: /bip7_disk/pingting114/mixed_bam/HCC1395/TF1e-2_25x/TF1e-2_25x.rep1.bam
+  #   role: mixture_bam
+  #   read_only: true
+
+input_checksums:       # input_manifest_id from the run manifest; NOT file content hashes
+  # input_manifest_id:
+  # note: the BAMs are 80 GB and read-only, so size+mtime are recorded instead of a digest
+
+configuration:         # path to the experiment YAML, plus the resolved thresholds
+  # config_file: config/experiments/h1_feasibility.yaml
+  # thresholds:
+  #   T_H1_min_molecules:
+
+software_versions:     # copied from the run manifest's tool_versions block
+
+method:                # what will be done, in enough detail to re-run
+
+baselines:             # what this is compared against; for H3 this is the ablation grid
+  # - model: D
+  #   role: baseline to beat
+  # - model: F
+  #   role: full proposal
+  # - model: F_permuted_methylation
+  #   role: capacity control
+
+metrics:               # in priority order; see research/experiments/evaluation-plan.md §2
+  # - sensitivity_at_fixed_specificity   # primary
+  # - average_precision
+  # - fp_per_informative_molecule
+  # - calibration
+  # - informative_molecule_count
+  # - roc_auc                            # reportable, never decisive
+
+acceptance_condition:  # concrete and checkable BEFORE seeing results
+rejection_condition:   # what result would falsify the hypothesis
+
+expected_outcomes:     # honest prediction, recorded so it can be wrong
+  # This is the point of the template. A prediction written after the fact is worthless.
+
+split:                 # leakage-safe split, declared in advance
+  # level: chromosome
+  # held_out: [chr20, chr21, chr22]
+  # rationale:
+
+# ══ POST-RUN — fill ONLY after the run completes ═════════════════════════════════════
+
+actual_results: null   # ← MUST stay null until the run has produced numbers
+uncertainties: null    # ← confidence intervals, n per stratum, known confounders
+decision: null         # ← ACCEPT | REJECT | PARTIAL | BLOCKED | INCONCLUSIVE
+next_experiment: null
+
+artifacts: []          # produced files: funnel TSVs, summaries, figures, logs
+
+# ── Decision vocabulary ──────────────────────────────────────────────────────────────
+#   ACCEPT        acceptance condition met; proceed to the next gated hypothesis
+#   REJECT        rejection condition met; take a pivot from research/hypotheses/hypotheses.md
+#   PARTIAL       some strata accept and others reject; say which, and why
+#   BLOCKED       could not run or could not be decided — missing tool, missing threshold,
+#                 insufficient data. NOT a soft rejection.
+#   INCONCLUSIVE  ran, but the result does not discriminate; usually too few molecules.
+#                 Record the n that would have been needed.

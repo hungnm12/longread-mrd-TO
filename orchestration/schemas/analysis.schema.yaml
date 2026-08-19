@@ -1,0 +1,20 @@
+# Shape of an analysis record (research/findings/<id>.md frontmatter).
+# The separation of observation from interpretation is the entire point of this schema.
+version: 1
+required:
+  id:              {type: string, pattern: "^FIND-[0-9]{4}$"}
+  experiment:      {type: string, note: "EXP id"}
+  created:         {type: date}
+  observation:     {type: string, note: "What the artifact shows, in neutral terms"}
+  interpretation:  {type: string, note: "What the analyst takes it to mean"}
+  evidence:        {type: array, items: string, note: "EV ids; empty requires evidence_note"}
+  denominator:     {type: string, note: "What the number is a fraction of, if it is one"}
+  caveats:         {type: array, items: string}
+  what_it_does_not_show: {type: array, items: string}
+  status:          {type: string, enum: [draft, in_review, accepted, rejected]}
+optional:
+  evidence_note:   {type: string, required_when: "evidence is empty"}
+  contradicts:     {type: array, items: string, note: "Prior FIND ids this disagrees with"}
+rules:
+  - An interpretation may not restate the observation as if it were stronger.
+  - A finding with no falsifying condition is returned by review.

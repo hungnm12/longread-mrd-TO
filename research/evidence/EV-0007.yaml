@@ -7,10 +7,10 @@ description: >-
   an MRD detector, common idea, unique idea, limitation for this setting, and what a native
   long-read platform could add. Includes the pipeline-position summary and an explicit list of
   what the matrix does not establish.
-path_or_url: docs/research/06_signal_matrix.md
+path_or_url: research/knowledge/methods/signal-matrix.md
 generated_by: Manual write-up
 input_data:
-  - docs/research/01_paper_patterns.md
+  - research/knowledge/methods/paper-patterns.md
   - site/src/data/relatedWork.ts
 linked_log: LOG-2026-08-19
 linked_suggestion: null

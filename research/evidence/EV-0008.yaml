@@ -7,12 +7,12 @@ description: >-
   against the BAMs, the full dataset inventory with mixing provenance, installed tools and
   compute, the constraints that bound any plan, the distilled method synthesis, and the open
   questions with what would settle each.
-path_or_url: knowledge/README.md
+path_or_url: research/knowledge/README.md
 generated_by: Direct filesystem and BAM inspection (samtools, ls, command -v) on 2026-08-19
 input_data:
   - /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG (headers and a sampled region, read-only)
   - /bip7_disk/pingting114/mixed_bam/HCC1395 (headers and listings, read-only)
-  - docs/research/06_signal_matrix.md
+  - research/knowledge/methods/signal-matrix.md
 linked_log: LOG-2026-08-19
 linked_suggestion: null
 linked_claims:

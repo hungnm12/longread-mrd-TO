@@ -5,8 +5,8 @@ title: Week 1 tumor-only candidate landscape summary
 description: >-
   Machine-readable summary of the tumor-only ClairS-TO candidate set: total records, PASS SNV count
   and proportion, and the depth, VAF and ALT-support distributions with quartiles.
-path_or_url: research/manifests/week-001-candidate-landscape.json
-generated_by: mrd-longphase/workflow/tumor_only/build_candidates.py
+path_or_url: data/manifests/week-001-candidate-landscape.json
+generated_by: scripts/workflow/tumor_only/build_candidates.py
 input_data:
   - ClairS-TO v0.5.0 tumor-only VCF for HCC1395 (long-read, no matched normal)
 linked_log: LOG-2026-08-13

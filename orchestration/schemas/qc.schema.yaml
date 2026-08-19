@@ -1,0 +1,23 @@
+# Shape of a QC report (outputs/temporary/qc/<id>.yaml).
+# QC answers one question: are the inputs what the design assumes?
+version: 1
+required:
+  id:            {type: string, pattern: "^QC-[0-9]{4}$"}
+  experiment:    {type: string, note: "EXP id"}
+  performed:     {type: date}
+  checks:
+    type: array
+    items:
+      name:      {type: string}
+      target:    {type: string, note: "Path or record checked"}
+      expected:  {type: string}
+      observed:  {type: string}
+      result:    {type: string, enum: [pass, fail, unknown]}
+      command:   {type: string, note: "Exactly what was run, so it can be re-run"}
+  verdict:       {type: string, enum: [pass, fail]}
+required_when_fail:
+  blocking_reason: {type: string}
+  returned_to:     {type: string, enum: [design, capture]}
+rules:
+  - QC never writes to a source path.
+  - "unknown" is a valid result and does not become "pass" by omission.

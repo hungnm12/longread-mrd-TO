@@ -3,8 +3,8 @@ created_at: 2026-08-13
 type: figure
 title: ALT-support distribution of PASS SNV candidates
 description: Histogram of alternate-allele supporting read counts for the retained candidates.
-path_or_url: mrd-longphase/figures/tumor_only/alt_support_distribution.png
-generated_by: mrd-longphase/workflow/tumor_only/build_candidates.py
+path_or_url: outputs/accepted/figures/tumor_only/alt_support_distribution.png
+generated_by: scripts/workflow/tumor_only/build_candidates.py
 input_data:
   - ClairS-TO v0.5.0 tumor-only VCF for HCC1395
 linked_log: LOG-2026-08-13

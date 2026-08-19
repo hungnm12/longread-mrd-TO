@@ -430,7 +430,7 @@ const evidenceRecords = defineCollection({
     title: z.string(),
     description: z.string(),
     // Repository-relative path or external URL. Absolute server paths are rejected by the
-    // validator: the public site must not print them (see .agent-context/AGENTS.md).
+    // validator: the public site must not print them (see AGENTS.md).
     path_or_url: z.string(),
     generated_by: z.string(),
     input_data: z.array(z.string()).default([]),

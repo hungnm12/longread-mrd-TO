@@ -166,7 +166,7 @@ export function validateResearchOs(repoRoot = defaultRepoRoot) {
     const isUrl = /^https?:\/\//.test(target);
     if (!isUrl) {
       if (path.isAbsolute(target)) {
-        // Absolute server paths must not reach the public site (see .agent-context/AGENTS.md).
+        // Absolute server paths must not reach the public site (see AGENTS.md).
         problems.push(`${where}: path_or_url must be repository-relative, found "${target}"`);
       } else if (data.verification_status !== "missing" && !fs.existsSync(path.join(repoRoot, target))) {
         problems.push(

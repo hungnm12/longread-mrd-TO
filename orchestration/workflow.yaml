@@ -1,0 +1,114 @@
+# Research workflow — the stages work passes through, and who owns each.
+#
+# This file is the contract between agents. An agent may only act on items in a stage it
+# owns, and may only move an item to a stage listed in `next`. Anything else is a handoff
+# request, written to orchestration/queue/, not an action.
+#
+# The loop this encodes is the same one the site renders:
+#   feedback → planned response → daily work → evidence → observation → interpretation
+#   → decision → next commitment → weekly report
+
+version: 1
+
+stages:
+  - id: capture
+    purpose: Record a suggestion, an observation or an idea before it is judged
+    owner: orchestrator
+    inputs: [meeting notes, user notes, agent proposals]
+    artifacts: [research/suggestions/*.yaml, research/ideas/*.md]
+    next: [triage]
+    rules:
+      - Capture is verbatim first, interpretation second; both are recorded fields.
+
+  - id: triage
+    purpose: Decide whether an item is worth work, and what would settle it
+    owner: orchestrator
+    reviewers: [idea-critic, pi-reviewer]
+    artifacts: [research/ideas/*.md, orchestration/queue/*.yaml]
+    next: [design, archived]
+    rules:
+      - An item leaves triage only with a stated success criterion and a stated failure criterion.
+
+  - id: design
+    purpose: Turn an accepted idea into an executable experiment specification
+    owner: analyst
+    contributors: [brainstormer, idea-critic]
+    schema: orchestration/schemas/experiment.schema.yaml
+    artifacts: [research/experiments/registry/*.yaml]
+    next: [qc, execute]
+    rules:
+      - Thresholds are fixed before execution. A threshold chosen after seeing results turns an
+        exploratory finding into a false confirmatory one.
+      - The design must name the ablation or control that could falsify it.
+
+  - id: qc
+    purpose: Check inputs exist, are readable, and are what the design assumes
+    owner: data-qc
+    schema: orchestration/schemas/qc.schema.yaml
+    artifacts: [outputs/temporary/qc/*]
+    next: [execute, design]
+    rules:
+      - QC reads data. QC never writes to a source path.
+      - A failed QC returns the item to design with the reason, it does not proceed with a caveat.
+
+  - id: execute
+    purpose: Run the specified experiment and record provenance
+    owner: implementer
+    artifacts: [outputs/active/**]
+    next: [analyse, failed]
+    rules:
+      - Every run records tool versions, input manifest, seeds and the command line.
+      - Region-scoped and resumable by default; whole-genome passes need an explicit reason.
+
+  - id: analyse
+    purpose: Separate observation from interpretation, and attach evidence
+    owner: analyst
+    schema: orchestration/schemas/analysis.schema.yaml
+    artifacts: [research/evidence/*.yaml, research/findings/*.md]
+    next: [review]
+    rules:
+      - An observation states what the artifact shows. An interpretation states what it is taken
+        to mean. They are separate fields and never merged.
+
+  - id: review
+    purpose: Challenge the claim before it becomes a project position
+    owner: pi-reviewer
+    contributors: [code-reviewer, idea-critic]
+    schema: orchestration/schemas/review.schema.yaml
+    artifacts: [research/findings/*.md, research/decisions/*.md]
+    next: [decide, analyse]
+    rules:
+      - Review checks the claim against its evidence, not against expectation.
+      - A finding with no falsifying condition is returned, not accepted.
+
+  - id: decide
+    purpose: Record what changes as a result, and what the next commitment is
+    owner: orchestrator
+    artifacts: [research/decisions/*.md, research/suggestions/*.yaml]
+    next: [capture, design]
+    rules:
+      - A decision names its revisit trigger.
+
+  - id: report
+    purpose: Compile the period's records into the meeting deck
+    owner: synthesizer
+    artifacts: [research/weekly-reports/*.md]
+    next: [capture]
+    rules:
+      - The report is a view over existing records. Anything absent is labelled, never filled in.
+
+  - id: archived
+    purpose: Keep what was decided against, with the reason
+    owner: cleaner
+    artifacts: [archive/**]
+    next: []
+
+# Stages an item can end in without completing the loop.
+terminal:
+  - failed
+  - archived
+
+# Cadence, not a hard schedule.
+cadence:
+  daily: [capture, execute, analyse]
+  weekly: [review, decide, report]

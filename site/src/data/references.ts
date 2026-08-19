@@ -8,7 +8,7 @@
 //
 // Every field below was checked against the publisher record or Crossref metadata on
 // 2026-08-17. Nothing in this file may be filled in from memory: an unverifiable field is
-// omitted rather than guessed (see docs/research/05_claim_boundaries.md).
+// omitted rather than guessed (see research/knowledge/claim-boundaries.md).
 
 export interface Reference {
   /** Stable citation key used by CitationMarker; never shown to readers. */

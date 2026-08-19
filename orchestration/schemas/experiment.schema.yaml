@@ -1,0 +1,21 @@
+# Shape of an experiment specification (research/experiments/registry/<id>.yaml).
+# Written before execution. Thresholds set here may not be changed after results are seen.
+version: 1
+required:
+  id:              {type: string, pattern: "^EXP-[A-Z0-9-]+$"}
+  title:           {type: string}
+  hypothesis:      {type: string, note: "HYP id or inline statement it tests"}
+  question:        {type: string}
+  unit_of_analysis: {type: string, note: "What one row of the result is"}
+  inputs:          {type: array, items: {path: string, role: string, read_only: bool}}
+  method:          {type: string, note: "What will be computed, not how it will be coded"}
+  thresholds:      {type: map, note: "May be null; null blocks execution rather than defaulting"}
+  success_criteria: {type: array, items: string}
+  failure_criteria: {type: array, items: string}
+  controls:        {type: array, items: string, note: "Blanks, ablations, negative controls"}
+  leakage_guard:   {type: string, note: "How evaluation-only data is kept out of inference"}
+  status:          {type: string, enum: [registered, qc_passed, running, complete, failed, abandoned]}
+optional:
+  fallback_paths:  {type: array, items: string}
+  estimated_cost:  {type: string}
+  run_records:     {type: array, items: string}
