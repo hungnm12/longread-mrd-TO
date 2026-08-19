@@ -3,9 +3,18 @@
 What is not known, ordered by how much it blocks. Each entry names what would settle it, so a
 question can be closed by doing something rather than by deciding it feels resolved.
 
+> **Parked 2026-08-19.** Section A below, and B2–B5, were written for the SNV + haplotype phase
+> + native methylation direction, which is parked in
+> [`../parked/snv-phase-methylation/`](../parked/snv-phase-methylation). They are kept because
+> they are good questions, not because they are current. **A1, B1, C and D stand on their own**
+> and matter for any direction.
+>
+> The live blocking question is now: *what is the project's full problem set?* — see
+> `orchestration/state.yaml`.
+
 ---
 
-## A. Blocking the research question
+## A. Parked — the previous direction's blocking questions
 
 | # | Question | What would settle it | Status |
 |---|---|---|---|
@@ -16,6 +25,8 @@ question can be closed by doing something rather than by deciding it feels resol
 | A5 | What is the **full problem set** this project takes on? | A scope statement covering all the positions it addresses, not one grid cell | Raised 2026-08-19 when the project's row was pulled from the signal matrix |
 
 ## B. Feasibility — answerable with the data on disk
+
+> B1 measures joint availability and stands whatever direction is chosen; B2–B5 came with the parked direction.
 
 | # | Question | What would settle it |
 |---|---|---|

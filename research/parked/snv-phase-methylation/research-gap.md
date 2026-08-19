@@ -14,7 +14,7 @@ Date: 2026-08-16
 ## Why this is marked "candidate" and not "gap"
 
 This statement is scoped to **the seven documents indexed in this project** (see
-[`01_paper_patterns.md`](./methods/paper-patterns.md)). That is not a literature review. Three
+[`01_paper_patterns.md`](../../knowledge/methods/paper-patterns.md)). That is not a literature review. Three
 things must happen before the word "candidate" is removed:
 
 1. **A systematic search** covering, at minimum: long-read MRD, nanopore ctDNA, haplotype-aware
@@ -52,7 +52,7 @@ question. This is a useful stress test to re-run whenever the framing drifts.
 | PAPER-007 (ML signal enrichment) | Learned enrichment of tumor-like signal | Plasma, short-read framing; modality set does not include native methylation on haplotagged molecules |
 
 PAPER-006 is the closest. The thesis's distinguishing claim relative to it is stated in
-[`01_paper_patterns.md`](./methods/paper-patterns.md#position-2--background-suppression):
+[`01_paper_patterns.md`](../../knowledge/methods/paper-patterns.md#position-2--background-suppression):
 PhasED-Seq needs *two or more variants in phase*, which becomes unavailable exactly when
 tumor fraction is low enough to matter; this project asks whether *methylation conditioned
 on haplotype context* can play the same background-suppressing role with a single variant.
@@ -64,10 +64,10 @@ on haplotype context* can play the same background-suppressing role with a singl
 | A broader search finds this already done | The gap closes | Do the search early (see next action) — before Phase 5 model work, not after |
 | Methylation turns out to be redundant with haplotype context | H3 rejects; the gap is real but the answer is "no" | This is a valid, publishable result. The ablation design produces it cleanly |
 | Too few joint molecules exist at 0.01% | H1 fails; the question is unanswerable on this data | Feasibility funnel runs first, before any modelling (Phase 4) |
-| HCC1395 dilution is not a valid proxy for the setting of interest | External validity limited | Already bounded in [`05_claim_boundaries.md`](./claim-boundaries.md) |
+| HCC1395 dilution is not a valid proxy for the setting of interest | External validity limited | Already bounded in [`05_claim_boundaries.md`](../../knowledge/claim-boundaries.md) |
 
 ## Next action on this document
 
 Run a documented literature search and record the queries, databases, date, and results in
-[`decision_log.md`](../decisions/decision-log.md). Until that entry exists, every downstream document
+[`decision_log.md`](../../decisions/decision-log.md). Until that entry exists, every downstream document
 must keep describing this as a **candidate** gap.

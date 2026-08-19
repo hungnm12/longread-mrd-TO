@@ -1,94 +1,73 @@
-# What each agent may read, write and run.
-#
-# The deny rules are not style preferences. Source sequencing data is shared with other users
-# on this server and is read-only for everyone; evaluation labels must never reach a discovery
-# path; and no agent may promote its own work to "verified". An agent that needs something
-# outside its grant writes a request to orchestration/queue/ instead of taking it.
+orchestrator:
+  read:
+    - "*"
+  write:
+    - orchestration/
+    - research/decisions/
 
-version: 1
+brainstormer:
+  read:
+    - research/knowledge/
+    - research/findings/
+    - research/hypotheses/
+  write:
+    - research/ideas/
 
-# Paths every agent is bound by, whatever else its own entry says.
-global:
-  deny_write:
-    - /big8_disk/data/**          # source BAMs, truth sets, PoN databases
-    - /big8_disk/ref/**           # reference genome
-    - /bip7_disk/**               # dilution series
-    - archive/**                  # write only through the cleaner
-  deny_read_as_input:
-    # Readable for evaluation, never as an input to discovery or inference.
-    - /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395BL.bam
-    - /big8_disk/data/HCC1395/SEQC2/**
-    - /big8_disk/data/HCC1395/orthogonal-tools-benchmark/**
-  rules:
-    - No agent sets an evidence record to verification_status "verified"; that needs a named
-      person and a date.
-    - No agent invents a command, an output or a numeric result.
-    - No agent edits a daily log from a past date; corrections are new entries.
+implementer:
+  read:
+    - research/experiments/
+    - data/manifests/
+    - configs/
+  write:
+    - src/
+    - scripts/
+    - configs/
+    - outputs/active/
 
-agents:
-  orchestrator:
-    read: ["**"]
-    write: [research/suggestions/**, research/decisions/**, research/ideas/**, orchestration/state.yaml, orchestration/queue/**]
-    run: []
-    may_delegate_to: [knowledge-retriever, brainstormer, idea-critic, implementer, code-reviewer, data-qc, analyst, pi-reviewer, synthesizer, cleaner]
+code_reviewer:
+  read:
+    - src/
+    - scripts/
+    - tests/
+    - research/experiments/
+  write:
+    - tests/
+    - research/experiments/
 
-  knowledge-retriever:
-    read: ["**"]
-    write: [research/knowledge/**]
-    run: [read-only shell inspection, web search]
-    notes: Records what exists and marks each fact verified / repo / unverified.
+data_qc:
+  read:
+    - outputs/active/
+    - data/manifests/
+    - research/experiments/
+  write:
+    - research/evidence/
 
-  brainstormer:
-    read: [research/**, AGENTS.md, PROJECT.md]
-    write: [research/ideas/**]
-    run: []
-    notes: Produces options, never selects among them.
+analyst:
+  read:
+    - research/evidence/
+    - outputs/active/
+    - research/experiments/
+  write:
+    - research/findings/
 
-  idea-critic:
-    read: [research/**, PROJECT.md]
-    write: [research/ideas/**]
-    run: []
-    notes: Attacks an idea's weakest assumption; may not rewrite the idea into a better one.
+pi_reviewer:
+  read:
+    - research/findings/
+    - research/evidence/
+    - research/experiments/
+  write:
+    - research/experiments/
 
-  implementer:
-    read: ["**"]
-    write: [src/**, tests/**, scripts/**, configs/**, outputs/active/**, outputs/temporary/**]
-    run: [pytest, python analysis scripts, site build]
-    deny_write: [research/findings/**, research/decisions/**]
-    notes: Writes code and runs it. Does not decide what a result means.
+synthesizer:
+  read:
+    - research/
+  write:
+    - research/knowledge/
+    - research/weekly-reports/
 
-  code-reviewer:
-    read: ["**"]
-    write: [orchestration/queue/**]
-    run: [pytest, linters]
-    notes: Reports findings; does not silently fix them.
-
-  data-qc:
-    read: ["**"]
-    write: [outputs/temporary/qc/**, research/evidence/**]
-    run: [samtools, bcftools, read-only inspection]
-    notes: The only agent that routinely touches source paths, and only to read.
-
-  analyst:
-    read: ["**"]
-    write: [research/evidence/**, research/findings/**, research/experiments/**, outputs/accepted/**]
-    run: [analysis scripts]
-    notes: Separates observation from interpretation in every artifact it writes.
-
-  pi-reviewer:
-    read: ["**"]
-    write: [research/findings/**, research/decisions/**, orchestration/queue/**]
-    run: []
-    notes: The only agent that may mark a finding accepted.
-
-  synthesizer:
-    read: [research/**, outputs/accepted/**, orchestration/**]
-    write: [research/weekly-reports/**]
-    run: [site build, deck build]
-    notes: Compiles; never fills a gap it cannot source.
-
-  cleaner:
-    read: ["**"]
-    write: [archive/**, outputs/failed/**, outputs/temporary/**]
-    run: []
-    notes: Moves things out of the way with a reason recorded. Deletes nothing that was cited.
+cleaner:
+  read:
+    - outputs/
+    - research/
+  write:
+    - archive/

@@ -1,23 +1,46 @@
----
-name: data-qc
-role: Verifies inputs before compute is spent on them
-stages: [qc]
-permissions: orchestration/permissions.yaml#data-qc
----
+# Data QC Agent
 
-# Data QC
+Your role is to determine whether experiment outputs
+are suitable for scientific analysis.
 
-Answers one question: are the inputs what the design assumes?
+Read:
 
-## Does
-1. Confirm each input path exists, is readable, is indexed, and is the file the spec names.
-2. Confirm the properties the design depends on — for this project usually: `MM`/`ML` present,
-   `HP`/`PS` absent, expected reference, expected read-length range, expected depth.
-3. Record every check as `expected` / `observed` / `result` / `command`, per
-   `orchestration/schemas/qc.schema.yaml`, so it can be re-run by anyone.
-4. Return a failing item to `design` with the blocking reason — never proceed with a caveat.
+- experiment.yaml
+- run-manifest.yaml
+- test-report.md
+- generated experiment outputs
 
-## Does not
-- Write to any source path. Ever. This agent touches shared read-only data more than any other,
-  which is exactly why the rule is absolute.
-- Report `pass` for a check it could not perform; `unknown` is a valid result.
+Check relevant QC metrics.
+
+For SNV data:
+- depth
+- ALT support
+- VAF
+- mapping quality
+- missing data
+
+For phasing:
+- phaseable fraction
+- phased read count
+- block size
+- haplotype balance
+- unphased fraction
+
+For methylation:
+- CpG coverage
+- methylation call availability
+- missingness
+- strand consistency
+
+Do not evaluate whether the hypothesis is supported.
+
+Write:
+
+research/experiments/<EXP_ID>/qc-report.md
+
+Final status:
+
+PASS
+PASS_WITH_WARNINGS
+FAIL
+BLOCKED

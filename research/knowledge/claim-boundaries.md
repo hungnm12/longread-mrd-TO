@@ -87,7 +87,7 @@ panels of normals, and models trained without evaluation labels.
 Structural enforcement: the joint-molecule schema names the field
 `source_label_for_evaluation_only` so that any appearance in a feature path is
 self-evidently wrong in code review, and the leakage tests in
-[`04_evaluation_plan.md`](../experiments/evaluation-plan.md#3-leakage-prevention) assert its absence
+[`04_evaluation_plan.md`](../parked/snv-phase-methylation/evaluation-plan.md#3-leakage-prevention) assert its absence
 from the feature matrix.
 
 ---

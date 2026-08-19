@@ -54,7 +54,7 @@ consensus, or a second signal class.
   low-tumor-fraction, long-read setting of this project*, not a criticism of the study.
 - That ONT would in fact add what the last column suggests. That column is a list of
   hypotheses; the current project hypothesis
-  ([`03_hypotheses.md`](../../hypotheses/hypotheses.md)) covers only part of that list.
+  ([`03_hypotheses.md`](../../parked/snv-phase-methylation/hypotheses.md)) covers only part of that list.
 - Anything about where this project sits. Its row is deliberately absent — see below.
 
 ## Position of this project — pending
@@ -72,7 +72,7 @@ exist before it re-enters the matrix:
 
 1. a scope statement covering the full problem set the project takes on, not one position;
 2. an updated gap statement — the current one in
-   [`02_research_gap.md`](../research-gap.md) is scoped to a single combination, and the
+   [`02_research_gap.md`](../../parked/snv-phase-methylation/research-gap.md) is scoped to a single combination, and the
    claim there still stands only *within these seven documents*, with no systematic search run.
 
 Until then this document compares the supplied literature only. The last column of the table

@@ -12,7 +12,7 @@ Implemented by `src/joint_evidence/`, produced by `workflow/joint_molecule/extra
 
 A read overlapping three candidate loci produces three records. This denormalization is
 deliberate: the unit of analysis in
-[`../../research/knowledge/scope.md`](../../research/knowledge/scope.md) is the *informative
+[`../../research/knowledge/scope.md`](../../research/parked/snv-phase-methylation/scope.md) is the *informative
 molecule at a locus*, and every downstream metric (`joint_yield`, per-candidate counts,
 per-phase-set strata) is computed over exactly this unit.
 
@@ -117,7 +117,7 @@ Evaluated in this fixed order; the **first** failure is recorded, so counts part
 | *(empty)* | usable |
 
 Ordering matters: it makes the funnel in
-[`../../research/experiments/evaluation-plan.md`](../../research/experiments/evaluation-plan.md)
+[`../../research/experiments/evaluation-plan.md`](../../research/parked/snv-phase-methylation/evaluation-plan.md)
 a strict partition, so stage survival rates are interpretable and sum correctly.
 
 ## 5. Processing guarantees

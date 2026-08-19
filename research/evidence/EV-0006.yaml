@@ -5,10 +5,10 @@ title: Research scope, paper-pattern map and gap statement
 description: >-
   The scope contract, the methodology map over the supplied literature, and the candidate research
   gap — including the explicit statement that the gap is scoped to the indexed documents only.
-path_or_url: research/knowledge/research-gap.md
+path_or_url: research/parked/snv-phase-methylation/research-gap.md
 generated_by: Manual write-up
 input_data:
-  - research/knowledge/scope.md
+  - research/parked/snv-phase-methylation/scope.md
   - research/knowledge/methods/paper-patterns.md
 linked_log: LOG-2026-08-16
 linked_suggestion: null
@@ -17,4 +17,6 @@ linked_claims:
 verification_status: file_present
 verified_by: null
 verified_on: null
-notes: A written argument, not a measurement. It supports scoping decisions only.
+notes: >-
+  A written argument, not a measurement. Moved to research/parked/ on 2026-08-19 with the
+  direction it was written for; the record and its path are kept in step.

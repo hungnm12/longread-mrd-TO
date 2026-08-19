@@ -27,7 +27,7 @@ into the experiment manifest **before** the experiment runs — the pattern alre
 `week4/phase0_results.md`, where targets were locked first and then honestly failed.
 
 Setting a threshold after seeing the result is prohibited by
-[`05_claim_boundaries.md`](../knowledge/claim-boundaries.md).
+[`05_claim_boundaries.md`](../../knowledge/claim-boundaries.md).
 
 ---
 
@@ -195,7 +195,7 @@ become the ablation's focus.
 
 **Observable outputs**
 
-- The six ablation models A–F defined in [`04_evaluation_plan.md`](../experiments/evaluation-plan.md).
+- The six ablation models A–F defined in [`04_evaluation_plan.md`](evaluation-plan.md).
 - Per-model performance with uncertainty, on held-out splits.
 - Calibration curves.
 - The specific comparisons: **D vs F** (does methylation add over sequence+haplotype?) and
@@ -304,7 +304,7 @@ detected by the methylation-using model (a specificity failure, which is disqual
 regardless of sensitivity).
 
 **Next action if accepted** → write up as controlled low-TF method development, bounded by
-[`05_claim_boundaries.md`](../knowledge/claim-boundaries.md). Then, and only then, consider
+[`05_claim_boundaries.md`](../../knowledge/claim-boundaries.md). Then, and only then, consider
 replicates, additional cell lines, or richer models.
 
 **Pivot if rejected**

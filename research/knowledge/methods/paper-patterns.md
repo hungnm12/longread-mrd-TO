@@ -114,7 +114,7 @@ specificity anchor.
 | Validation | yes — framework | not applicable at this project's scale |
 
 The unfilled cell in the "background suppression" row is the candidate research gap.
-See [`02_research_gap.md`](../research-gap.md).
+See [`02_research_gap.md`](../../parked/snv-phase-methylation/research-gap.md).
 
 ---
 

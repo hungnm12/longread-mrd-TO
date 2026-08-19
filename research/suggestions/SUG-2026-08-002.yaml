@@ -17,10 +17,11 @@ planned_actions:
   - action: Specify the metric and its blank/background reference
     expected_evidence: A written metric definition with the control condition it is measured against
     status: planned
-status: captured
+status: not_pursued
 linked_daily_logs: []
 evidence: []
 result: null
-reason_not_completed: Not started; depends on the label source being settled first.
-next_action: Draft the evaluation-unit decision and circulate it before implementation.
+reason_not_completed: >-
+  Parked on 2026-08-19 with the SNV + haplotype phase + native methylation direction. See research/parked/snv-phase-methylation/. Reopen when the project's scope statement exists.
+next_action: null
 target_week: 2026-W35

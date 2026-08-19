@@ -2,7 +2,7 @@
 
 Status: active research contract
 Date: 2026-08-16
-Supersedes the Week 1 framing in [`../RESEARCH_SCOPE.md`](../../archive/RESEARCH_SCOPE.md) as the
+Supersedes the Week 1 framing in [`../RESEARCH_SCOPE.md`](../../../archive/RESEARCH_SCOPE.md) as the
 *primary* storyline; that document's candidate-characterization work is retained as the
 upstream baseline.
 
@@ -60,7 +60,7 @@ allele, the haplotype/phase-set context, and the native methylation evidence can
 read off the same alignment record.
 
 This is deliberately narrower than "one read" and narrower than "one variant". The joint
-record is defined in [`../../orchestration/schemas/joint-molecule.schema.md`](../../orchestration/schemas/joint-molecule.schema.md)
+record is defined in [`../../orchestration/schemas/joint-molecule.schema.md`](../../../orchestration/schemas/joint-molecule.schema.md)
 once Phase 3 lands.
 
 ## Expected output

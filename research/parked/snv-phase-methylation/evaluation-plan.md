@@ -149,7 +149,7 @@ Stated here so it is not accidentally claimed later:
 
 - **No LoB or LoD** in the PAPER-006 analytical sense. One replicate per dilution and one
   blank sample cannot support those estimates.
-- **No clinical performance claim.** See [`05_claim_boundaries.md`](../knowledge/claim-boundaries.md).
+- **No clinical performance claim.** See [`05_claim_boundaries.md`](../../knowledge/claim-boundaries.md).
 - **No cross-sample generalization claim.** One cell line, one mixture series.
 - **No within-level variance estimate.** n = 1 per dilution.
 

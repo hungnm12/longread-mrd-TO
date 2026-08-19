@@ -96,7 +96,7 @@ other.
 | Repository layout: reuse `mrd-longphase/` vs. flatten to the brief's tree | Phases 3–8 file locations | see [`../migration_plan.md`](../../archive/migration_plan.md) §4 |
 | Whole-BAM vs. region-scoped haplotagging | H1 cost and phase-block length | after a cost estimate |
 | Joint-molecule storage format (TSV / JSONL / Parquet) | Phase 3 | `pyarrow` is absent from the environment; trade-off documented in the Phase 3 contract |
-| Literature search to promote the candidate gap | citing the gap as established | [`02_research_gap.md`](../knowledge/research-gap.md) §"Next action" |
+| Literature search to promote the candidate gap | citing the gap as established | [`02_research_gap.md`](../parked/snv-phase-methylation/research-gap.md) §"Next action" |
 | Which chromosomes are held out for testing | Phase 5 splits | before any model is fit |
 
 ## Entries that must never appear here

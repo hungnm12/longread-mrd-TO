@@ -1,10 +1,10 @@
 # Tumor-only long-read MRD — research workspace
 
-**Question:** after accounting for sequence and haplotype context, does native methylation
-provide *incremental* evidence for detecting tumor-derived molecules at low tumor fractions?
-
-The load-bearing word is *incremental* — not whether methylation is informative, but whether it
-is informative **after** sequence and haplotype have been used.
+**Status: between directions.** The tumor-only candidate landscape is characterized and stands.
+The direction built on it — SNV candidates combined with haplotype phase and native methylation
+— was parked on 2026-08-19 and lives, intact, in
+[`research/parked/snv-phase-methylation/`](./research/parked/snv-phase-methylation). The
+project's full problem set is being written down before another direction is adopted.
 
 Start with [`PROJECT.md`](./PROJECT.md) — charter, current phase, and what may not be claimed.
 Then [`AGENTS.md`](./AGENTS.md) if you are an agent working in this repository.
@@ -40,9 +40,8 @@ Then [`AGENTS.md`](./AGENTS.md) if you are an agent working in this repository.
 | Dilution material | 14 BAMs at ~25×: 5 blanks + 3 replicates each at 1%, 0.1%, 0.01% |
 | Experimental result | **none yet** |
 
-The blocking measurement is the feasibility funnel — see
-[`research/knowledge/open-questions.md`](./research/knowledge/open-questions.md) B1, with the
-queued next action in [`orchestration/state.yaml`](./orchestration/state.yaml).
+What is blocking is a definition, not a measurement: the project's problem set. See
+[`orchestration/state.yaml`](./orchestration/state.yaml).
 
 ## Commands
 

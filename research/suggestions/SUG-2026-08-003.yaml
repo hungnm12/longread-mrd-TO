@@ -14,10 +14,11 @@ planned_actions:
   - action: Freeze the SNV-only feature set and scoring rule
     expected_evidence: A versioned baseline configuration file under the workflow directory
     status: planned
-status: captured
+status: not_pursued
 linked_daily_logs: []
 evidence: []
 result: null
-reason_not_completed: Not started; requires the evaluation metric from SUG-2026-08-002.
-next_action: Write the baseline configuration once the metric is defined.
+reason_not_completed: >-
+  Parked on 2026-08-19 with the SNV + haplotype phase + native methylation direction. See research/parked/snv-phase-methylation/. Reopen when the project's scope statement exists.
+next_action: null
 target_week: 2026-W36
