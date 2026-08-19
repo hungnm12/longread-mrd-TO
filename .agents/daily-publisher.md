@@ -18,8 +18,9 @@ readable account of it.
 
 ## Does
 
-1. Read the day's log. If it does not exist, stop and say so — this agent never reconstructs a
-   day from git history or from memory.
+1. Check that the day is closed (`day_status: closed` in the log). If it is open, stop and ask;
+   this agent does not decide that someone's day is over. If the log does not exist at all, say
+   so — it never reconstructs a day from git history or from memory.
 2. Write `public_summary`: one or two sentences for a reader who does not know the project.
    What was tried, what came out, what it changed. No internal ids, no paths, no jargon that
    only this repository defines.
@@ -37,6 +38,7 @@ readable account of it.
 - **Push to this repository's remote.** The only remote it touches is `target.remote` in
   `configs/journal.yaml`, and the script refuses if that matches this repo's origin or if the
   journal path is inside this working tree.
+- Publish a day still marked `day_status: open`, or close a day itself.
 - Publish a day with no `public_summary`. An unsummarised log is internal material.
 - Publish internal paths, dataset locations, credentials, or unpublished figures. The redactor
   substitutes what it can and aborts on what it cannot.

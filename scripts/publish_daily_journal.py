@@ -21,6 +21,8 @@ Safety properties, in order of importance:
 3. It aborts rather than publishing text that still matches a forbidden pattern after redaction.
 4. It publishes nothing for a day whose log has no `public_summary`: an unsummarised day has
    nothing to say to an outside reader.
+5. It publishes nothing for a day still marked `day_status: open`. The day ends when the
+   researcher says it ends, not when the script is run.
 """
 
 from __future__ import annotations
@@ -259,6 +261,13 @@ def main() -> None:
 
     log, body = read_front_matter(log_path)
     date = iso_day(log["date"])
+
+    if config["content"].get("require_closed_day", True) and log.get("day_status", "open") != "closed":
+        fail(
+            f"{log_path.name} is still open — set `day_status: closed` when the day is finished. "
+            "A day published mid-flight reads as an account of the day when it is only a snapshot "
+            "of part of it."
+        )
 
     if config["content"].get("require_public_summary") and not (log.get("public_summary") or "").strip():
         fail(

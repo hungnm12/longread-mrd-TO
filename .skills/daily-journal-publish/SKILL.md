@@ -9,15 +9,18 @@ Publish one day to the journal repository — a **different repo** from this one
 
 ## Preconditions
 
-1. The internal log exists at `research/daily-logs/<date>.md`. If not, run
+1. **The day is over and the researcher says so.** The log must carry `day_status: closed`.
+   Publishing a day still being worked on presents part of it as the whole of it. If the log
+   says `open`, ask — do not close it on the researcher's behalf.
+2. The internal log exists at `research/daily-logs/<date>.md`. If not, run
    `daily-work-summary` first; this skill does not invent a day.
-2. `configs/journal.yaml` has `target.remote` set. If it is `null`, the journal is local-only
+3. `configs/journal.yaml` has `target.remote` set. If it is `null`, the journal is local-only
    and `--push` will refuse — report that instead of working around it.
 
 ## Steps
 
-1. **Read the day's log.** Note what was actually done, what the output showed, and what
-   changed as a result.
+1. **Confirm the day is closed.** If `day_status` is `open`, stop and ask whether the day is
+   finished. Then read the log: what was done, what the output showed, what changed.
 2. **Write `public_summary`** into the log's front matter — one or two sentences for a reader
    outside the project:
    - what was attempted, what came out, and what it changed;
@@ -41,6 +44,8 @@ Publish one day to the journal repository — a **different repo** from this one
   with a manual `git push`.
 - **Never publish** an internal path, a dataset location, a credential or an unpublished
   figure. If the redactor aborts, fix the source text — do not weaken the pattern list.
+- **Never publish an open day**, and never set `day_status: closed` yourself. The researcher
+  decides when the day is over.
 - **Never soften a negative day.** "Nothing worked, here is what was ruled out" is a good entry.
 - **Never edit the log's factual fields** to make the summary read better. Add the summary; leave
   observations, interpretations and decisions as recorded.

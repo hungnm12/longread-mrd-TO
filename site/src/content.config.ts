@@ -362,6 +362,9 @@ const dailyLogs = defineCollection({
     // One or two sentences for an outside reader. The journal publisher refuses to publish a
     // day without one: an unsummarised log is internal material, not a journal entry.
     public_summary: z.string().nullable().default(null),
+    // A day is `open` until the researcher says it is finished. The publisher refuses to
+    // publish an open day: a log written at midday is a snapshot, not an account of the day.
+    day_status: z.enum(["open", "closed"]).default("open"),
     linked_suggestions: z.array(z.string()).default([]),
     planned_work: z.array(z.string()).default([]),
     // The five-part separation the workflow depends on: an action is not a result, and a

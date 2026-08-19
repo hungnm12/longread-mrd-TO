@@ -28,8 +28,11 @@ layout:
     dataset locations and unpublished figures are not included.
 
 content:
-  # A day is published only if the researcher (or the daily-work-summary agent) wrote a
-  # `public_summary` in the daily log. Without it there is nothing to publish but raw internals.
+  # A day is published only once its log is marked `day_status: closed`. Publishing a day that
+  # is still being worked on presents a partial record as a finished one.
+  require_closed_day: true
+  # ... and only if the researcher (or the daily-work-summary agent) wrote a `public_summary`.
+  # Without it there is nothing to publish but raw internals.
   require_public_summary: true
   include_sections:
     - focus
