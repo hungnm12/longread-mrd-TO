@@ -61,6 +61,10 @@ cd site && npm run validate:research
 ./scripts/run-site.sh dev           # or: build | preview | check | test
 cd site && npm run deploy           # rebuild + publish to Cloudflare
 python3 scripts/build_research_deck.py   # → outputs/accepted/mrd-research-report.pptx
+
+# the public journal — a separate repository, configured in configs/journal.yaml
+python3 scripts/publish_daily_journal.py                 # dry run, latest day
+python3 scripts/publish_daily_journal.py 2026-08-19 --write --push
 ```
 
 Environment check before any run:

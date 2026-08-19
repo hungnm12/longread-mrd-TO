@@ -359,6 +359,9 @@ const dailyLogs = defineCollection({
     date: isoDate,
     record_kind: recordKind.default("real"),
     research_question: z.string(),
+    // One or two sentences for an outside reader. The journal publisher refuses to publish a
+    // day without one: an unsummarised log is internal material, not a journal entry.
+    public_summary: z.string().nullable().default(null),
     linked_suggestions: z.array(z.string()).default([]),
     planned_work: z.array(z.string()).default([]),
     // The five-part separation the workflow depends on: an action is not a result, and a

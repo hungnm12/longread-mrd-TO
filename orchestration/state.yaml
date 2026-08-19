@@ -1,62 +1,12 @@
-# Current process state. Updated by the orchestrator when a stage changes.
-#
-# The dashboard state the website reads is research/research-os.json; this file holds the
-# orchestration view and points there rather than restating it.
+project_state: BRAINSTORM
 
-version: 1
-updated: 2026-08-19
-source_of_truth_for_research_state: research/research-os.json
+active_hypothesis: null
+active_idea: null
+active_experiment: null
 
-phase: Between directions — scope being restated
+human_gate:
+  waiting: false
+  type: null
 
-active_stage: capture
-
-paused_streams:
-  - id: site-and-research-os
-    since: 2026-08-19
-    reason: >-
-      Site, record store and reporting tooling are complete and deployed; further work there
-      does not advance the research question.
-    resume_trigger: A reporting need the current site cannot serve.
-
-parked_directions:
-  - id: snv-phase-methylation
-    since: 2026-08-19
-    location: research/parked/snv-phase-methylation/
-    what: >-
-      Tumor-only SNV candidates combined with haplotype phase and native methylation read off
-      the same molecule, tested for incremental discriminative value at low tumor fraction.
-    reason: >-
-      One idea at one position in the method landscape. The project is expected to address a
-      broader problem set; a single direction in the active state shapes every question asked
-      around it.
-    resume_trigger: >-
-      A scope statement covering the full problem set exists, and this direction is shown to be
-      part of it rather than the whole of it.
-
-open_items:
-  suggestions_open: 1          # SUG-2026-08-001, candidate composition
-  suggestions_parked: 3        # 002, 003, 004 — with the parked direction
-  findings_pending_review: 0
-  experiments_registered: 0    # EXP-H1-001 parked with its direction
-  experiments_executed: 0
-
-blocking_question: >-
-  What is the project's full problem set? Until it is written down, any direction adopted will
-  be narrower than the work, which is what happened to the parked one.
-
-next_action:
-  stage: capture
-  item: Write the scope statement — the problem set, not a single position
-  owner: human
-  note: >-
-    Reserved for the researcher. The orchestrator does not choose scientific direction
-    (AGENTS.md rule 10).
-
-still_standing:
-  - The tumor-only candidate landscape and its distributions (direction-independent).
-  - The environment survey in research/knowledge/ — datasets, tools, ONT capabilities, constraints.
-  - The method synthesis over the supplied literature.
-  - The open question of candidate composition, which any direction needs answered.
-
-last_weekly_report: WR-2026-W33
+last_agent: null
+next_agent: brainstormer

@@ -1,0 +1,63 @@
+# Daily journal publishing — the separate, outward-facing repository.
+#
+# This is the ONLY place the journal remote is configured. The publisher refuses to run if the
+# target turns out to be this repository, or a directory inside it: the whole point is that the
+# journal is a different repo with a different audience.
+
+version: 1
+
+target:
+  # Where the journal checkout lives on disk. Must be OUTSIDE this repository.
+  path: ../mrd-daily-journal
+  # Git remote of the journal repo. Set this before the first push; `null` means local-only.
+  remote: null
+  branch: main
+  # Written into the journal's commits so its history is attributable.
+  commit_author: null            # "Name <email>"; null uses the machine's git config
+  commit_prefix: "journal:"
+
+layout:
+  # Where an entry lands inside the journal repo. {yyyy} {mm} {dd} {date} are substituted.
+  entry_path: "entries/{yyyy}/{mm}/{date}.md"
+  # Regenerated on every run from the entries present.
+  index_path: "README.md"
+  index_title: "Research journal — tumor-only long-read MRD"
+  index_intro: >-
+    Daily working notes, published from a private research repository. Each entry separates what
+    was done from what the output showed and from what it is taken to mean. Internal paths,
+    dataset locations and unpublished figures are not included.
+
+content:
+  # A day is published only if the researcher (or the daily-work-summary agent) wrote a
+  # `public_summary` in the daily log. Without it there is nothing to publish but raw internals.
+  require_public_summary: true
+  include_sections:
+    - focus
+    - what_was_done
+    - observations
+    - interpretation
+    - problems
+    - decisions
+    - next
+  include_evidence_titles: true    # ids and titles only — never paths
+  include_suggestion_ids: false    # feedback ids are internal
+  footer: >-
+    Published from a private research repository. Observations are what an artifact showed;
+    interpretations are the researcher's reading of them.
+
+redaction:
+  # Applied before anything is written. Order matters; the first match wins.
+  substitutions:
+    - pattern: "/big8_disk/[^\\s`\"')]+"
+      replacement: "[internal path]"
+    - pattern: "/bip[0-9]+_disk/[^\\s`\"')]+"
+      replacement: "[internal path]"
+    - pattern: "/home/[A-Za-z0-9_.-]+"
+      replacement: "[home path]"
+  # If any of these survives redaction, the run aborts rather than publishing.
+  forbidden:
+    - "/big8_disk"
+    - "/bip7_disk"
+    - "/bip8_disk"
+    - "gh[pousr]_[A-Za-z0-9]{20,}"
+    - "BEGIN [A-Z ]*PRIVATE KEY"

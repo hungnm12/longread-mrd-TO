@@ -71,3 +71,20 @@ cleaner:
     - research/
   write:
     - archive/
+
+daily_publisher:
+  read:
+    - research/daily-logs/
+    - research/evidence/
+    - configs/journal.yaml
+  write:
+    - research/daily-logs/          # the public_summary field only
+  external:
+    # The only agent that writes outside this repository.
+    - configs/journal.yaml#target.path      # separate journal checkout
+  deny:
+    - pushing to this repository's remote, by any means
+    - publishing a day whose log has no public_summary
+    - publishing internal paths, dataset locations or credentials
+    - editing a log's observations, interpretations or decisions
+

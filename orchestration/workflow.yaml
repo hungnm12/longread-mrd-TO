@@ -97,6 +97,17 @@ stages:
     rules:
       - The report is a view over existing records. Anything absent is labelled, never filled in.
 
+  - id: publish
+    purpose: Put an outward-facing account of the day into the separate journal repository
+    owner: daily-publisher
+    artifacts: ["research/daily-logs/*.md (public_summary)", "journal repo — see configs/journal.yaml"]
+    next: [capture]
+    rules:
+      - The journal is a different repository with a different audience; nothing is pushed to
+        this repository's remote from this stage.
+      - A day with no public_summary is not published; an unsummarised log is internal material.
+      - Redaction failure aborts the publish rather than trimming the text until it passes.
+
   - id: archived
     purpose: Keep what was decided against, with the reason
     owner: cleaner
@@ -110,5 +121,5 @@ terminal:
 
 # Cadence, not a hard schedule.
 cadence:
-  daily: [capture, execute, analyse]
+  daily: [capture, execute, analyse, publish]
   weekly: [review, decide, report]
