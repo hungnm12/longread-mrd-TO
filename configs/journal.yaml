@@ -18,7 +18,7 @@ target:
 
 layout:
   # Where an entry lands inside the journal repo. {yyyy} {mm} {dd} {date} are substituted.
-  entry_path: "entries/{yyyy}/{mm}/{date}.md"
+  entry_path: "entries/{yyyy}/{mm}/{date}.html"
   # Regenerated on every run from the entries present.
   index_path: "README.md"
   # Kept in step with what the researcher wrote in the journal repo on 2026-08-19; the publisher
@@ -27,6 +27,9 @@ layout:
   index_intro: ""
 
 content:
+  # The journal publishes rendered HTML, not Markdown: an entry is meant to be read, and a
+  # self-contained page opens offline and prints without a toolchain. Set to `markdown` to go back.
+  entry_format: html
   # A day is published only once its log is marked `day_status: closed`. Publishing a day that
   # is still being worked on presents a partial record as a finished one.
   require_closed_day: true

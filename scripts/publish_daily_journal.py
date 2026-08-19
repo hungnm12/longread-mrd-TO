@@ -37,6 +37,10 @@ from pathlib import Path
 import yaml
 
 REPO = Path(__file__).resolve().parents[1]
+# The HTML entry uses the same renderer as the local daily report, so a published page and a
+# locally rendered one are the same artifact.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from render_markdown_html import to_html  # noqa: E402
 LOGS = REPO / "research" / "daily-logs"
 EVIDENCE = REPO / "research" / "evidence"
 DEFAULT_CONFIG = REPO / "configs" / "journal.yaml"
@@ -173,9 +177,10 @@ def render_entry(log: dict, body: str, evidence: dict, config: dict) -> str:
 def render_index(journal: Path, config: dict) -> str:
     layout = config["layout"]
     entries: list[tuple[str, str]] = []
+    suffix = Path(layout["entry_path"]).suffix
     root = journal / Path(layout["entry_path"]).parts[0]
     if root.exists():
-        for path in sorted(root.rglob("*.md"), reverse=True):
+        for path in sorted(root.rglob(f"*{suffix}"), reverse=True):
             entries.append((path.stem, str(path.relative_to(journal))))
 
     out = [f"# {layout['index_title']}", "", (layout.get("index_intro") or "").strip(), ""]
@@ -311,7 +316,27 @@ def main() -> None:
     rel = layout["entry_path"].format(yyyy=date[:4], mm=date[5:7], dd=date[8:10], date=date)
     entry_path = journal / rel
     entry_path.parent.mkdir(parents=True, exist_ok=True)
-    entry_path.write_text(entry, encoding="utf-8")
+
+    if config["content"].get("entry_format", "markdown") == "html":
+        rendered = to_html(
+            entry,
+            title=f"Daily report — {date}",
+            project="Tumor-only long-read MRD — daily report",
+            meta=f"{date} · published from a private research repository",
+            footer=(config["content"].get("footer") or "").strip(),
+        )
+        if redactor.verify(rendered):
+            fail("redaction failed on the rendered entry")
+        entry_path.write_text(rendered, encoding="utf-8")
+    else:
+        entry_path.write_text(entry, encoding="utf-8")
+
+    # Switching formats must not leave the old file behind for the same day.
+    for stale in entry_path.parent.glob(f"{entry_path.stem}.*"):
+        if stale != entry_path:
+            run_git(journal, "rm", "-q", "--ignore-unmatch", str(stale.relative_to(journal)), check=False)
+            stale.unlink(missing_ok=True)
+            print(f"removed stale {stale.relative_to(journal)}")
 
     # Attachments are scanned before they are copied: a leak in an attached file is a leak.
     for item in config["content"].get("attachments", []):
