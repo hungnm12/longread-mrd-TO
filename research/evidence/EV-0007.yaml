@@ -1,0 +1,25 @@
+id: EV-0007
+created_at: 2026-08-19
+type: document
+title: Signal matrix over the supplied literature
+description: >-
+  One row per supplied study across seven questions — signal used, problem solved, position in
+  an MRD detector, common idea, unique idea, limitation for this setting, and what a native
+  long-read platform could add. Includes the pipeline-position summary and an explicit list of
+  what the matrix does not establish.
+path_or_url: docs/research/06_signal_matrix.md
+generated_by: Manual write-up
+input_data:
+  - docs/research/01_paper_patterns.md
+  - site/src/data/relatedWork.ts
+linked_log: LOG-2026-08-19
+linked_suggestion: null
+linked_claims:
+  - Every listed method makes each molecule count for more before aggregating; they differ in what "more" means
+  - PhasED-Seq requires two somatic variants on one fragment, which is scarcest at low tumor fraction
+verification_status: file_present
+verified_by: null
+verified_on: null
+notes: >-
+  Comparative reading of indexed records, not of source PDFs. The "what ONT may add" column is
+  speculative by construction and is labelled as such in the document.

@@ -1,6 +1,6 @@
 {
-  "current_phase": "Phase 1 — tumor-only candidate characterization (descriptive)",
-  "phase_note": "Descriptive characterization is complete for the pure-tumor sample. Evaluation design has not started.",
+  "current_phase": "Phase 1 \u2014 tumor-only candidate characterization (descriptive)",
+  "phase_note": "Descriptive characterization is complete for the pure-tumor sample. Evaluation design has not started. The website and research-OS implementation stream is paused as of 2026-08-19; active work is literature positioning and evaluation-metric definition.",
   "research_question": "What information is still missing before tumor-only ClairS-TO candidates can be evaluated as reliable MRD markers?",
   "working_hypothesis": "PASS plus adequate depth and ALT support reduces technical noise but does not by itself establish somatic status; an explicit SNV-only baseline and a defined recognition metric are required before any incremental-evidence claim can be tested.",
   "hypothesis_ref": "HYP-001",
@@ -17,25 +17,33 @@
       "id": "ISSUE-01",
       "title": "Candidate composition is unknown",
       "detail": "The somatic, germline and technical-artifact composition of the 48,819 PASS SNV candidates has not been determined.",
-      "blocks": ["SUG-2026-08-001"]
+      "blocks": [
+        "SUG-2026-08-001"
+      ]
     },
     {
       "id": "ISSUE-02",
-      "title": "“Tumor recognition” is not yet an evaluation metric",
+      "title": "\u201cTumor recognition\u201d is not yet an evaluation metric",
       "detail": "No measurable definition of tumor-signal recognition exists, so no method can currently be scored against another.",
-      "blocks": ["SUG-2026-08-002"]
+      "blocks": [
+        "SUG-2026-08-002"
+      ]
     },
     {
       "id": "ISSUE-03",
       "title": "No SNV-only baseline is specified",
       "detail": "Incremental value of any additional evidence modality is undefined until the SNV-only baseline is fixed.",
-      "blocks": ["SUG-2026-08-003"]
+      "blocks": [
+        "SUG-2026-08-003"
+      ]
     },
     {
       "id": "ISSUE-04",
       "title": "Phase and methylation contribution is untested",
       "detail": "Phase and native methylation evidence may be complementary, redundant or unhelpful. This must be tested through an ablation, not assumed.",
-      "blocks": ["SUG-2026-08-004"]
+      "blocks": [
+        "SUG-2026-08-004"
+      ]
     }
   ],
   "guardrails": [
