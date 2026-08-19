@@ -154,6 +154,16 @@ def render_entry(log: dict, body: str, evidence: dict, config: dict) -> str:
     if body.strip():
         out += ["## Note", "", body.strip(), ""]
 
+    attachments = [
+        item for item in content.get("attachments", [])
+        if not item.get("days") or date in [iso_day(d) for d in item["days"]]
+    ]
+    if attachments:
+        out += ["## Attached", ""]
+        for item in attachments:
+            out.append(f"- [{item['label']}]({item['dest']})")
+        out.append("")
+
     footer = (content.get("footer") or "").strip()
     if footer:
         out += ["---", "", f"*{footer}*", ""]
@@ -302,6 +312,25 @@ def main() -> None:
     entry_path = journal / rel
     entry_path.parent.mkdir(parents=True, exist_ok=True)
     entry_path.write_text(entry, encoding="utf-8")
+
+    # Attachments are scanned before they are copied: a leak in an attached file is a leak.
+    for item in config["content"].get("attachments", []):
+        if item.get("days") and date not in [iso_day(d) for d in item["days"]]:
+            continue
+        source = REPO / item["source"]
+        if not source.exists():
+            fail(f"attachment {item['source']} does not exist")
+        payload = source.read_bytes()
+        try:
+            leaks = redactor.verify(payload.decode("utf-8"))
+        except UnicodeDecodeError:
+            leaks = []  # binary attachment: nothing to scan for path strings
+        if leaks:
+            fail(f"attachment {item['source']} matches forbidden patterns: {', '.join(leaks)}")
+        target = journal / item["dest"]
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(payload)
+        print(f"attached {item['dest']}")
 
     index = redactor.scrub(render_index(journal, config))
     if redactor.verify(index):

@@ -21,11 +21,10 @@ layout:
   entry_path: "entries/{yyyy}/{mm}/{date}.md"
   # Regenerated on every run from the entries present.
   index_path: "README.md"
-  index_title: "Research journal — tumor-only long-read MRD"
-  index_intro: >-
-    Daily working notes, published from a private research repository. Each entry separates what
-    was done from what the output showed and from what it is taken to mean. Internal paths,
-    dataset locations and unpublished figures are not included.
+  # Kept in step with what the researcher wrote in the journal repo on 2026-08-19; the publisher
+  # regenerates this file, so its wording lives here or it gets overwritten every publish.
+  index_title: "Daily Report"
+  index_intro: ""
 
 content:
   # A day is published only once its log is marked `day_status: closed`. Publishing a day that
@@ -44,6 +43,13 @@ content:
     - next
   include_evidence_titles: true    # ids and titles only — never paths
   include_suggestion_ids: false    # feedback ids are internal
+  # Files copied into the journal beside the entry and linked from it. Each is scanned for the
+  # forbidden patterns below before it is copied; a match aborts the publish.
+  attachments:
+    - source: outputs/accepted/reports/2026-08-19-ont-linked-evidence.html
+      dest: reports/2026-08-19-ont-linked-evidence.html
+      label: "Research report — does long-read ONT improve tumour recognition? (5 figures, opens offline)"
+      days: [2026-08-19]        # omit to attach to every entry
   footer: >-
     Published from a private research repository. Observations are what an artifact showed;
     interpretations are the researcher's reading of them.
