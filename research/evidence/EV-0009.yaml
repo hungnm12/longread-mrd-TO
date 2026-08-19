@@ -1,0 +1,27 @@
+id: EV-0009
+created_at: 2026-08-19
+type: analysis_result
+title: Detector design-space synthesis — axes, method matrix, capabilities, gaps
+description: >-
+  Field-level synthesis of the reviewed MRD literature as a design space: eleven axes, eight
+  methods positioned on each, an ONT capability inventory checked against the BAMs, an
+  experimental resource map, and five candidate gaps with falsification conditions. The site's
+  research narrative is rendered from these artifacts.
+path_or_url: research/design-space/detector-axes.yaml
+generated_by: Manual synthesis over research/knowledge, plus one measurement on the candidate table
+input_data:
+  - research/knowledge/methods/paper-patterns.md
+  - research/knowledge/methods/signal-matrix.md
+  - outputs/active/results/tumor_only/HCC1395/candidate_pass_snvs.tsv
+linked_log: LOG-2026-08-19
+linked_suggestion: null
+linked_claims:
+  - 34.8% of PASS SNV candidates have another PASS candidate within 10 kb, 21.3% within 5 kb
+  - Every reviewed detection method is tumor-informed; tumor-naive discovery appears only in local tooling
+  - Fragmentomics cannot be tested on this material because it is cell-line genomic DNA, not cfDNA
+verification_status: file_present
+verified_by: null
+verified_on: null
+notes: >-
+  Method positions derive from indexed summaries, not source PDFs. Coverage claims are scoped to
+  the seven reviewed documents; no systematic search has been run.

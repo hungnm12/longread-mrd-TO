@@ -1,0 +1,202 @@
+# Method × design-space matrix.
+#
+# One entry per reviewed method, positioned on the axes in detector-axes.yaml. Positions are
+# `[unverified]` at the whole-file level: every entry derives from indexed summaries, not from a
+# source PDF read locally (research/knowledge/methods/paper-patterns.md). No performance figure
+# appears anywhere here — the studies use different assays, sample types and cohorts.
+#
+# `ref` matches site/src/data/references.ts numbering.
+
+version: 1
+updated: 2026-08-19
+verification: All positions derive from indexed summaries; none confirmed against a source PDF.
+
+methods:
+
+  - id: mrdetect
+    name: MRDetect
+    ref: 1
+    in_reviewed_set: true
+    axes:
+      marker-discovery: Tumor-informed, genome-wide — thousands of patient-specific sites from tumor WGS
+      evidence-per-observation: Allele only
+      measurement-accuracy: Error-model suppression; no physical consensus
+      background-suppression: Error modelling over a very large marker set
+      evidence-linkage: None — observations are independent across loci
+      aggregation: Genome-wide integration of individually weak per-locus evidence
+      detection-unit: Locus, then sample
+      decision-threshold: Fixed statistic against a reference distribution
+      validation: Cohort performance
+      platform-deployability: Short-read WGS; separate assay per signal class
+      modality-independence: Single modality; question does not arise
+    unique_contribution: >-
+      Established breadth over depth: with enough loci, evidence too weak to act on at any single
+      site becomes a usable sample-level readout.
+    limitation_here: >-
+      Aggregates across loci rather than within a molecule — each read still contributes one bit.
+      Tumor-informed, so it presupposes a tumor profile this project does not have.
+
+  - id: mrd-edge
+    name: MRD-EDGE
+    ref: 2
+    in_reviewed_set: true
+    axes:
+      marker-discovery: Tumor-informed, genome-wide
+      evidence-per-observation: Allele plus copy number
+      measurement-accuracy: Error-model suppression, learned
+      background-suppression: Learned ranking of observations by how tumor-like their features are
+      evidence-linkage: None
+      aggregation: Genome-wide integration after enrichment; multimodal SNV + CNV
+      detection-unit: Locus, then sample
+      decision-threshold: Model probability with a chosen operating point
+      validation: Cohort performance
+      platform-deployability: Short-read WGS
+      modality-independence: SNV and CNV combined; independence assumed rather than tested [unverified]
+    unique_contribution: >-
+      Moved background suppression from a filter to a learned model applied before aggregation.
+    limitation_here: >-
+      The feature space is short-read sequence context; native base modifications are not among its
+      inputs, and it needs labelled training data this project does not have.
+
+  - id: phased-seq
+    name: PhasED-Seq
+    ref: 3
+    in_reviewed_set: true
+    axes:
+      marker-discovery: Tumor-informed panel of phased variant regions
+      evidence-per-observation: Allele only, but several per fragment
+      measurement-accuracy: Error-model suppression
+      background-suppression: Within-molecule consistency — two or more variants must co-occur in phase
+      evidence-linkage: Short-fragment co-occurrence, limited by cfDNA fragment length
+      aggregation: Count fragments satisfying the linkage requirement
+      detection-unit: Molecule / fragment
+      decision-threshold: Blank-anchored — the cut is defined against a measured background distribution
+      validation: Analytical validation — LoB, LoD, precision, dilution series
+      platform-deployability: Short-read targeted assay
+      modality-independence: Single modality
+    unique_contribution: >-
+      Linkage as a background-suppression mechanism: independent errors rarely fail twice on one
+      fragment, so requiring co-occurrence suppresses background multiplicatively. Also the reviewed
+      set's only analytical-validation framework.
+    limitation_here: >-
+      Requires two or more somatic variants inside one short fragment — available in mutation-dense
+      disease, scarcest exactly where tumor fraction is lowest. Not tumor-only.
+
+  - id: real-time-ont
+    name: Real-time nanopore cfDNA genome and fragmentome
+    ref: 4
+    in_reviewed_set: true
+    axes:
+      marker-discovery: None — no per-patient marker set; genome-wide summaries
+      evidence-per-observation: Fragment properties and copy number
+      measurement-accuracy: Native single-pass
+      background-suppression: Not the contribution
+      evidence-linkage: Long-read co-observation available on the platform, not used as a mechanism
+      aggregation: Region/bin summaries into a sample-level readout
+      detection-unit: Region or bin, then sample
+      decision-threshold: Not the contribution
+      validation: Feasibility demonstration
+      platform-deployability: Single native ONT library, plasma and urine, short turnaround
+      modality-independence: CNA and fragmentomics combined; coupling not examined
+    unique_contribution: >-
+      Showed that genomic and fragment-level readouts come off one native long-read library quickly
+      enough to matter clinically.
+    limitation_here: >-
+      Copy-number and fragmentation need appreciable tumor fraction; the design does not address
+      single-nucleotide evidence at low tumor fraction.
+
+  - id: nanorcs
+    name: NanoRCS
+    ref: 5
+    in_reviewed_set: true
+    axes:
+      marker-discovery: Tumor-informed for the SNV channel; genome-wide for CNA
+      evidence-per-observation: Allele, copy number and fragment properties on consensus-corrected reads
+      measurement-accuracy: Rolling-circle consensus — the reviewed set's only physical accuracy fix
+      background-suppression: Higher per-read confidence rather than an explicit suppression model
+      evidence-linkage: Long-read co-observation available; used for multimodality, not linkage
+      aggregation: Multimodal tumor-fraction estimation across signal classes
+      detection-unit: Molecule, then sample
+      decision-threshold: Model-based tumor-fraction estimate
+      validation: Cohort performance with in-vitro confirmation
+      platform-deployability: Single long-read library, but with an amplification step
+      modality-independence: Channels combined; independence assumed [unverified]
+    unique_contribution: >-
+      Raised per-molecule confidence physically on a long-read platform, then used several signal
+      classes from the same reads at once.
+    limitation_here: >-
+      The consensus is built from amplified copies, so native base modifications are not expected to
+      survive [unverified]. Combined modalities are sequence- and fragment-level, not phase and
+      methylation.
+
+  - id: methylation-fragmentation
+    name: Methylation and cell-free DNA fragmentation
+    ref: 6
+    in_reviewed_set: true
+    is_detector: false
+    axes:
+      marker-discovery: Not applicable
+      evidence-per-observation: Methylation and fragmentation, related to each other
+      measurement-accuracy: Not applicable
+      background-suppression: Not applicable
+      evidence-linkage: Not applicable
+      aggregation: Constrains it — shows the channels are coupled
+      detection-unit: Region, population level
+      decision-threshold: Not applicable
+      validation: Not a detector
+      platform-deployability: Not applicable
+      modality-independence: The contribution — demonstrates coupling rather than independence
+    unique_contribution: >-
+      Supplies the constraint every multimodal aggregation in this space must respect: methylation
+      and fragmentation are biologically coupled, not independent evidence.
+    limitation_here: >-
+      Population- and region-level, not per-molecule tumor-origin inference; supplies no detection
+      method.
+
+  - id: ont-cfdna-methylation
+    name: ONT cfDNA methylation requirements
+    ref: 7
+    in_reviewed_set: true
+    is_detector: false
+    axes:
+      marker-discovery: Not applicable
+      evidence-per-observation: Native 5mC from the same molecule, no separate assay
+      measurement-accuracy: Native single-pass; states where the measurement degrades
+      background-suppression: Protocol control — constrain preparation before modelling
+      evidence-linkage: Not applicable
+      aggregation: Not applicable
+      detection-unit: Not applicable
+      decision-threshold: Not applicable
+      validation: Not a detector
+      platform-deployability: Single native library
+      modality-independence: Not applicable
+    unique_contribution: >-
+      Makes methylation evidence conditional on preparation rather than absolute, and names where
+      the measurement is least reliable.
+    limitation_here: >-
+      A vendor requirements document, not a detection study: it constrains interpretation without
+      supplying comparative evidence.
+
+# Local tooling, included so the project's own position on the axes is legible. Not a reviewed
+# MRD method and not counted when judging what the literature covers.
+  - id: clairs-to
+    name: ClairS-TO (local tooling)
+    ref: 8
+    in_reviewed_set: false
+    axes:
+      marker-discovery: Tumor-naive — candidates derived from the test sample with no matched normal
+      evidence-per-observation: Allele only
+      measurement-accuracy: Native single-pass, deep-learning caller
+      background-suppression: Population databases and panel of normals
+      evidence-linkage: None
+      aggregation: None — produces a candidate list, not a sample score
+      detection-unit: Locus
+      decision-threshold: Caller PASS label, which is a retention decision and not a somatic verdict
+      validation: Not applicable
+      platform-deployability: Runs on the native long-read library already produced
+      modality-independence: Single modality
+    unique_contribution: >-
+      Tumor-naive candidate generation on long reads — the only tumor-naive position anywhere in
+      this matrix.
+    limitation_here: >-
+      Stops at candidates. Composition of the retained set is unknown, and PASS is not somatic truth.

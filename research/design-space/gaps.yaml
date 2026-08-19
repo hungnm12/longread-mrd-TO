@@ -1,0 +1,159 @@
+# Candidate design-space gaps.
+#
+# "Underexplored" here means: not represented in the seven documents reviewed in this repository.
+# It does NOT mean unstudied in the field. No systematic literature search has been run, so every
+# entry below carries that scope limit and none may be described as novel.
+#
+# Nothing here is selected as the thesis direction. G2 is the previously parked direction, listed
+# as one candidate among others with no privileged status.
+
+version: 1
+updated: 2026-08-19
+scope_limit: >-
+  Coverage claims are relative to the seven reviewed documents only. A documented systematic
+  search has not been run — see research/knowledge/open-questions.md D3.
+
+well_explored:
+  - Genome-wide aggregation of weak per-locus SNV evidence, tumor-informed [1,2]
+  - Learned background suppression on short-read sequence context [2]
+  - Linkage-based suppression within a short cfDNA fragment [3]
+  - Physical accuracy improvement by consensus on long reads [5]
+  - Native multi-class readout from one ONT library, at region scale [4,5]
+  - Analytical validation framing — LoB, LoD, precision [3]
+
+partially_explored:
+  - Long reads used for multimodality but not for linkage-based background suppression [4,5]
+  - Multimodal aggregation with modality independence assumed rather than tested [2,5 vs 6]
+
+gaps:
+  - id: G1
+    title: Long-range same-molecule linkage for tumor-only detection
+    axes_combined: [evidence-linkage, background-suppression, marker-discovery, detection-unit]
+    closest_methods: [phased-seq, nanorcs]
+    what_is_actually_different: >-
+      PhasED-Seq requires two somatic variants inside one short cfDNA fragment, is tumor-informed
+      and uses a matched-normal design. Long reads extend the co-observation window from hundreds
+      of bases to kilobases, which changes how often the opportunity exists — and the candidates
+      here come from a tumor-naive caller, so no prior tumor profile is assumed. NanoRCS has the
+      read length but spends it on consensus and multimodality, not on linkage.
+    required_ont_capability: [read-span, same-molecule-cooccurrence, snv-calls]
+    required_data: Dilution series with blanks; candidate set; per-read labels for evaluation only
+    feasibility: >-
+      Measurable now. 34.8% of PASS candidates have another PASS candidate within 10 kb and 21.3%
+      within 5 kb, against a median read of ~11.3 kb. The first experiment is counting how often
+      two candidates are actually co-observed on one read, per tumor fraction.
+    confounding_risks:
+      - Candidate pairs in close proximity may be enriched for the same artifact class, so co-occurrence could mark a shared error mode rather than shared origin.
+      - Nearby candidates may be germline haplotype structure rather than somatic events; composition is unknown.
+      - Distance availability is an upper bound and is not co-observation.
+    falsification: >-
+      Count co-observed candidate pairs per dilution. If the count at 0.1% and 0.01% is
+      indistinguishable from the blanks, linkage carries no usable signal at those fractions and
+      the direction dies on this data.
+    status: candidate
+
+  - id: G2
+    title: Haplotype-conditioned native methylation on the same molecule
+    axes_combined: [evidence-per-observation, evidence-linkage, background-suppression, modality-independence]
+    closest_methods: [phased-seq, ont-cfdna-methylation, methylation-fragmentation]
+    what_is_actually_different: >-
+      Uses the haplotype background of a single variant, plus that molecule's methylation state, in
+      place of PhasED-Seq's requirement for a second somatic variant. No reviewed method reads
+      allele, phase context and native methylation off one molecule.
+    required_ont_capability: [native-5mc, native-5hmc, haplotype-tags, phase-blocks, methylation-calibration]
+    required_data: Dilution series; a germline het set for phasing; blanks
+    feasibility: >-
+      Blocked on two unmeasured things: phase block length at 25x, and how many molecules carry
+      allele, phase and methylation together. Both are cheap to measure and neither has been.
+    confounding_risks:
+      - Methylation is coupled to fragmentation rather than independent [6], so an apparent gain may be re-encoded information.
+      - Methylation calls are protocol-sensitive [7] and the basecaller model is unrecorded here.
+      - Haplotype context does not exist until phasing succeeds, and it may not at low coverage.
+    falsification: >-
+      Ablate: sequence alone, sequence + phase, sequence + methylation, all three. If the full
+      configuration does not separate from the sequence-only baseline on the same molecules, the
+      added modalities are redundant in this setting.
+    status: candidate
+    note: >-
+      This was the project's previous direction. It was parked on 2026-08-19 and appears here as
+      one candidate among others, with no privileged position.
+
+  - id: G3
+    title: Native-molecule accuracy versus modality — the unexamined trade
+    axes_combined: [measurement-accuracy, evidence-per-observation, platform-deployability]
+    closest_methods: [nanorcs, real-time-ont]
+    what_is_actually_different: >-
+      The reviewed set contains one method that buys accuracy with amplification (losing native
+      modifications) and one that keeps the molecule native (accepting per-read error). Nothing
+      measures what is given up either way on the same material.
+    required_ont_capability: [read-error-context, native-5mc, snv-calls]
+    required_data: Pure tumor and blanks; no dilution needed for the first pass
+    feasibility: >-
+      Partially measurable. The native side is measurable here; the consensus side is not, because
+      no amplified library exists. This is a comparison this project can only half-run.
+    confounding_risks:
+      - Comparing to published consensus performance across different samples would be exactly the incompatible-numbers comparison this project forbids.
+    falsification: >-
+      Quantify how much per-read error costs at the candidate level, and whether modification
+      calls add enough to offset it. A null here would mean the native trade is not worth taking.
+    status: candidate-limited
+
+  - id: G4
+    title: Blank-anchored decision rule for a tumor-only long-read detector
+    axes_combined: [decision-threshold, validation, detection-unit]
+    closest_methods: [phased-seq]
+    what_is_actually_different: >-
+      The reviewed set's only blank-anchored framework is short-read, targeted and tumor-informed.
+      No reviewed method defines a decision rule against measured blanks for a tumor-naive
+      long-read setting.
+    required_ont_capability: [snv-calls, negative-control]
+    required_data: The five TF0 replicates — already on disk
+    feasibility: >-
+      Feasible and cheap, and it does not depend on which evidence axis is eventually chosen. Five
+      blank replicates is the usual minimum for a rudimentary limit-of-blank estimate.
+    confounding_risks:
+      - Five replicates from one subsampling pipeline share their source; they are not independent libraries, so the estimated blank distribution is narrower than a true one.
+      - A limit of blank on cell-line dilution says nothing about plasma.
+    falsification: >-
+      If the blank distribution is so wide that no threshold separates 1% from 0%, the whole
+      detection question on this material is answered negatively — which is itself a result.
+    status: candidate
+
+  - id: G5
+    title: Tumor-naive marker discovery as an MRD strategy
+    axes_combined: [marker-discovery, background-suppression]
+    closest_methods: []
+    what_is_actually_different: >-
+      Every reviewed detection method is tumor-informed. This project's candidate set is
+      tumor-naive, which is a different problem: the marker set carries its own false-positive
+      structure rather than being validated in advance by tumor sequencing.
+    required_ont_capability: [snv-calls]
+    required_data: Candidate set, population resources, SEQC2 for evaluation only
+    feasibility: >-
+      This is the composition question (SUG-2026-08-001) in design-space terms, and it is a
+      precondition for every other gap: no recognition metric is definable over a set of unknown
+      composition.
+    confounding_risks:
+      - Estimating composition with the same population resources that produced the candidates is circular for the germline fraction.
+      - SEQC2 may be used to evaluate composition but never to select candidates.
+    falsification: >-
+      If the retained set proves to be dominated by germline and recurrent artifact, tumor-naive
+      discovery is not a viable base for any of the other gaps on this data.
+    status: candidate-foundational
+
+infeasible_here:
+  - id: X1
+    title: Fragmentomics-based detection
+    reason: >-
+      This is cell-line genomic DNA, not cfDNA. Fragment ends reflect library preparation, not the
+      nuclease biology that makes cfDNA fragmentomics informative. The axis cannot be tested on
+      this material regardless of what the literature does with it.
+    would_require: Plasma cfDNA sequenced on the same platform
+  - id: X2
+    title: Consensus-accuracy designs
+    reason: The data is simplex with no amplification-based consensus; the NanoRCS route is unavailable.
+    would_require: A rolling-circle or duplex library, which would in turn lose native modifications
+  - id: X3
+    title: Any clinical MRD performance claim
+    reason: Cell-line genomic dilution is not a patient sample; no cohort exists here.
+    would_require: A clinical cohort and a different study design entirely

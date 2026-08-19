@@ -1,0 +1,122 @@
+# Experimental resource map — what can actually be run, with what, against what.
+#
+# Placed in data/ rather than research/data/ because this repository already keeps dataset
+# pointers, manifests and governance here; the narrative inventory is
+# research/knowledge/datasets.md. All source paths are READ-ONLY.
+
+version: 1
+updated: 2026-08-19
+governance: data/GOVERNANCE.md
+
+materials:
+  - id: pure-tumor
+    what: HCC1395 tumor cell line, ONT native modification calling
+    role: Candidate discovery; positive-control methylation reference
+    scale: ~272 GB BAM with index
+    status: available
+    read_only: true
+
+  - id: matched-normal
+    what: HCC1395BL lymphoblastoid normal, same platform
+    role: EVALUATION ONLY — source of per-read labels and of germline context for checking
+    scale: ~139 GB BAM with index
+    status: available
+    read_only: true
+    restriction: May never enter a discovery or inference path.
+
+  - id: dilution-series
+    what: Tumor/normal mixtures at ~25x
+    role: The low-tumor-fraction material; the only place a detection question can be posed
+    levels:
+      - {tumor_fraction: "0 (blank)", replicates: 5}
+      - {tumor_fraction: "1e-2", replicates: 3}
+      - {tumor_fraction: "1e-3", replicates: 3}
+      - {tumor_fraction: "1e-4", replicates: 3}
+    scale: 14 BAMs, ~76 GB each, ~1.06 TB total
+    provenance: >-
+      Each level is samtools subsampling of deduplicated tumor and normal separately, then merged;
+      seeds and fractions are recorded in the BAM @PG chains and are therefore reproducible.
+    status: available
+    read_only: true
+    note: >-
+      Corrects the parked scope contract, which assumed one replicate per level and concluded that
+      no limit-of-blank estimate was possible.
+
+  - id: reference
+    what: GRCh38_no_alt_analysis_set
+    role: Alignment reference; matches the BAM headers
+    status: available
+    read_only: true
+
+truth_and_benchmarks:
+  - id: seqc2-hc
+    what: SEQC2 high-confidence somatic SNV and INDEL calls with high-confidence region BED
+    role: EVALUATION ONLY — scoring a candidate set against an external truth
+    status: available
+    restriction: Using it to select candidates would leak truth into the method.
+  - id: orthogonal-benchmark
+    what: HCC1395 orthogonal-tools benchmark somatic VCF and BED
+    role: EVALUATION ONLY — second opinion on the same question
+    status: available
+  - id: per-read-labels
+    what: Tumor/normal origin of individual dilution reads, by read-name matching
+    role: EVALUATION ONLY — the only per-molecule label available
+    status: derivable
+    caveat: Demonstrated in one pilot window; collision rate at scale unmeasured.
+
+background_resources:
+  - id: clairs-to-pon
+    what: gnomAD, dbSNP non-somatic sites, 1000g PoN, CoLoRSdb (long-read population database), difficult-region BED
+    role: Tumor-only background suppression without a matched normal
+    status: available
+    note: CoLoRSdb matters specifically because it is long-read derived.
+
+tooling:
+  - id: clairs-to
+    what: Tumor-only somatic caller, v0.5.0
+    status: present-but-broken
+    detail: The wrapper fails on a missing `python` on PATH; needs a conda env, a shim or the container.
+  - id: longphase
+    what: LongPhase 2.0.2 — phasing and haplotagging
+    status: present-unrun
+    detail: Off PATH, at week1/experiment/external/longphase_develop/longphase. Needs a het variant set first.
+  - id: clair3
+    what: Germline caller — the missing input for phasing
+    status: present-unrun
+  - id: whatshap
+    what: Phasing alternative and cross-check, v2.8
+    status: available
+  - id: pysam
+    what: Direct MM/ML parsing; removes any need for modkit
+    status: available
+  - id: compute
+    what: 112 cores, 503 GB RAM, no GPU
+    status: available
+    consequence: Rules out deep-model designs on this host; reinforces interpretable methods.
+
+operations_possible:
+  - id: region-slicing
+    what: Extract a genomic region from any BAM for cheap iteration
+    cost: Minutes on one region; the default way to work here
+  - id: downsampling
+    what: Further subsample an existing dilution to lower effective depth
+    cost: Hours per BAM; writes to outputs/, never to source
+  - id: candidate-pairing
+    what: Find candidate pairs within one read span
+    cost: Seconds on the existing candidate table — already measured (34.8% within 10 kb)
+  - id: haplotagging
+    what: Germline calling then LongPhase, whole-BAM or region-scoped
+    cost: Unmeasured; region-scoped is far cheaper but yields shorter blocks
+    status: not yet run
+  - id: re-mixing
+    what: Producing new tumor fractions from the source BAMs
+    status: possible-but-unowned
+    caveat: >-
+      The existing mixtures were produced by another user's pipeline. Reproducing them requires
+      the dedup source and enough disk for ~76 GB per replicate; nothing here modifies theirs.
+
+blocking_unknowns:
+  - Basecaller model and version are not recorded in the BAM header, so methylation calibration is unconfirmed.
+  - Phase block length at 25x is unmeasured, so haplotype-conditioned designs have unknown coverage.
+  - Composition of the PASS candidate set (somatic / germline / artifact) is unknown.
+  - Free disk space is unmeasured; `df` hangs on this host.

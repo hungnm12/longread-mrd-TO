@@ -3388,3 +3388,436 @@ body.deck-presenting {
   font-size: 0.95rem;
   color: var(--ink);
 }
+
+/* ======================================================================== */
+/* Design-space synthesis — axis cards, matrix, capabilities, gaps          */
+/* ======================================================================== */
+/*                                                                          */
+/* All of this renders from research/design-space/*.yaml, so the styling     */
+/* has to survive an axis or a gap being added without layout surgery:       */
+/* everything is a flow of self-sizing cards rather than a fixed grid.       */
+
+.axis-list,
+.gap-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.axis-card,
+.gap-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel-strong);
+  padding: 1.1rem 1.3rem;
+}
+
+.axis-card__head,
+.gap-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.axis-card__number,
+.gap-card__id {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+}
+
+.axis-card__head h3,
+.gap-card__head h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.18rem;
+  flex: 1 1 14rem;
+}
+
+.axis-card__tag,
+.mechanism-row__tag,
+.axis-matrix__tag {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.05rem 0.5rem;
+}
+
+.axis-card__definition {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.axis-card__why {
+  margin: 0 0 0.5rem;
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+
+.axis-card__strategies {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.axis-card__strategies li {
+  border-left: 2px solid var(--accent-soft);
+  padding-left: 0.8rem;
+  display: grid;
+  gap: 0.1rem;
+}
+
+.axis-card__strategy {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.axis-card__detail {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.axis-card__methods {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--accent);
+}
+
+.axis-card__caveat {
+  font-size: 0.85rem;
+  color: var(--warning);
+}
+
+.axis-card__open,
+.axis-card__measured {
+  margin: 0.8rem 0 0;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.axis-card__open {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.axis-card__measured {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* --- principles and mechanisms ------------------------------------------- */
+
+.principle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.principle {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  padding: 1rem 1.1rem;
+}
+
+.principle h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  font-family: var(--serif);
+}
+
+.principle p {
+  margin: 0;
+  font-size: 0.94rem;
+}
+
+.mechanism-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.mechanism-row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr);
+  gap: 0.4rem 1.4rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.9rem;
+}
+
+.mechanism-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.mechanism-row__name {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: baseline;
+  font-size: 0.98rem;
+}
+
+.mechanism-row__body p {
+  margin: 0 0 0.4rem;
+  font-size: 0.96rem;
+}
+
+.mechanism-row__limit {
+  color: var(--muted);
+  font-size: 0.9rem !important;
+}
+
+/* --- method × axis matrix ------------------------------------------------ */
+
+.matrix-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-strong);
+}
+
+.axis-matrix {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 74rem;
+  font-size: 0.84rem;
+}
+
+.axis-matrix th,
+.axis-matrix td {
+  border-bottom: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  padding: 0.6rem 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.axis-matrix th:last-child,
+.axis-matrix td:last-child {
+  border-right: none;
+}
+
+.axis-matrix thead th {
+  position: sticky;
+  top: 0;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.axis-matrix tbody th {
+  width: 11rem;
+  font-weight: 600;
+  display: table-cell;
+}
+
+.axis-matrix__row--tooling {
+  background: rgba(105, 95, 86, 0.05);
+}
+
+/* --- capability space ---------------------------------------------------- */
+
+.capability-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.capability-group {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel-strong);
+  padding: 1rem 1.1rem;
+}
+
+.capability-group header h3 {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  letter-spacing: 0.08em;
+}
+
+.capability-group header p {
+  margin: 0.15rem 0 0.8rem;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.capability-group--available { border-top: 4px solid var(--accent); }
+.capability-group--available header h3 { color: var(--accent); }
+.capability-group--derivable { border-top: 4px solid #2f6b3a; }
+.capability-group--derivable header h3 { color: #2f6b3a; }
+.capability-group--unknown { border-top: 4px solid var(--warning); }
+.capability-group--unknown header h3 { color: var(--warning); }
+.capability-group--missing { border-top: 4px solid var(--danger); }
+.capability-group--missing header h3 { color: var(--danger); }
+
+.capability-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.capability-group li {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.capability__name {
+  font-weight: 600;
+  font-size: 0.94rem;
+}
+
+.capability__evidence {
+  font-size: 0.87rem;
+  color: var(--muted);
+}
+
+.capability__path {
+  font-size: 0.84rem;
+  color: var(--accent);
+}
+
+.capability__caveat {
+  font-size: 0.84rem;
+  color: var(--warning);
+}
+
+/* --- resources and coverage ---------------------------------------------- */
+
+.resource-grid,
+.coverage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.resource-card,
+.coverage {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  padding: 1rem 1.1rem;
+}
+
+.resource-card h3,
+.coverage h3 {
+  margin: 0 0 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.resource-card ul,
+.coverage ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+}
+
+.coverage--well { border-left: 4px solid var(--accent); }
+.coverage--partial { border-left: 4px solid var(--warning); }
+.coverage--partial h3 { color: var(--warning); }
+.coverage--infeasible { border-left: 4px solid var(--danger); }
+.coverage--infeasible h3 { color: var(--danger); }
+
+/* --- candidate gaps ------------------------------------------------------ */
+
+.gap-card__status {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.gap-card__axes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.8rem;
+}
+
+.gap-card__axis {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.1rem 0.45rem;
+  color: var(--muted);
+  background: var(--panel);
+}
+
+.gap-card__fields {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(9rem, auto) minmax(0, 1fr);
+  gap: 0.4rem 1.2rem;
+  font-size: 0.93rem;
+}
+
+.gap-card__fields dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.15rem;
+}
+
+.gap-card__fields dd {
+  margin: 0;
+}
+
+.gap-card__fields dd ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.gap-card__falsify {
+  border-left: 3px solid var(--accent);
+  padding-left: 0.8rem;
+}
+
+.gap-card__note {
+  margin: 0.8rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding-top: 0.6rem;
+}
+
+.figure-note {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+@media (max-width: 700px) {
+  .mechanism-row,
+  .gap-card__fields {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,141 @@
+# ONT capability space — what is actually usable on THIS data, not what the platform supports.
+#
+# Status vocabulary:
+#   AVAILABLE  — present in the BAMs now, checked by reading them
+#   DERIVABLE  — obtainable with tooling on this machine, by a named path that has not been run
+#   UNKNOWN    — cannot be stated without a check or an answer from whoever produced the run
+#   MISSING    — not obtainable from this data, for a stated reason
+#
+# A capability is never AVAILABLE because ONT supports it in principle. The narrative version of
+# this inventory is research/knowledge/ont-capabilities.md.
+
+version: 1
+updated: 2026-08-19
+checked_on: 2026-08-19
+sample_checked: HCC1395 tumor BAM, chr1:5,000,000-5,020,000 (224 reads); TF1e-4 rep1, 300 reads
+
+capabilities:
+
+  - id: snv-calls
+    capability: Single-nucleotide candidates
+    status: AVAILABLE
+    evidence: 48,819 PASS SNV candidates from ClairS-TO v0.5.0; the call set exists on disk.
+    caveat: PASS is a caller retention label, not confirmed somatic truth. Composition unknown.
+
+  - id: indel-calls
+    capability: Small insertions and deletions
+    status: DERIVABLE
+    evidence: An indel VCF exists from an earlier whole-genome ClairS-TO run.
+    path: Re-run or reuse the existing indel output; the wrapper currently fails on a missing `python` on PATH.
+    caveat: Indel calling on ONT is more error-prone than SNV calling; not characterised here.
+
+  - id: read-span
+    capability: Read length — how much sequence one molecule covers
+    status: AVAILABLE
+    evidence: Median ~11.3 kb, max 70.2 kb in the sampled window; MAPQ median 60.
+    note: This is the physical basis for every same-molecule capability below.
+
+  - id: same-molecule-cooccurrence
+    capability: Two or more candidate variants observed on one molecule
+    status: DERIVABLE
+    evidence: >-
+      Measured on the candidate set: 34.8% of the 48,819 PASS candidates have another PASS candidate
+      within 10 kb, and 21.3% within 5 kb. The opportunity exists for roughly a third of candidates.
+    path: Extract read-level co-occurrence at candidate pairs within one read span.
+    caveat: >-
+      An upper bound. It does not account for whether both candidates are real, whether one read
+      covers both, or local coverage. Distance availability is not co-observation.
+
+  - id: haplotype-tags
+    capability: HP / PS tags — reads assigned to a haplotype
+    status: DERIVABLE
+    evidence: Absent from every sampled read in both the pure tumor BAM and the dilutions (0/224, 0/300).
+    path: >-
+      Needs a heterozygous variant set first — no germline call set exists on disk. Route is a
+      germline caller (Clair3 is checked out) then LongPhase 2.0.2, both present but unrun.
+    caveat: Phase block length at ~25x on the dilution BAMs is unmeasured; this is open question B2.
+
+  - id: phase-blocks
+    capability: Phase block structure and length
+    status: UNKNOWN
+    evidence: Nothing phased yet, so no block statistics exist.
+    path: Falls out of the haplotagging run above.
+    caveat: >-
+      Whether blocks are long enough to place candidates in haplotype context is the thing that
+      decides feasibility, and it has not been measured.
+
+  - id: native-5mc
+    capability: Native 5-methylcytosine calls
+    status: AVAILABLE
+    evidence: "MM:Z:C+m? with matching ML on 224/224 sampled tumor reads and 300/300 dilution reads."
+    note: Parsed directly with pysam; modkit is not installed and is not required.
+
+  - id: native-5hmc
+    capability: Native 5-hydroxymethylcytosine calls
+    status: AVAILABLE
+    evidence: "MM:Z:C+h? present on the same reads as a separate channel."
+    caveat: 5mC and 5hmC are separate channels and are never summed.
+
+  - id: methylation-calibration
+    capability: Knowing which basecaller model produced the modification calls
+    status: UNKNOWN
+    evidence: >-
+      The BAM header has no @RG and no basecaller @PG line — only minimap2 2.26 and samtools. The
+      "5 kHz simplex 5mCG/5hmCG" description comes from directory and FASTQ names.
+    blocks: Any claim that depends on modification-call calibration.
+    resolution: Ask whoever produced the run.
+
+  - id: read-error-context
+    capability: Per-read basecall quality and local sequence context around a candidate
+    status: DERIVABLE
+    evidence: Per-base qualities and alignment are in the BAM; nothing extra is needed.
+    path: Extract at candidate positions during joint-record building.
+
+  - id: cna-from-coverage
+    capability: Copy-number signal from coverage
+    status: DERIVABLE
+    evidence: Coverage is computable from the BAMs; a depth directory exists for a sibling dataset.
+    caveat: >-
+      In a cell-line dilution the copy-number profile is a property of the cell line, present at
+      every tumor fraction in proportion. Its usefulness as a low-TF readout here is unexamined.
+
+  - id: fragmentomics
+    capability: Fragment-length and fragment-end signal of the kind used in cfDNA work
+    status: MISSING
+    evidence: >-
+      This is genomic DNA from a cell line, not circulating cell-free DNA. Fragment ends reflect
+      library preparation and shearing, not the nucleosomal and nuclease biology that makes cfDNA
+      fragmentomics informative.
+    consequence: >-
+      The fragmentomics axis of the design space cannot be tested on this data at all, whatever the
+      reviewed literature does with it.
+
+  - id: cfdna-context
+    capability: Anything that requires plasma cfDNA biology
+    status: MISSING
+    evidence: Cell-line genomic dilution material only.
+    consequence: No result here transfers to a clinical cfDNA claim.
+
+  - id: duplex-consensus
+    capability: Duplex reads or consensus-corrected molecules
+    status: MISSING
+    evidence: The data is simplex; there is no duplex channel and no amplification-based consensus.
+    consequence: >-
+      The NanoRCS accuracy route is unavailable, which is also what keeps the modification calls
+      native.
+
+  - id: per-read-truth-labels
+    capability: Knowing whether a read came from the tumor or the normal source
+    status: DERIVABLE
+    evidence: >-
+      Dilution reads keep their original ONT read-name UUIDs, so names can be matched against the
+      source BAMs. Demonstrated in one pilot window only.
+    restriction: >-
+      EVALUATION ONLY. A label may never reach a discovery or inference path; the field is named
+      source_label_for_evaluation_only and a test asserts features are identical with and without it.
+
+  - id: negative-control
+    capability: Tumor-free material processed identically
+    status: AVAILABLE
+    evidence: Five TF0 replicates at ~25x, produced by the same subsampling pipeline as the others.
+    note: This is what makes a blank-anchored decision rule possible at all.

@@ -1,5 +1,6 @@
 import { defineCollection, z } from "astro:content";
-import { glob } from "astro/loaders";
+import { file, glob } from "astro/loaders";
+import { parse as parseYaml } from "yaml";
 
 const evidenceState = z.enum([
   "planned",
@@ -538,7 +539,112 @@ const weeklyReports = defineCollection({
   })
 });
 
+/**
+ * Every design-space artifact is a document — metadata keys, then one list — so a loader names
+ * the list it wants rather than assuming the file is a bare array.
+ */
+function yamlList(key: string) {
+  return (text: string): Record<string, unknown>[] => {
+    const doc = parseYaml(text) as Record<string, unknown>;
+    return (doc?.[key] as Record<string, unknown>[]) ?? [];
+  };
+}
+
+/* ------------------------------------------------------------------------ */
+/* Design space                                                               */
+/* ------------------------------------------------------------------------ */
+/*                                                                            */
+/* The synthesis artifacts in research/design-space/ are the source of truth;  */
+/* the site renders them. A YAML list file is loaded with `file()`, so adding  */
+/* an axis or a gap changes the page without touching a component.            */
+
+const designAxes = defineCollection({
+  loader: file("../research/design-space/detector-axes.yaml", {
+    parser: yamlList("axes")
+  }),
+  schema: z.object({
+    name: z.string(),
+    order: z.number(),
+    added: z.boolean().default(false),
+    justification: z.string().optional(),
+    definition: z.string(),
+    why_it_matters: z.string(),
+    strategies: z
+      .array(
+        z.object({
+          name: z.string(),
+          detail: z.string().optional(),
+          methods: z.array(z.string()).default([]),
+          note: z.string().optional(),
+          cost: z.string().optional()
+        })
+      )
+      .default([]),
+    open_position: z.string().optional(),
+    note: z.string().optional(),
+    tension: z.string().optional(),
+    constraint: z.string().optional(),
+    measured_locally: z.string().optional()
+  })
+});
+
+const designMethods = defineCollection({
+  loader: file("../research/design-space/method-matrix.yaml", {
+    parser: yamlList("methods")
+  }),
+  schema: z.object({
+    name: z.string(),
+    ref: z.number().nullable().default(null),
+    in_reviewed_set: z.boolean().default(true),
+    is_detector: z.boolean().default(true),
+    axes: z.record(z.string(), z.string()),
+    unique_contribution: z.string(),
+    limitation_here: z.string()
+  })
+});
+
+const designGaps = defineCollection({
+  loader: file("../research/design-space/gaps.yaml", {
+    parser: yamlList("gaps")
+  }),
+  schema: z.object({
+    title: z.string(),
+    axes_combined: z.array(z.string()),
+    closest_methods: z.array(z.string()).default([]),
+    what_is_actually_different: z.string(),
+    required_ont_capability: z.array(z.string()).default([]),
+    required_data: z.string(),
+    feasibility: z.string(),
+    confounding_risks: z.array(z.string()).default([]),
+    falsification: z.string(),
+    status: z.string(),
+    note: z.string().optional()
+  })
+});
+
+const ontCapabilities = defineCollection({
+  loader: file("../research/knowledge/ont-capabilities.yaml", {
+    parser: yamlList("capabilities")
+  }),
+  schema: z.object({
+    capability: z.string(),
+    status: z.enum(["AVAILABLE", "DERIVABLE", "UNKNOWN", "MISSING"]),
+    evidence: z.string(),
+    path: z.string().optional(),
+    caveat: z.string().optional(),
+    note: z.string().optional(),
+    blocks: z.string().optional(),
+    resolution: z.string().optional(),
+    consequence: z.string().optional(),
+    restriction: z.string().optional()
+  })
+});
+
 export const collections = {
+  designAxes,
+  designMethods,
+  designGaps,
+  ontCapabilities,
   suggestions,
   dailyLogs,
   evidenceRecords,

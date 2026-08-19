@@ -1,0 +1,262 @@
+# Detector design space — the axes an MRD method can move along.
+#
+# Normalised from the reviewed literature (research/knowledge/papers, site papers collection).
+# An axis earns a place here only if at least two reviewed methods take different positions on
+# it, or if one method's central contribution is a position on it.
+#
+# `[unverified]` marks a claim taken from an indexed summary rather than a source PDF. All seven
+# reviewed documents are currently at that level — see research/knowledge/methods/paper-patterns.md.
+#
+# Rendered by the site at /research-narrative/#design-space.
+
+version: 1
+updated: 2026-08-19
+reviewed_set: [MRDetect, MRD-EDGE, PhasED-Seq, real-time-ONT, NanoRCS, methylation-fragmentation, ont-cfdna-methylation]
+
+axes:
+
+  - id: marker-discovery
+    name: Marker discovery and breadth
+    order: 1
+    definition: >-
+      How the loci that will be watched are chosen, and how many of them there are — from a fixed
+      panel of a few hundred, through exome, to whole-genome sets of hundreds of thousands.
+    why_it_matters: >-
+      Breadth sets the ceiling on how much independent evidence a sample can contribute. At low
+      tumor fraction the expected number of tumor molecules per locus falls below one, so the
+      number of loci, not the depth at each, determines whether anything is observable at all.
+    strategies:
+      - name: Tumor-informed panel
+        detail: Sequence the tumor first, track its mutations in follow-up samples.
+        methods: [PhasED-Seq]
+      - name: Tumor-informed genome-wide
+        detail: Take the patient's whole mutation set from tumor WGS and integrate across all of it.
+        methods: [MRDetect, MRD-EDGE]
+      - name: Tumor-naive / caller-defined
+        detail: >-
+          Derive candidates from the test sample itself with a somatic caller and population
+          resources, with no matched normal and no prior tumor profile.
+        methods: [ClairS-TO (local tooling, not a reviewed MRD method)]
+    open_position: >-
+      Tumor-naive marker discovery is present in this project's tooling but not in any reviewed
+      MRD method; every reviewed detection method is tumor-informed.
+
+  - id: evidence-per-observation
+    name: Evidence carried by one observation
+    order: 2
+    definition: >-
+      What is known about a single molecule or read beyond the allele it carries — copy number
+      context, fragment properties, base modifications, or nothing else.
+    why_it_matters: >-
+      If a molecule is described by one fact, a true observation and a background observation are
+      described identically and no downstream processing can separate them. Every added property
+      is another way for background to fail to imitate signal.
+    strategies:
+      - name: Allele only
+        detail: One read contributes the base it carries at one position.
+        methods: [MRDetect, PhasED-Seq]
+      - name: Allele plus copy number
+        detail: SNV evidence combined with a genome-wide copy-number readout of the same library.
+        methods: [MRD-EDGE, NanoRCS]
+      - name: Fragment properties
+        detail: Fragment length and end position, treated as a signal class in their own right.
+        methods: [real-time-ONT, NanoRCS, methylation-fragmentation]
+      - name: Native base modification
+        detail: Per-CpG methylation read from the same molecule with no separate assay.
+        methods: [ont-cfdna-methylation, methylation-fragmentation]
+    open_position: >-
+      No reviewed method reads allele, phase context and native methylation off one molecule.
+
+  - id: measurement-accuracy
+    name: Measurement accuracy and error correction
+    order: 3
+    definition: How confident the platform is about a single molecule's sequence before any filtering.
+    why_it_matters: >-
+      A per-read error rate sets a floor under the false-positive rate that no amount of downstream
+      modelling removes; methods either lower it physically or model around it.
+    strategies:
+      - name: Duplicate/consensus collapse
+        detail: Sequence the same physical molecule several times and take a consensus.
+        methods: [NanoRCS]
+        cost: "Amplification-based consensus is not expected to preserve native base modifications [unverified]"
+      - name: Error-model suppression
+        detail: Accept raw per-read accuracy and model the error distribution instead.
+        methods: [MRDetect, MRD-EDGE, PhasED-Seq]
+      - name: Native single-pass
+        detail: Take the basecaller's per-read output as given, keeping modifications intact.
+        methods: [real-time-ONT, ont-cfdna-methylation]
+    tension: >-
+      Accuracy through amplification and modality through native sequencing are competing designs
+      in the reviewed set, not complementary ones.
+
+  - id: background-suppression
+    name: Background suppression
+    order: 4
+    definition: >-
+      How non-tumor observations are prevented from looking tumor-like — distinct from aggregation,
+      which happens after, and from signal enrichment, which selects what to aggregate.
+    why_it_matters: >-
+      In a tumor-only setting the background contains germline variation with no matched normal to
+      subtract, clonal haematopoiesis, alignment artifacts and protocol bias. Reducing sequencing
+      error alone does not make it small.
+    strategies:
+      - name: Population and panel-of-normals filtering
+        detail: Remove sites seen in population databases or in a panel of normal samples.
+        methods: [ClairS-TO (local tooling)]
+      - name: Learned ranking
+        detail: A model scores observations by how tumor-like their local features are.
+        methods: [MRD-EDGE]
+      - name: Within-molecule consistency
+        detail: >-
+          Require several facts about the same molecule to agree, so background must fail more than
+          once on one fragment.
+        methods: [PhasED-Seq]
+      - name: Protocol control
+        detail: Constrain library preparation so a measurement is not distorted before modelling.
+        methods: [ont-cfdna-methylation]
+    note: >-
+      This is the least crowded axis in the reviewed set, and both occupants sit under constraints
+      that do not hold for tumor-only long reads.
+
+  - id: evidence-linkage
+    name: Evidence linkage
+    order: 5
+    definition: >-
+      Whether two or more facts are known to come from the same physical molecule, and over what
+      genomic distance that linkage extends.
+    why_it_matters: >-
+      Linked evidence multiplies: two independent errors rarely co-occur on one fragment. The reach
+      of the linkage — a few hundred bases for a short fragment, kilobases for a long read — decides
+      how often the opportunity exists at all.
+    strategies:
+      - name: None
+        detail: Each observation stands alone.
+        methods: [MRDetect, MRD-EDGE]
+      - name: Short-fragment co-occurrence
+        detail: Two or more somatic variants within one cfDNA fragment (~<300 bp).
+        methods: [PhasED-Seq]
+      - name: Long-read co-observation
+        detail: >-
+          Anything within one read's span is co-observed by construction — allele, neighbouring
+          heterozygous alleles, base modifications.
+        methods: [NanoRCS, real-time-ONT]
+        note: Available on the platform; not used as a background-suppression mechanism in the reviewed set.
+    measured_locally: >-
+      Median read ~11.3 kb, and 34.8% of the 48,819 PASS SNV candidates have another PASS candidate
+      within 10 kb (21.3% within 5 kb) — see research/design-space/gaps.yaml G1.
+
+  - id: aggregation
+    name: Evidence aggregation
+    order: 6
+    definition: How per-observation evidence is combined into a per-sample quantity.
+    why_it_matters: >-
+      Aggregation is where weak evidence becomes usable, and where coupled evidence counted twice
+      inflates confidence.
+    strategies:
+      - name: Genome-wide integration
+        detail: Sum or integrate weak per-locus evidence across a very large marker set.
+        methods: [MRDetect, MRD-EDGE]
+      - name: Multimodal combination
+        detail: Combine signal classes (SNV, CNA, fragmentomics) into one estimate.
+        methods: [NanoRCS, MRD-EDGE]
+      - name: Per-fragment evidence then count
+        detail: Count molecules that satisfy a linkage requirement.
+        methods: [PhasED-Seq]
+    constraint: >-
+      Methylation and fragmentation are biologically coupled, so treating them as independent
+      channels overstates the combined evidence [methylation-fragmentation, unverified].
+
+  - id: detection-unit
+    name: Detection unit
+    order: 7
+    definition: The thing a score is attached to — a locus, a molecule, a region, or a sample.
+    why_it_matters: >-
+      The unit determines what "recognition" can even mean, what a label would have to be attached
+      to, and which errors are visible in evaluation.
+    strategies:
+      - name: Locus
+        detail: Evidence accumulates per site across reads.
+        methods: [MRDetect]
+      - name: Molecule / fragment
+        detail: A single fragment is judged tumor-derived or not.
+        methods: [PhasED-Seq, NanoRCS]
+      - name: Region or bin
+        detail: Copy-number or fragmentation summarised over windows.
+        methods: [real-time-ONT, methylation-fragmentation]
+      - name: Sample
+        detail: One scalar per sample, trended over time.
+        methods: [MRDetect, MRD-EDGE, NanoRCS]
+
+  - id: decision-threshold
+    name: Decision and thresholding
+    order: 8
+    definition: How a score becomes a call, and against what reference the cut is placed.
+    why_it_matters: >-
+      A threshold chosen after seeing results converts an exploratory finding into a false
+      confirmatory one; a threshold with no blank distribution behind it has no error rate.
+    strategies:
+      - name: Blank-anchored
+        detail: The cut is defined against the distribution measured in tumor-free samples.
+        methods: [PhasED-Seq]
+      - name: Model probability
+        detail: A learned score with an operating point chosen on held-out data.
+        methods: [MRD-EDGE]
+      - name: Fixed statistic
+        detail: A pre-specified statistic compared to a reference distribution.
+        methods: [MRDetect]
+
+  - id: validation
+    name: Validation strategy
+    order: 9
+    definition: What evidence is offered that the method performs as claimed.
+    why_it_matters: >-
+      Analytical claims (limit of blank, limit of detection, precision) require replicate structure;
+      clinical claims require cohorts. Neither transfers from the other.
+    strategies:
+      - name: Analytical validation
+        detail: LoB, LoD, precision, dilution series, background error modelling.
+        methods: [PhasED-Seq]
+      - name: Cohort performance
+        detail: Detection rates in patient samples against clinical outcome.
+        methods: [MRDetect, MRD-EDGE, NanoRCS]
+      - name: Feasibility demonstration
+        detail: Show the measurement can be made at all, on few samples.
+        methods: [real-time-ONT]
+
+# --- axes added beyond the requested nine, because a reviewed method's central contribution
+# --- sits on them and they change what is buildable here.
+
+  - id: platform-deployability
+    name: Platform and deployability
+    order: 10
+    added: true
+    justification: >-
+      The central contribution of the real-time ONT work is turnaround and native access, not a new
+      statistic; without this axis that method has no position in the space.
+    definition: Time to result, sample type, and whether the measurement needs a separate assay.
+    why_it_matters: >-
+      A method that needs three assays to read three signal classes competes differently from one
+      that reads them from a single native library.
+    strategies:
+      - name: Separate assay per signal class
+        methods: [MRDetect, MRD-EDGE, PhasED-Seq]
+      - name: Single native library, multiple classes
+        methods: [real-time-ONT, NanoRCS, ont-cfdna-methylation]
+
+  - id: modality-independence
+    name: Modality independence
+    order: 11
+    added: true
+    justification: >-
+      The methylation-fragmentation work contributes no detector; its contribution is a constraint
+      on how any multimodal detector may combine channels.
+    definition: Whether combined signal classes carry independent information or restate each other.
+    why_it_matters: >-
+      Coupled channels added as if independent inflate apparent confidence, and an ablation is the
+      only way to tell the difference.
+    strategies:
+      - name: Assumed independent
+        methods: [MRD-EDGE, NanoRCS]
+        note: Assumption not tested within the reviewed set [unverified].
+      - name: Coupling demonstrated
+        methods: [methylation-fragmentation]

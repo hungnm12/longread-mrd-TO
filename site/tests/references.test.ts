@@ -96,6 +96,29 @@ describe("website format", () => {
     expect(narrative).toContain("ResearchLayout");
   });
 
+  test("the narrative's TOC matches the section ids it renders", () => {
+    const meta = readFileSync(resolve(siteRoot, "src", "data", "siteMeta.ts"), "utf8");
+    const narrative = readFileSync(
+      resolve(siteRoot, "src", "pages", "research-narrative", "index.astro"),
+      "utf8"
+    );
+    const tocIds = [...meta.matchAll(/\{ id: "([a-z-]+)"/g)].map((m) => m[1]);
+    expect(tocIds.length).toBeGreaterThan(5);
+    for (const id of tocIds) {
+      expect(narrative, `section ${id} is in the TOC but not on the page`).toContain(`id="${id}"`);
+    }
+  });
+
+  test("the previously proposed direction stays demoted to a candidate", () => {
+    const narrative = readFileSync(
+      resolve(siteRoot, "src", "pages", "research-narrative", "index.astro"),
+      "utf8"
+    );
+    // It may appear as one gap among others; it may not become the page's own conclusion.
+    expect(narrative).toMatch(/candidate/i);
+    expect(narrative).not.toMatch(/HypothesisPanel/);
+  });
+
   test("deck behaviour is confined to the weekly report route", () => {
     const deckUsers: string[] = [];
     const walk = (dir: string) => {
@@ -117,15 +140,19 @@ describe("website format", () => {
       resolve(siteRoot, "src", "pages", "research-narrative", "index.astro"),
       "utf8"
     );
+    // The section list is the design-space synthesis, not the earlier hypothesis narrative.
     for (const id of [
       "overview",
       "mrd-problem",
-      "detection-barriers",
-      "related-work",
-      "synthesis",
-      "clairs-to",
-      "research-gap",
-      "hypothesis",
+      "design-space",
+      "common-principles",
+      "unique-mechanisms",
+      "method-matrix",
+      "unresolved",
+      "ont-capabilities",
+      "resources",
+      "explored",
+      "opportunities",
       "references"
     ]) {
       expect(index).toContain(`id="${id}"`);
