@@ -9,8 +9,8 @@ version: 1
 target:
   # Where the journal checkout lives on disk. Must be OUTSIDE this repository.
   path: ../mrd-daily-journal
-  # Git remote of the journal repo. Set this before the first push; `null` means local-only.
-  remote: null
+  # Git remote of the journal repo. Private, in the lab organisation.
+  remote: https://github.com/CCU-Bioinformatics-Lab/hungnm-logwork.git
   branch: main
   # Written into the journal's commits so its history is attributable.
   commit_author: null            # "Name <email>"; null uses the machine's git config

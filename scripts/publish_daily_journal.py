@@ -194,9 +194,22 @@ def resolve_journal(config: dict, initialise: bool) -> Path:
     if not journal.exists():
         if not initialise:
             fail(f"journal checkout {journal} does not exist — run with --init to create it")
-        journal.mkdir(parents=True)
-        run_git(journal, "init", "-b", target.get("branch", "main"))
-        print(f"initialised journal repository at {journal}")
+        configured_remote = target.get("remote")
+        # Clone when there is something to clone: initialising over a remote that already has
+        # commits produces a confusing non-fast-forward on the first push.
+        cloned = False
+        if configured_remote:
+            clone = subprocess.run(
+                ["git", "clone", configured_remote, str(journal)],
+                capture_output=True, text=True,
+            )
+            cloned = clone.returncode == 0 and (journal / ".git").exists()
+            if cloned:
+                print(f"cloned existing journal repository into {journal}")
+        if not cloned:
+            journal.mkdir(parents=True, exist_ok=True)
+            run_git(journal, "init", "-b", target.get("branch", "main"))
+            print(f"initialised journal repository at {journal}")
 
     if not (journal / ".git").exists():
         if not initialise:
