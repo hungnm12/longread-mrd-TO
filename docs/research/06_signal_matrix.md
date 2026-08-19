@@ -31,7 +31,6 @@ cannot do, and what a native long-read platform could add on top of its idea.
 | **NanoRCS** [5] | Consensus-corrected long reads carrying SNV, CNA and fragmentomic signal | Per-read nanopore error limits how confidently one molecule can be called tumor-derived | Signal extraction (accuracy) → aggregation (multimodal tumor-fraction estimate) | Raise confidence per molecule before aggregating | Rolling-circle consensus on long reads, with several signal classes estimated together | The combined modalities are sequence- and fragment-level; haplotype context and native methylation are not the axes being combined. Consensus is built from amplified copies, so native base modifications are not expected to survive the amplification `[unverified]` | The complementary trade: keep the molecule native — lower per-read accuracy, but methylation and fragment ends preserved and readable alongside the allele |
 | **Methylation ↔ fragmentation** [6] | DNA methylation and gene expression against genome-wide fragmentation | What actually determines where cfDNA breaks | Not a detector — a constraint on the aggregation step | Interpret signal classes biologically before combining them | Evidence that methylation and fragmentation are *coupled*, not independent readouts | Population- and region-level, not per-molecule tumor-origin inference; supplies no detection method | Methylation and fragment ends measured on the *same* molecule, so the coupling can be quantified per read instead of assumed away |
 | **ONT cfDNA methylation requirements** [7] | Native 5mC calling on cell-free DNA | Methylation measurements are distorted by pre-analytical and library-prep effects | Guardrail across every stage (QC and provenance) | Measurement validity precedes inference | States the protocol conditions under which cfDNA methylation profiling is supported | A vendor requirements document, not a detection study: it constrains interpretation without supplying comparative evidence | It *is* the boundary condition — it defines when methylation evidence from ONT may be used at all |
-| **This project (proposed)** | Candidate ALT allele + haplotype phase + native 5mC/5hmC, co-observed on one molecule | Tumor-only detection at low TF with a *single* variant per molecule and no matched normal | Background suppression, per molecule, before any aggregation | Add evidence per observation so background must fail on several axes at once | Methylation conditioned on haplotype context, for the single-variant case, tumor-only | Untested. Requires phasing to succeed; modalities may be coupled [6]; no per-read truth labels; methylation is protocol-sensitive [7] | — (this is the ONT-native design being asked about) |
 
 ---
 
@@ -39,7 +38,7 @@ cannot do, and what a native long-read platform could add on top of its idea.
 
 ```text
 signal extraction     → MRDetect (breadth) · NanoRCS (accuracy) · Real-time ONT (fragmentome) · ONT methylation (validity)
-background suppression → PhasED-Seq (linkage) · MRD-EDGE (learned) · [this project: per-molecule consistency]
+background suppression → PhasED-Seq (linkage) · MRD-EDGE (learned)
 evidence aggregation  → MRDetect · MRD-EDGE · NanoRCS      [constraint: methylation ↔ fragmentation coupling]
 sample-level score    → MRDetect · MRD-EDGE · NanoRCS
 validation            → PhasED-Seq (LoB / LoD / precision framework)
@@ -54,11 +53,31 @@ consensus, or a second signal class.
 - That any listed limitation is fatal — each is a limitation *relative to the tumor-only,
   low-tumor-fraction, long-read setting of this project*, not a criticism of the study.
 - That ONT would in fact add what the last column suggests. That column is a list of
-  hypotheses; the project's own hypothesis
-  ([`03_hypotheses.md`](./03_hypotheses.md)) is the first of them to be tested.
-- That the combination proposed in the last row is absent from the wider field. The scoping
-  claim remains the one in [`02_research_gap.md`](./02_research_gap.md): it is unaddressed
-  *within these seven documents*, and a systematic search has not been run.
+  hypotheses; the current project hypothesis
+  ([`03_hypotheses.md`](./03_hypotheses.md)) covers only part of that list.
+- Anything about where this project sits. Its row is deliberately absent — see below.
+
+## Position of this project — pending
+
+This project's own row has been removed from the matrix.
+
+The row that stood here described it as one idea at one position: per-molecule background
+suppression using phase and native methylation, for the single-variant tumor-only case. That
+framing is narrower than the work actually is, and a matrix row invites exactly the wrong
+reading — that the project is a competitor to PhasED-Seq at one cell of the grid.
+
+The project is expected to address several of the problems in this table at once, and until
+that scope is written down, placing a single row would fix the wrong shape. Two things must
+exist before it re-enters the matrix:
+
+1. a scope statement covering the full problem set the project takes on, not one position;
+2. an updated gap statement — the current one in
+   [`02_research_gap.md`](./02_research_gap.md) is scoped to a single combination, and the
+   claim there still stands only *within these seven documents*, with no systematic search run.
+
+Until then this document compares the supplied literature only. The last column of the table
+still says what a native long-read platform *could* add to each idea; that is a property of the
+platform, not a placement of this project.
 
 ## References
 
