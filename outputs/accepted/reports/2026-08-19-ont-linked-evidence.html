@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Does long-read ONT supply evidence that improves tumor recognition?</title>
+<style>
+:root{--bg:#f7f3eb;--panel:#fffdf8;--ink:#1f1b16;--muted:#695f56;--line:#d4c8bb;
+--accent:#1f5c4e;--accent-soft:#d8ebe5;--warn:#8d5c14;--warn-soft:#f7ebc7;--danger:#8f3d2c;
+--danger-soft:#f6ddd7;--serif:Georgia,"Iowan Old Style",serif;--sans:"Segoe UI",Calibri,system-ui,sans-serif;
+--mono:"IBM Plex Mono",Consolas,monospace;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.62;font-size:16px}
+.page{width:min(58rem,calc(100% - 3rem));margin:0 auto;padding:3rem 0 4rem}
+.masthead{border-bottom:2px solid var(--accent);padding-bottom:1rem;margin-bottom:2rem}
+.masthead__kicker{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0}
+h1{font-family:var(--serif);font-size:2.3rem;line-height:1.18;margin:.6rem 0 .8rem}
+.masthead__meta{font-size:.85rem;color:var(--muted);margin:0;display:flex;flex-wrap:wrap;gap:.4rem 1.4rem}
+h2{font-family:var(--mono);font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+margin:2.8rem 0 .7rem;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+p{margin:0 0 1rem;max-width:62ch}
+.verdict{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--panel);
+border-radius:12px;padding:1.3rem 1.5rem;margin:0 0 2rem}
+.verdict h2{margin:0 0 .6rem;border:none;padding:0}
+.verdict p{font-size:1.05rem;max-width:none}
+.verdict p:last-child{margin-bottom:0}
+.verdict strong{color:var(--accent)}
+.fig{margin:1.6rem 0 2.2rem;border:1px solid var(--line);border-radius:14px;background:var(--panel);
+padding:1.1rem 1.2rem 1rem}
+.fig__head{font-size:1rem;font-family:var(--serif);margin-bottom:.7rem}
+.fig__num{font-family:var(--mono);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;
+color:var(--accent);margin-right:.5rem}
+.fig__canvas{overflow-x:auto}
+.fig svg{display:block;width:100%;min-width:640px;height:auto}
+.fig__caption{margin:.8rem 0 0;font-size:.87rem;color:var(--muted);max-width:none}
+.keynum{display:flex;flex-wrap:wrap;gap:1px;background:var(--line);border:1px solid var(--line);
+border-radius:12px;overflow:hidden;margin:0 0 2rem}
+.keynum div{flex:1 1 10rem;background:var(--panel);padding:.9rem 1rem}
+.keynum dt{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.keynum dd{margin:.25rem 0 0;font-family:var(--mono);font-size:1.35rem;color:var(--accent)}
+.keynum dd small{font-family:var(--sans);font-size:.78rem;color:var(--muted);display:block;line-height:1.35}
+.caution{border:1px solid rgba(141,92,20,.35);border-left:4px solid var(--warn);background:var(--warn-soft);
+border-radius:10px;padding:.9rem 1.2rem;margin:1.4rem 0}
+.caution p{margin:0;max-width:none;font-size:.94rem}
+ul{margin:0 0 1rem;padding-left:1.2rem;max-width:62ch}
+li{margin-bottom:.4rem}
+.method{font-size:.9rem;color:var(--muted)}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+@media print{body{background:#fff;font-size:11pt}.page{width:100%;padding:0}.fig{break-inside:avoid}
+.fig svg{min-width:0}h2{break-after:avoid}}
+</style></head>
+<body><div class="page">
+
+<header class="masthead">
+  <p class="masthead__kicker">Research report · 19 August 2026</p>
+  <h1>Does long-read ONT supply evidence that improves recognition of tumor-derived molecules?</h1>
+  <p class="masthead__meta">
+    <span>HCC1395, pure tumor</span><span>ONT R10.4.1 simplex, native 5mC/5hmC</span>
+    <span>ClairS-TO v0.5.0 candidates</span><span>EXP-G1-001</span>
+  </p>
+</header>
+
+<section class="verdict">
+  <h2>Answer so far</h2>
+  <p>
+    <strong>Yes to the evidence, not yet to the recognition.</strong> Long reads deliver a kind of
+    evidence short fragments cannot: two candidate variants observed on one physical molecule,
+    which happens for 67.87% of candidate pairs tested. But the same
+    experiment shows that co-occurrence is <strong>not specific to somatic variants</strong> — it is
+    more common among pairs the truth set does not confirm than among pairs it does.
+  </p>
+  <p>
+    So the platform supplies the raw material for a linkage-based detector. Whether that material
+    improves recognition remains unmeasured, and the honest reading is that it will not until the
+    composition of the candidate set is known.
+  </p>
+</section>
+
+<dl class="keynum">
+  <div><dt>Candidates with a neighbour in read range</dt><dd>34.8%<small>of 48,819 PASS SNVs, within 10 kb</small></dd></div>
+  <div><dt>Pairs seen with both ALT on one read</dt><dd>67.87%<small>678 of 999 evaluable pairs</small></dd></div>
+  <div><dt>Reads carrying both ALT alleles</dt><dd>23.9%<small>of 50,756 reads spanning both</small></dd></div>
+  <div><dt>Somatic specificity</dt><dd>none<small>65.1% confirmed vs 78.6% unconfirmed</small></dd></div>
+</dl>
+
+<h2>The question</h2>
+<p>
+  Every method in the reviewed MRD literature improves the same ratio — tumor signal over
+  background — by making each observation carry more before combining. Long reads offer a way of
+  doing that which short fragments cannot: several facts about the <em>same physical molecule</em>,
+  across kilobases. This report asks whether that offer is real in our data, and whether it helps.
+</p>
+<p class="method">
+  <strong>Method.</strong> All 48,819 PASS SNV candidates were enumerated into pairs
+  within 20 kb (29,074 pairs); 1,000 were sampled
+  with a fixed seed. For each pair, every read spanning both positions in the pure tumor BAM was
+  classified by the base it carried at each (MAPQ ≥ 20, base quality ≥ 10). Thresholds and success
+  criteria were registered before the run. SEQC2 high-confidence somatic calls were read only after
+  counting, to stratify the report — never to select pairs.
+</p>
+
+<figure class="fig">
+  <figcaption class="fig__head"><span class="fig__num">Figure 1</span> Linked evidence is available for about a third of candidates</figcaption>
+  <div class="fig__canvas"><svg viewBox="0 0 900 350" role="img" aria-label="Linked evidence is available for about a third of candidates"><rect x="76.0" y="66.0" width="794.0" height="214.0" rx="0" fill="none" stroke="#d4c8bb" opacity="1.0"/><rect x="76.0" y="66.0" width="456.5" height="214.0" rx="0" fill="#d8ebe5" stroke="none" opacity="0.55"/><line x1="533" y1="66" x2="533" y2="280" stroke="#1f5c4e" stroke-width="2" stroke-dasharray="5 4"/><text x="540.55" y="56" font-size="12" fill="#1f5c4e" text-anchor="start" font-weight="600" font-family="var(--sans)">median read ≈ 11.3 kb</text><text x="76" y="38" font-size="13" fill="#1f5c4e" text-anchor="start" font-weight="600" font-family="var(--sans)">34.8% of candidates have a neighbour within one read</text><text x="76" y="56" font-size="11" fill="#695f56" text-anchor="start" font-weight="normal" font-family="var(--sans)">share of candidates</text><rect x="82.0" y="239.5" width="87.2" height="40.5" rx="3" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="125.625" y="233.50762970498474" font-size="11" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--mono)">5.3%</text><text x="125.625" y="300" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">0–500 bp</text><rect x="181.2" y="262.9" width="87.2" height="17.1" rx="3" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="224.875" y="256.910478128179" font-size="11" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--mono)">2.3%</text><text x="224.875" y="300" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">500–1000 bp</text><rect x="280.5" y="251.0" width="87.2" height="29.0" rx="3" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="324.125" y="244.98357796831857" font-size="11" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--mono)">3.8%</text><text x="324.125" y="300" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">1–2 kb</text><rect x="379.8" y="204.8" width="87.2" height="75.2" rx="3" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="423.375" y="198.78433367243133" font-size="11" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--mono)">9.9%</text><text x="423.375" y="300" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">2–5 kb</text><rect x="479.0" y="177.4" width="87.2" height="102.6" rx="3" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="522.625" y="171.41621857288186" font-size="11" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--mono)">13.5%</text><text x="522.625" y="300" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">5–10 kb</text><rect x="578.2" y="127.9" width="87.2" height="152.1" rx="3" fill="#c9beb2" stroke="none" opacity="1.0"/><text x="621.875" y="121.87371021653829" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">20.0%</text><text x="621.875" y="300" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">10–20 kb</text><rect x="677.5" y="66.0" width="87.2" height="214.0" rx="3" fill="#c9beb2" stroke="none" opacity="1.0"/><text x="721.125" y="60.0" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">28.2%</text><text x="721.125" y="300" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">20–50 kb</text><rect x="776.8" y="151.4" width="87.2" height="128.6" rx="3" fill="#c9beb2" stroke="none" opacity="1.0"/><text x="820.375" y="145.3854090975149" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">16.9%</text><text x="820.375" y="300" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">&gt; 50 kb</text><text x="76" y="328" font-size="12" fill="#695f56" text-anchor="start" font-weight="normal" font-family="var(--sans)">distance to the nearest other PASS candidate</text></svg></div>
+  <p class="fig__caption">Nearest-neighbour distance for all 48,819 PASS SNV candidates. Green bars fall within the span of a single median read; the dashed line marks that span. Availability is an opportunity, not an observation — Figure 2 tests whether it is taken.</p>
+</figure>
+<figure class="fig">
+  <figcaption class="fig__head"><span class="fig__num">Figure 2</span> Two candidates do appear on the same molecule</figcaption>
+  <div class="fig__canvas"><svg viewBox="0 0 900 380" role="img" aria-label="Two candidates do appear on the same molecule"><text x="60" y="40" font-size="14" fill="#1f1b16" text-anchor="start" font-weight="600" font-family="var(--serif)">A · What the reads carry</text><text x="60" y="58" font-size="11" fill="#695f56" text-anchor="start" font-weight="normal" font-family="var(--sans)">50,756 reads spanning both positions of a sampled pair</text><rect x="60.0" y="70.0" width="186.6" height="54.0" rx="3" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="153.30463393490425" y="94" font-size="14" fill="#fffdf8" text-anchor="middle" font-weight="700" font-family="var(--mono)">23.9%</text><text x="153.30463393490425" y="112" font-size="11" fill="#fffdf8" text-anchor="middle" font-weight="normal" font-family="var(--sans)">both ALT</text><rect x="246.6" y="70.0" width="274.4" height="54.0" rx="3" fill="#8d5c14" stroke="none" opacity="1.0"/><text x="383.8192528962093" y="94" font-size="14" fill="#fffdf8" text-anchor="middle" font-weight="700" font-family="var(--mono)">35.2%</text><text x="383.8192528962093" y="112" font-size="11" fill="#fffdf8" text-anchor="middle" font-weight="normal" font-family="var(--sans)">ALT at one</text><rect x="521.0" y="70.0" width="313.2" height="54.0" rx="3" fill="#c9beb2" stroke="none" opacity="1.0"/><text x="677.6408700449208" y="94" font-size="14" fill="#1f1b16" text-anchor="middle" font-weight="700" font-family="var(--mono)">40.2%</text><text x="677.6408700449208" y="112" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">neither ALT</text><rect x="834.3" y="70.0" width="5.7" height="54.0" rx="3" fill="#d4c8bb" stroke="none" opacity="1.0"/><text x="60" y="168" font-size="14" fill="#1f1b16" text-anchor="start" font-weight="600" font-family="var(--serif)">B · How pairs distribute</text><rect x="64.0" y="210.0" width="70.0" height="110.0" rx="2" fill="#c9beb2" stroke="none" opacity="1.0"/><text x="99.0" y="205.0" font-size="10" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">355</text><rect x="142.0" y="287.2" width="70.0" height="32.8" rx="2" fill="#8d5c14" stroke="none" opacity="1.0"/><text x="177.0" y="282.15492957746477" font-size="10" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">106</text><rect x="220.0" y="285.9" width="70.0" height="34.1" rx="2" fill="#8d5c14" stroke="none" opacity="1.0"/><text x="255.0" y="280.9154929577465" font-size="10" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">110</text><rect x="298.0" y="295.8" width="70.0" height="24.2" rx="2" fill="#8d5c14" stroke="none" opacity="1.0"/><text x="333.0" y="290.83098591549293" font-size="10" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">78</text><rect x="376.0" y="298.9" width="70.0" height="21.1" rx="2" fill="#8d5c14" stroke="none" opacity="1.0"/><text x="411.0" y="293.92957746478874" font-size="10" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">68</text><rect x="454.0" y="302.6" width="70.0" height="17.4" rx="2" fill="#8d5c14" stroke="none" opacity="1.0"/><text x="489.0" y="297.6478873239437" font-size="10" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">56</text><rect x="532.0" y="307.3" width="70.0" height="12.7" rx="2" fill="#8d5c14" stroke="none" opacity="1.0"/><text x="567.0" y="302.2957746478873" font-size="10" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">41</text><rect x="610.0" y="312.3" width="70.0" height="7.7" rx="2" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="645.0" y="307.2535211267606" font-size="10" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">25</text><rect x="688.0" y="311.6" width="70.0" height="8.4" rx="2" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="723.0" y="306.6338028169014" font-size="10" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">27</text><rect x="766.0" y="278.8" width="70.0" height="41.2" rx="2" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="801.0" y="273.7887323943662" font-size="10" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">133</text><line x1="60" y1="320" x2="840" y2="320" stroke="#d4c8bb"/><text x="95.0" y="338" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">0</text><text x="485.0" y="338" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">0.5</text><text x="797.0" y="338" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--mono)">1.0</text><text x="60" y="360" font-size="12" fill="#695f56" text-anchor="start" font-weight="normal" font-family="var(--sans)">fraction of reads carrying both ALT alleles, per candidate pair</text><text x="66" y="186" font-size="11" fill="#695f56" text-anchor="start" font-weight="normal" font-family="var(--sans)">never together</text><text x="834" y="186" font-size="11" fill="#1f5c4e" text-anchor="end" font-weight="normal" font-family="var(--sans)">always together</text></svg></div>
+  <p class="fig__caption">678 of 999 evaluable pairs (67.87%) had at least one read carrying both ALT alleles, and 662 had two or more. Panel B is bimodal: pairs tend to be either never or almost always together on a molecule — the signature of two variants lying in cis on one haplotype versus in trans on opposite ones.</p>
+</figure>
+<figure class="fig">
+  <figcaption class="fig__head"><span class="fig__num">Figure 3</span> The co-occurrence is not specific to somatic pairs</figcaption>
+  <div class="fig__canvas"><svg viewBox="0 0 900 350" role="img" aria-label="The co-occurrence is not specific to somatic pairs"><text x="60" y="26" font-size="12" fill="#695f56" text-anchor="start" font-weight="normal" font-family="var(--sans)">Predicted: confirmed-somatic pairs should co-occur more often</text><rect x="90.0" y="135.8" width="200.0" height="130.2" rx="4" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="190.0" y="125.80000000000001" font-size="20" fill="#1f1b16" text-anchor="middle" font-weight="700" font-family="var(--mono)">65.1%</text><text x="190.0" y="288" font-size="12" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--sans)">both confirmed</text><text x="190.0" y="306" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">222 of 341 pairs</text><rect x="350.0" y="156.6" width="200.0" height="109.4" rx="4" fill="#8d5c14" stroke="none" opacity="1.0"/><text x="450.0" y="146.62" font-size="20" fill="#1f1b16" text-anchor="middle" font-weight="700" font-family="var(--mono)">54.7%</text><text x="450.0" y="288" font-size="12" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--sans)">one confirmed</text><text x="450.0" y="306" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">140 of 256 pairs</text><rect x="610.0" y="108.8" width="200.0" height="157.2" rx="4" fill="#8f3d2c" stroke="none" opacity="1.0"/><text x="710.0" y="98.78" font-size="20" fill="#1f1b16" text-anchor="middle" font-weight="700" font-family="var(--mono)">78.6%</text><text x="710.0" y="288" font-size="12" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--sans)">neither confirmed</text><text x="710.0" y="306" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">316 of 402 pairs</text><line x1="90" y1="266" x2="860" y2="266" stroke="#d4c8bb"/><path d="M 190 68 L 710 68" stroke="#8f3d2c" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8f3d2c"/></marker></defs><text x="350" y="60" font-size="12" fill="#8f3d2c" text-anchor="middle" font-weight="600" font-family="var(--sans)">observed direction</text></svg></div>
+  <p class="fig__caption">Share of pairs with at least one both-ALT read, split by how many of the two candidates are SEQC2 high-confidence somatic SNVs. The criterion set before the run predicted the opposite ordering. Germline heterozygous variants lying in cis is the economical explanation, and it is what a candidate set of unknown composition would produce.</p>
+</figure>
+<figure class="fig">
+  <figcaption class="fig__head"><span class="fig__num">Figure 4</span> The decline with distance is a read-length effect, not a biological one</figcaption>
+  <div class="fig__canvas"><svg viewBox="0 0 900 300" role="img" aria-label="The decline with distance is a read-length effect, not a biological one"><rect x="70.0" y="50.0" width="760.0" height="170.0" rx="0" fill="none" stroke="#d4c8bb" opacity="1.0"/><rect x="123.0" y="64.9" width="84.0" height="155.1" rx="3" fill="#d8ebe5" stroke="none" opacity="1.0"/><text x="165.0" y="56.875" font-size="11" fill="#1f5c4e" text-anchor="middle" font-weight="normal" font-family="var(--mono)">73 reads</text><text x="165.0" y="242" font-size="12" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--sans)">&lt;1 kb</text><text x="165.0" y="260" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">88 pairs</text><rect x="313.0" y="71.2" width="84.0" height="148.8" rx="3" fill="#d8ebe5" stroke="none" opacity="1.0"/><text x="355.0" y="63.25" font-size="11" fill="#1f5c4e" text-anchor="middle" font-weight="normal" font-family="var(--mono)">70 reads</text><text x="355.0" y="242" font-size="12" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--sans)">1–5 kb</text><text x="355.0" y="260" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">226 pairs</text><rect x="503.0" y="122.2" width="84.0" height="97.8" rx="3" fill="#d8ebe5" stroke="none" opacity="1.0"/><text x="545.0" y="114.25" font-size="11" fill="#1f5c4e" text-anchor="middle" font-weight="normal" font-family="var(--mono)">46 reads</text><text x="545.0" y="242" font-size="12" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--sans)">5–10 kb</text><text x="545.0" y="260" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">264 pairs</text><rect x="693.0" y="160.5" width="84.0" height="59.5" rx="3" fill="#d8ebe5" stroke="none" opacity="1.0"/><text x="735.0" y="152.5" font-size="11" fill="#1f5c4e" text-anchor="middle" font-weight="normal" font-family="var(--mono)">28 reads</text><text x="735.0" y="242" font-size="12" fill="#1f1b16" text-anchor="middle" font-weight="normal" font-family="var(--sans)">10–20 kb</text><text x="735.0" y="260" font-size="11" fill="#695f56" text-anchor="middle" font-weight="normal" font-family="var(--sans)">421 pairs</text><path d="M 165 87 L 355 95 L 545 106 L 735 113" fill="none" stroke="#8f3d2c" stroke-width="2.5"/><circle cx="165" cy="87" r="5" fill="#8f3d2c"/><text x="165.0" y="74.70454545454547" font-size="12" fill="#8f3d2c" text-anchor="middle" font-weight="700" font-family="var(--mono)">78%</text><circle cx="355" cy="95" r="5" fill="#8f3d2c"/><text x="355.0" y="83.13274336283186" font-size="12" fill="#8f3d2c" text-anchor="middle" font-weight="700" font-family="var(--mono)">73%</text><circle cx="545" cy="106" r="5" fill="#8f3d2c"/><text x="545.0" y="94.02272727272728" font-size="12" fill="#8f3d2c" text-anchor="middle" font-weight="700" font-family="var(--mono)">67%</text><circle cx="735" cy="113" r="5" fill="#8f3d2c"/><text x="735.0" y="100.58907363420427" font-size="12" fill="#8f3d2c" text-anchor="middle" font-weight="700" font-family="var(--mono)">63%</text><text x="70" y="286" font-size="12" fill="#695f56" text-anchor="start" font-weight="normal" font-family="var(--sans)">distance between the two candidates</text><text x="830" y="36" font-size="11" fill="#695f56" text-anchor="end" font-weight="normal" font-family="var(--sans)">line: pairs with a both-ALT read   ·   bars: median reads covering both</text></svg></div>
+  <p class="fig__caption">Co-occurrence falls from 78% under 1 kb to 63% at 10–20 kb, tracking the fall in reads that cover both positions at all (median 72 → 28). Nothing here suggests linkage decays biologically over this range; the molecule simply stops reaching.</p>
+</figure>
+<figure class="fig">
+  <figcaption class="fig__head"><span class="fig__num">Figure 5</span> Where the claim stands</figcaption>
+  <div class="fig__canvas"><svg viewBox="0 0 900 300" role="img" aria-label="Where the claim stands"><rect x="60.0" y="30.0" width="780.0" height="42.0" rx="8" fill="#fffdf8" stroke="#d4c8bb" opacity="1.0"/><rect x="60.0" y="30.0" width="6.0" height="42.0" rx="3" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="80" y="57" font-size="13" fill="#1f5c4e" text-anchor="start" font-weight="700" font-family="var(--mono)">1</text><text x="104" y="57" font-size="13.5" fill="#1f1b16" text-anchor="start" font-weight="normal" font-family="var(--sans)">Candidates are close enough to share a read</text><text x="640" y="57" font-size="12" fill="#1f5c4e" text-anchor="end" font-weight="600" font-family="var(--sans)">measured</text><text x="830" y="57" font-size="11.5" fill="#695f56" text-anchor="end" font-weight="normal" font-family="var(--mono)">34.8% within 10 kb</text><rect x="60.0" y="80.0" width="780.0" height="42.0" rx="8" fill="#fffdf8" stroke="#d4c8bb" opacity="1.0"/><rect x="60.0" y="80.0" width="6.0" height="42.0" rx="3" fill="#1f5c4e" stroke="none" opacity="1.0"/><text x="80" y="107" font-size="13" fill="#1f5c4e" text-anchor="start" font-weight="700" font-family="var(--mono)">2</text><text x="104" y="107" font-size="13.5" fill="#1f1b16" text-anchor="start" font-weight="normal" font-family="var(--sans)">Two candidates appear as ALT on one molecule</text><text x="640" y="107" font-size="12" fill="#1f5c4e" text-anchor="end" font-weight="600" font-family="var(--sans)">measured</text><text x="830" y="107" font-size="11.5" fill="#695f56" text-anchor="end" font-weight="normal" font-family="var(--mono)">67.9% of pairs</text><rect x="60.0" y="130.0" width="780.0" height="42.0" rx="8" fill="#fffdf8" stroke="#d4c8bb" opacity="1.0"/><rect x="60.0" y="130.0" width="6.0" height="42.0" rx="3" fill="#8f3d2c" stroke="none" opacity="1.0"/><text x="80" y="157" font-size="13" fill="#8f3d2c" text-anchor="start" font-weight="700" font-family="var(--mono)">3</text><text x="104" y="157" font-size="13.5" fill="#1f1b16" text-anchor="start" font-weight="normal" font-family="var(--sans)">That co-occurrence is specific to somatic pairs</text><text x="640" y="157" font-size="12" fill="#8f3d2c" text-anchor="end" font-weight="600" font-family="var(--sans)">contradicted</text><text x="830" y="157" font-size="11.5" fill="#695f56" text-anchor="end" font-weight="normal" font-family="var(--mono)">65.1% vs 78.6%</text><rect x="60.0" y="180.0" width="780.0" height="42.0" rx="8" fill="#fffdf8" stroke="#d4c8bb" opacity="1.0"/><rect x="60.0" y="180.0" width="6.0" height="42.0" rx="3" fill="#c9beb2" stroke="none" opacity="1.0"/><text x="80" y="207" font-size="13" fill="#c9beb2" text-anchor="start" font-weight="700" font-family="var(--mono)">4</text><text x="104" y="207" font-size="13.5" fill="#1f1b16" text-anchor="start" font-weight="normal" font-family="var(--sans)">It persists at low tumor fraction</text><text x="640" y="207" font-size="12" fill="#c9beb2" text-anchor="end" font-weight="600" font-family="var(--sans)">not measured</text><text x="830" y="207" font-size="11.5" fill="#695f56" text-anchor="end" font-weight="normal" font-family="var(--mono)">next experiment</text><rect x="60.0" y="230.0" width="780.0" height="42.0" rx="8" fill="#fffdf8" stroke="#d4c8bb" opacity="1.0"/><rect x="60.0" y="230.0" width="6.0" height="42.0" rx="3" fill="#c9beb2" stroke="none" opacity="1.0"/><text x="80" y="257" font-size="13" fill="#c9beb2" text-anchor="start" font-weight="700" font-family="var(--mono)">5</text><text x="104" y="257" font-size="13.5" fill="#1f1b16" text-anchor="start" font-weight="normal" font-family="var(--sans)">It suppresses background relative to blanks</text><text x="640" y="257" font-size="12" fill="#c9beb2" text-anchor="end" font-weight="600" font-family="var(--sans)">not measured</text><text x="830" y="257" font-size="11.5" fill="#695f56" text-anchor="end" font-weight="normal" font-family="var(--mono)">—</text></svg></div>
+  <p class="fig__caption">Rungs 1 and 2 are measurements made today. Rung 3 was pre-registered and came out in the opposite direction. Rungs 4 and 5 are what would turn an available evidence type into an improvement in recognition — and neither has been attempted.</p>
+</figure>
+
+<h2>What this does and does not establish</h2>
+<ul>
+  <li><strong>Established:</strong> the co-observation exists physically, abundantly, and with
+  multi-read support. G1's premise is no longer an inference from genomic coordinates.</li>
+  <li><strong>Not established:</strong> that co-occurring ALT alleles are somatic in origin.</li>
+  <li><strong>Not established:</strong> that linkage separates tumor-derived molecules from
+  background — that needs the blank comparison, which has not been run.</li>
+  <li><strong>Not addressed:</strong> anything at low tumor fraction. This is pure tumor, the most
+  favourable case by construction.</li>
+</ul>
+
+<div class="caution">
+  <p>
+    <strong>The result that matters most is the negative one.</strong> Had the somatic-specificity
+    criterion not been fixed before the run, 67.9% would have read as a clean success. It was
+    fixed, it failed, and it points at the candidate set's unknown composition as the thing to
+    resolve next.
+  </p>
+</div>
+
+<h2>What would settle it</h2>
+<ul>
+  <li><strong>The blank comparison.</strong> The same statistic on the five tumor-free replicates
+  and the 1%, 0.1% and 0.01% dilutions. If co-occurrence at low tumor fraction is
+  indistinguishable from blanks, linkage carries no usable signal where it matters — a publishable
+  negative.</li>
+  <li><strong>Candidate composition.</strong> How much of the retained set is somatic, germline or
+  recurrent artifact. Until this is known, no co-occurrence count can be attributed to tumor
+  origin.</li>
+  <li><strong>Cis versus trans.</strong> A third of reads carried exactly one ALT; whether those
+  pairs sit on opposite haplotypes, are subclonal, or include an artifact is unexamined.</li>
+</ul>
+
+<footer>
+  Generated from measured files by <code>scripts/build_linkage_report.py</code>. Sources:
+  EXP-G1-001, FIND-0001, EV-0010. Pure tumor at 100% tumor fraction; sampling error at n=1,000 is
+  roughly ±3 percentage points. Method positions in the surrounding synthesis derive from indexed
+  summaries rather than source PDFs.
+</footer>
+
+</div></body></html>
