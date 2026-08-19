@@ -5,6 +5,7 @@ in. Written to be read before planning work, not after.
 
 | File | Answers |
 |---|---|
+| [`current-state.md`](./current-state.md) | **Start here** — where the project stands, what was measured, what changed and what is still unknown |
 | [`methods/method-synthesis.md`](./methods/method-synthesis.md) | What the supplied methods do, and what the field's recurring move is |
 | [`ont-capabilities.md`](./ont-capabilities.md) | What this ONT data physically gives us, checked against the BAMs |
 | [`datasets.md`](./datasets.md) | Every dataset on the server, its role, size and provenance |
