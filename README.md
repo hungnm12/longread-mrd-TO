@@ -24,6 +24,7 @@ Start with [`docs/research/00_scope.md`](./docs/research/00_scope.md).
 | `research/` | the research OS record store — `suggestions/`, `daily-logs/`, `evidence/`, `weekly-reports/`, plus derived manifests the site reads |
 | `site/` | the Astro site: research dashboard, trackers and the weekly report deck |
 | [`docs/RESEARCH_OS.md`](./docs/RESEARCH_OS.md) | the weekly working loop — after the meeting, every day, before the meeting |
+| [`knowledge/`](./knowledge) | what exists on this server — ONT capabilities, datasets, tools, constraints, method synthesis, open questions |
 | `tools/` | small repo-level generators — currently the PowerPoint research report |
 | `legacy/` | preserved earlier work, not maintained ([`legacy/README.md`](./legacy/README.md)) |
 

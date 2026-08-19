@@ -1,0 +1,28 @@
+id: EV-0008
+created_at: 2026-08-19
+type: document
+title: Knowledge base — environment survey and method synthesis
+description: >-
+  Six-part knowledge directory recording what exists on this server: ONT capabilities checked
+  against the BAMs, the full dataset inventory with mixing provenance, installed tools and
+  compute, the constraints that bound any plan, the distilled method synthesis, and the open
+  questions with what would settle each.
+path_or_url: knowledge/README.md
+generated_by: Direct filesystem and BAM inspection (samtools, ls, command -v) on 2026-08-19
+input_data:
+  - /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG (headers and a sampled region, read-only)
+  - /bip7_disk/pingting114/mixed_bam/HCC1395 (headers and listings, read-only)
+  - docs/research/06_signal_matrix.md
+linked_log: LOG-2026-08-19
+linked_suggestion: null
+linked_claims:
+  - Every sampled read carries both 5mC and 5hmC modification calls; none carries HP or PS
+  - The dilution series holds 14 BAMs — 5 blanks and 3 replicates per tumor-bearing level
+  - The BAM header records no basecaller or read group, so the model description is a naming claim
+verification_status: file_present
+verified_by: null
+verified_on: null
+notes: >-
+  Facts are individually marked verified / repo / unverified inside each document. Nothing in
+  the source data was modified; all inspection was read-only header reads and one sampled
+  region per BAM.
