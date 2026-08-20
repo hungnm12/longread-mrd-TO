@@ -660,6 +660,45 @@ const designGaps = defineCollection({
   })
 });
 
+const researchFindings = defineCollection({
+  loader: glob({ base: "../research/findings", pattern: "FIND-*.md" }),
+  schema: z.object({
+    id: z.string(),
+    experiment: z.string(),
+    created: isoDate,
+    observation: z.string(),
+    interpretation: z.string(),
+    evidence: z.array(z.string()).default([]),
+    denominator: z.string().optional(),
+    caveats: z.array(z.string()).default([]),
+    what_it_does_not_show: z.array(z.string()).default([]),
+    status: z.string()
+  })
+});
+
+const experimentRegistry = defineCollection({
+  loader: glob({ base: "../research/experiments/registry", pattern: "EXP-*.yaml" }),
+  schema: z.object({
+    id: z.string(),
+    title: z.string(),
+    hypothesis: z.string(),
+    question: z.string(),
+    unit_of_analysis: z.string(),
+    inputs: z.array(z.object({ path: z.string(), role: z.string(), read_only: z.boolean().default(true) })).default([]),
+    method: z.string(),
+    parameters: z.record(z.string(), z.union([z.string(), z.number()])).default({}),
+    thresholds: z.record(z.string(), z.union([z.string(), z.number(), z.null()])).default({}),
+    success_criteria: z.array(z.string()).default([]),
+    failure_criteria: z.array(z.string()).default([]),
+    controls: z.array(z.string()).default([]),
+    leakage_guard: z.string(),
+    status: z.string(),
+    result: z.string().optional(),
+    run_records: z.array(z.string()).default([]),
+    notes: z.string().optional()
+  })
+});
+
 const detectorComponents = defineCollection({
   loader: file("../research/design-space/detector-components.yaml", { parser: yamlList("components") }),
   schema: z.object({
@@ -705,6 +744,8 @@ const ontCapabilities = defineCollection({
 });
 
 export const collections = {
+  researchFindings,
+  experimentRegistry,
   detectorComponents,
   crossCutting,
   designAxes,

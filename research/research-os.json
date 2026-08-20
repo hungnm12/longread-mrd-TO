@@ -40,5 +40,9 @@
     "VAF is not tumor fraction.",
     "High coverage in the source sample is not low-tumor-fraction sensitivity.",
     "The parked direction stays parked: no claim about phase or methylation is made while it is."
-  ]
+  ],
+  "active_gap": "G1",
+  "active_component": "molecule-recognition",
+  "research_goal": "Can long-read ONT provide additional evidence that helps distinguish tumor-derived signal from biological and technical background?",
+  "current_stage_plain": "Exploring which ONT evidence is actually useful before building a detector."
 }

@@ -1,0 +1,70 @@
+---
+// What this platform and this data actually provide, grouped by how sure we are.
+import { getCollection } from "astro:content";
+import NarrativeLayout from "@layouts/NarrativeLayout.astro";
+
+const capabilities = await getCollection("ontCapabilities");
+const order = ["AVAILABLE", "DERIVABLE", "UNKNOWN", "MISSING"] as const;
+const note: Record<string, string> = {
+  AVAILABLE: "In the data now — checked by reading the files",
+  DERIVABLE: "Obtainable here, by a route that has not been run yet",
+  UNKNOWN: "Cannot be stated without a check or an answer from someone",
+  MISSING: "Not obtainable from this material, for a stated reason"
+};
+const groups = order.map((status) => ({
+  status,
+  note: note[status],
+  items: capabilities.filter((capability) => capability.data.status === status)
+}));
+---
+
+<NarrativeLayout
+  section="resources"
+  title="Resources — what the data and platform provide"
+  description="ONT capabilities, datasets, tools and blocking unknowns, grouped by how certain each is."
+  crumbs={[{ label: "Research home", href: "/research-narrative/" }, { label: "Resources" }]}
+>
+  <header class="nv-page-head">
+    <h1>What can we actually work with?</h1>
+    <p>
+      A capability is never listed as available because the platform supports it in principle —
+      only because someone read the files and found it there.
+    </p>
+  </header>
+
+  {groups.map((group) => (
+    <section class={`capability-group capability-group--${group.status.toLowerCase()}`}>
+      <header>
+        <h2>{group.status}</h2>
+        <p>{group.note}</p>
+      </header>
+      <ul>
+        {group.items.map((item) => (
+          <li>
+            <span class="capability__name">{item.data.capability}</span>
+            <span class="capability__evidence">{item.data.evidence}</span>
+            {item.data.path && <span class="capability__path">Route — {item.data.path}</span>}
+            {item.data.caveat && <span class="capability__caveat">{item.data.caveat}</span>}
+            {item.data.consequence && <span class="capability__caveat">{item.data.consequence}</span>}
+            {item.data.restriction && <span class="capability__caveat">{item.data.restriction}</span>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+  <section class="nv-block nv-block--quiet">
+    <h2>Material</h2>
+    <ul class="nv-risks">
+      <li>HCC1395 tumor, ONT with native modification calls — candidate discovery</li>
+      <li>HCC1395BL normal — <strong>evaluation only</strong>, never an inference input</li>
+      <li>Dilution series at ~25×: <strong>5 blanks</strong>, plus 3 replicates each at 1%, 0.1% and 0.01%</li>
+      <li>SEQC2 high-confidence somatic calls and the orthogonal benchmark — evaluation only</li>
+      <li>112 cores, 503 GB RAM, <strong>no GPU</strong></li>
+    </ul>
+    <p class="nv-note">
+      The full inventory with paths and provenance lives in the repository under
+      <code>research/knowledge/datasets.md</code>; server paths are deliberately not printed here.
+    </p>
+  </section>
+</NarrativeLayout>

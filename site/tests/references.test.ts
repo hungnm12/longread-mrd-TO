@@ -1,6 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { describe, expect, test } from "vitest";
 import { citationNumber, formatReference, references } from "../src/data/references";
 import { relatedWork, paperIdToRefKey } from "../src/data/relatedWork";
@@ -93,28 +93,16 @@ describe("website format", () => {
       "utf8"
     );
     expect(narrative).not.toMatch(/ReportDeck|ReportSlide|presentation mode/i);
-    expect(narrative).toContain("ResearchLayout");
+    expect(narrative).toContain("NarrativeLayout");
   });
 
-  test("the narrative's TOC matches the section ids it renders", () => {
-    const meta = readFileSync(resolve(siteRoot, "src", "data", "siteMeta.ts"), "utf8");
-    const narrative = readFileSync(
-      resolve(siteRoot, "src", "pages", "research-narrative", "index.astro"),
-      "utf8"
-    );
-    const tocIds = [...meta.matchAll(/\{ id: "([a-z-]+)"/g)].map((m) => m[1]);
-    expect(tocIds.length).toBeGreaterThan(5);
-    for (const id of tocIds) {
-      expect(narrative, `section ${id} is in the TOC but not on the page`).toContain(`id="${id}"`);
-    }
-  });
-
-  test("research integrity: the map does not overstate what G1 showed", () => {
+  test("research integrity: G1 is not overstated where it is told", () => {
     // Whitespace is collapsed first: these phrases wrap across source lines, and a line break
-    // must not be the reason an integrity check passes or fails.
-    const narrative = readFileSync(
-      resolve(siteRoot, "src", "pages", "research-narrative", "index.astro"),
-      "utf8"
+    // must not be the reason an integrity check passes or fails. The claims now live in the gap
+    // record and the gap page, so both are checked.
+    const narrative = (
+      readFileSync(resolve(siteRoot, "src", "pages", "research-narrative", "gap", "[id].astro"), "utf8") +
+      readFileSync(resolve(siteRoot, "..", "research", "design-space", "gaps.yaml"), "utf8")
     ).replace(/\s+/g, " ");
     // Physical linkage must never be presented as tumor specificity.
     expect(narrative).toMatch(/linkage alone is not tumor-specific/i);
@@ -124,6 +112,12 @@ describe("website format", () => {
     expect(narrative).not.toMatch(/germline pairs|non-somatic pairs|false pairs/i);
     // G5 is a prerequisite, not a peer hypothesis.
     expect(narrative).toMatch(/PREREQUISITE/);
+  });
+
+  test("the beginner path never requires the advanced taxonomy", () => {
+    const map = readFileSync(resolve(siteRoot, "src", "pages", "research-narrative", "map.astro"), "utf8");
+    // The map is Level 1: components and their questions, no axes or matrices.
+    expect(map).not.toMatch(/designAxes|axis-matrix|method-matrix/);
   });
 
   test("gap state stays multi-dimensional rather than collapsing to pass\/fail", () => {
@@ -137,14 +131,14 @@ describe("website format", () => {
     expect(gaps).toMatch(/Somatic specificity[\s\S]{0,60}NOT-SUPPORTED/);
   });
 
-  test("the previously proposed direction stays demoted to a candidate", () => {
-    const narrative = readFileSync(
-      resolve(siteRoot, "src", "pages", "research-narrative", "index.astro"),
+  test("the previously proposed direction stays one gap among others", () => {
+    const gapPage = readFileSync(
+      resolve(siteRoot, "src", "pages", "research-narrative", "gap", "[id].astro"),
       "utf8"
     );
-    // It may appear as one gap among others; it may not become the page's own conclusion.
-    expect(narrative).toMatch(/candidate/i);
-    expect(narrative).not.toMatch(/HypothesisPanel/);
+    // G2 is rendered by the same template as every other gap, with no privileged page.
+    expect(gapPage).not.toMatch(/HypothesisPanel/);
+    expect(gapPage).toMatch(/NOT YET TESTED/);
   });
 
   test("deck behaviour is confined to the weekly report route", () => {
@@ -163,22 +157,26 @@ describe("website format", () => {
     expect(deckUsers).toEqual(["src/pages/weekly-reports/[id].astro"]);
   });
 
-  test("the narrative page renders its sections with stable anchors", () => {
-    const index = readFileSync(
+  test("the narrative is a multi-view site, not one long page", () => {
+    const routes = resolve(siteRoot, "src", "pages", "research-narrative");
+    // Level 0-4 each get their own view; a hidden section on one DOM page would not satisfy this.
+    for (const file of ["index.astro", "map.astro", "literature.astro", "design-space.astro",
+                        "resources.astro", "reports.astro", "component/[id].astro",
+                        "gap/[id].astro", "experiments/[id].astro"]) {
+      expect(existsSync(resolve(routes, file)), `${file} is missing`).toBe(true);
+    }
+  });
+
+  test("the landing page stays beginner-first", () => {
+    const home = readFileSync(
       resolve(siteRoot, "src", "pages", "research-narrative", "index.astro"),
       "utf8"
     );
-    // The section list is the research map: components first, then the active branch.
-    for (const id of [
-      "map",
-      "active",
-      "g1",
-      "branches",
-      "literature",
-      "design-space",
-      "references"
-    ]) {
-      expect(index).toContain(`id="${id}"`);
-    }
+    // Advanced taxonomy must not leak onto Level 0.
+    expect(home).not.toMatch(/designAxes|method-matrix|axis-matrix|ReferenceList/);
+    // It must lead with the goal and the current question, and link onward.
+    expect(home).toMatch(/research_goal/);
+    expect(home).toMatch(/active_question/);
+    expect(home).toMatch(/\/research-narrative\/map\//);
   });
 });

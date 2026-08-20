@@ -1,0 +1,75 @@
+---
+// Reference view. Methods filterable by the detector component they address — the filter is
+// plain CSS over a radio group, so it works without JavaScript and needs no client bundle.
+import { getCollection } from "astro:content";
+import NarrativeLayout from "@layouts/NarrativeLayout.astro";
+import CitationMarker from "@components/CitationMarker.astro";
+import ReferenceList from "@components/ReferenceList.astro";
+
+const components = (await getCollection("detectorComponents")).sort((a, b) => a.data.order - b.data.order);
+const methods = await getCollection("designMethods");
+const refKey = ["", "mrdetect", "mrd-edge", "phased-seq", "ont-realtime", "nanorcs",
+                "methyl-fragmentation", "ont-cfdna-methyl", "clairs-to"];
+---
+
+<NarrativeLayout
+  section="literature"
+  title="Literature — methods by detector component"
+  description="What the field has tried, attached to the detector problem each method addresses."
+  crumbs={[{ label: "Research home", href: "/research-narrative/" }, { label: "Literature" }]}
+>
+  <header class="nv-page-head">
+    <h1>What the field has tried</h1>
+    <p>
+      Every method here is placed by the detector problem it addresses, not by publication date. A
+      method may address several. Positions derive from indexed summaries, not source PDFs read
+      locally, and no performance figures are compared — the studies use different assays, samples
+      and cohorts.
+    </p>
+  </header>
+
+  <div class="litfilter">
+    <input type="radio" name="litfilter" id="lit-all" checked />
+    <label class="litfilter__tab" for="lit-all">All</label>
+    {components.map((component) => (
+      <>
+        <input type="radio" name="litfilter" id={`lit-${component.id}`} />
+        <label class="litfilter__tab" for={`lit-${component.id}`}>{component.data.short}</label>
+      </>
+    ))}
+
+    <div class="litfilter__panel">
+      {methods.map((method) => (
+        <article class="litmethod" data-components={method.data.components.join(" ")}>
+          <header>
+            <h2>
+              {method.data.name}
+              {method.data.ref && <CitationMarker refs={refKey[method.data.ref]} />}
+            </h2>
+            <p class="litmethod__where">
+              {method.data.components.map((id) => (
+                <a href={`/research-narrative/component/${id}/`}>
+                  {components.find((c) => c.id === id)?.data.short ?? id}
+                </a>
+              ))}
+            </p>
+          </header>
+          <p><strong>Mechanism it introduces.</strong> {method.data.unique_contribution}</p>
+          <p><strong>Limitation that remains.</strong> {method.data.limitation_here}</p>
+          {method.data.relation_to_current_gap && (
+            <p class="litmethod__rel"><strong>Relation to our work.</strong> {method.data.relation_to_current_gap}</p>
+          )}
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <section class="nv-block">
+    <h2>References</h2>
+    <ReferenceList />
+  </section>
+
+  <p class="nv-more-row">
+    <a class="nv-more" href="/research-narrative/design-space/">Advanced: the eleven design axes →</a>
+  </p>
+</NarrativeLayout>

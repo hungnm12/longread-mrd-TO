@@ -1,0 +1,81 @@
+---
+// Level 1 — the six problems as one picture. Each node is a link, not a paragraph.
+import { getCollection } from "astro:content";
+import NarrativeLayout from "@layouts/NarrativeLayout.astro";
+import DetectorMap from "@components/DetectorMap.astro";
+import { researchOs } from "@utils/researchOs";
+
+const components = (await getCollection("detectorComponents")).sort((a, b) => a.data.order - b.data.order);
+const gaps = await getCollection("designGaps");
+const crossCutting = await getCollection("crossCutting");
+const os = researchOs as { active_gap: string; active_component: string };
+const componentName = (id: string) => components.find((c) => c.id === id)?.data.name ?? id;
+---
+
+<NarrativeLayout
+  section="map"
+  title="MRD detector map"
+  description="The six components a complete MRD detector must solve, and where the current work sits."
+  crumbs={[{ label: "Research home", href: "/research-narrative/" }, { label: "Detector map" }]}
+>
+  <header class="nv-page-head">
+    <h1>What must a detector solve?</h1>
+    <p>
+      The centre is the problem. Each node around it is a part of the problem that needs its own
+      answer. Open a node to see what the field has tried there and what we are testing.
+    </p>
+  </header>
+
+  <DetectorMap
+    centre={{ name: "MRD Detection", problem: "Find rare tumor-derived signal while controlling background at very low tumor fraction." }}
+    components={components}
+    gaps={gaps}
+    active={os.active_component}
+  >
+    Gap identifiers sit on the component they belong to — they are stages of one detector, not
+    competing hypotheses.
+  </DetectorMap>
+
+  <div class="nv-nodes">
+    {components.map((component) => {
+      const primary = gaps.filter((gap) => gap.data.component === component.id);
+      const secondary = gaps.filter((gap) => gap.data.secondary_components.includes(component.id));
+      const active = primary.find((gap) => gap.id === os.active_gap);
+      const others = primary.filter((gap) => gap.id !== os.active_gap);
+      return (
+        <article class={`nv-node${active ? " nv-node--active" : ""}`}>
+          <h2>{component.data.short}</h2>
+          <p class="nv-node__q">{component.data.question}</p>
+          <dl class="nv-node__meta">
+            <div>
+              <dt>Status</dt>
+              <dd>{active ? "active research" : primary.length ? "open, not started" : "not started"}</dd>
+            </div>
+            <div>
+              <dt>Active</dt>
+              <dd>{active ? active.id : "—"}</dd>
+            </div>
+            <div>
+              <dt>Other candidates</dt>
+              <dd>{others.length ? others.map((g) => g.id).join(", ") : secondary.length ? `${secondary.map((g) => g.id).join(", ")} (secondary)` : "—"}</dd>
+            </div>
+          </dl>
+          <a class="nv-node__link" href={`/research-narrative/component/${component.id}/`}>Explore →</a>
+        </article>
+      );
+    })}
+  </div>
+
+  <section class="nv-crosscut">
+    <h2>Cross-cutting properties</h2>
+    <p>Not stages of the detector — properties that condition several components at once.</p>
+    <ul>
+      {crossCutting.map((entry) => (
+        <li>
+          <strong>{entry.data.name}</strong> — {entry.data.detail}
+          <span>affects {entry.data.affects.map((id) => componentName(id)).join(" · ")}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</NarrativeLayout>

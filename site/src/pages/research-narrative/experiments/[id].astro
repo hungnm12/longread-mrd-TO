@@ -1,0 +1,101 @@
+---
+// Level 4 — the experiment: what was registered before the run, and what came back.
+import { getCollection } from "astro:content";
+import NarrativeLayout from "@layouts/NarrativeLayout.astro";
+import ClaimLabel from "@components/ClaimLabel.astro";
+
+export async function getStaticPaths() {
+  const experiments = await getCollection("experimentRegistry");
+  return experiments.map((experiment) => ({
+    params: { id: experiment.data.id.toLowerCase() },
+    props: { experimentId: experiment.data.id }
+  }));
+}
+
+const { experimentId } = Astro.props;
+const experiments = await getCollection("experimentRegistry");
+const experiment = experiments.find((entry) => entry.data.id === experimentId)!;
+const findings = await getCollection("researchFindings");
+const gaps = await getCollection("designGaps");
+const components = await getCollection("detectorComponents");
+
+const finding = findings.find((entry) => entry.data.experiment === experimentId);
+const gap = gaps.find((entry) => experimentId.includes(entry.id));
+const component = gap ? components.find((entry) => entry.id === gap.data.component) : undefined;
+---
+
+<NarrativeLayout
+  section="map"
+  title={`${experiment.data.id} — ${experiment.data.title}`}
+  description={experiment.data.question}
+  crumbs={[
+    { label: "Research home", href: "/research-narrative/" },
+    ...(component ? [{ label: component.data.short, href: `/research-narrative/component/${component.id}/` }] : []),
+    ...(gap ? [{ label: gap.id, href: `/research-narrative/gap/${gap.id.toLowerCase()}/` }] : []),
+    { label: experiment.data.id }
+  ]}
+>
+  <header class="nv-page-head">
+    <p class="nv-page-head__kicker">Experiment · {experiment.data.status}</p>
+    <h1>{experiment.data.title}</h1>
+    <p class="nv-page-head__q">{experiment.data.question}</p>
+  </header>
+
+  <section class="nv-block">
+    <h2>Registered before the run</h2>
+    <p class="nv-note">
+      Thresholds and criteria below were fixed before any result was seen. A threshold chosen
+      afterwards turns an exploratory finding into a false confirmatory one.
+    </p>
+    <dl class="nv-deflist">
+      <dt>Unit of analysis</dt><dd>{experiment.data.unit_of_analysis}</dd>
+      <dt>Method</dt><dd>{experiment.data.method}</dd>
+      <dt>Success criteria</dt>
+      <dd><ul>{experiment.data.success_criteria.map((item) => <li>{item}</li>)}</ul></dd>
+      <dt>Failure criteria</dt>
+      <dd><ul>{experiment.data.failure_criteria.map((item) => <li>{item}</li>)}</ul></dd>
+      <dt>Controls</dt>
+      <dd><ul>{experiment.data.controls.map((item) => <li>{item}</li>)}</ul></dd>
+      <dt>Leakage guard</dt><dd>{experiment.data.leakage_guard}</dd>
+    </dl>
+  </section>
+
+  {experiment.data.result && (
+    <section class="nv-block">
+      <h2>Outcome <ClaimLabel kind="MEASURED" /></h2>
+      <p class="nv-lead">{experiment.data.result}</p>
+    </section>
+  )}
+
+  {finding && (
+    <section class="nv-block" id="finding">
+      <h2>{finding.data.id} — the finding</h2>
+      <p class="nv-finding__obs"><span>Observation</span>{finding.data.observation}</p>
+      <p class="nv-finding__int"><span>Interpretation</span>{finding.data.interpretation}</p>
+      {finding.data.what_it_does_not_show.length > 0 && (
+        <div class="nv-doesnot">
+          <p>What it does not show</p>
+          <ul>{finding.data.what_it_does_not_show.map((item) => <li>{item}</li>)}</ul>
+        </div>
+      )}
+      {finding.data.caveats.length > 0 && (
+        <details class="branch__more">
+          <summary>Caveats ({finding.data.caveats.length})</summary>
+          <ul class="nv-risks">{finding.data.caveats.map((item) => <li>{item}</li>)}</ul>
+        </details>
+      )}
+    </section>
+  )}
+
+  <section class="nv-block nv-block--quiet">
+    <h2>Inputs</h2>
+    <ul class="nv-inputs">
+      {experiment.data.inputs.map((input) => (
+        <li>
+          <span>{input.role}</span>
+          {input.read_only && <em>read-only</em>}
+        </li>
+      ))}
+    </ul>
+  </section>
+</NarrativeLayout>

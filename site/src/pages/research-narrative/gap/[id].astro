@@ -1,0 +1,194 @@
+---
+// Level 3 — one research gap, told as the journey it actually was.
+//
+// This is where detail belongs. A gap with a journey recorded (G1) gets the full sequence; a gap
+// without one is shown honestly as NOT YET TESTED rather than padded with speculation.
+import { getCollection } from "astro:content";
+import NarrativeLayout from "@layouts/NarrativeLayout.astro";
+import GapState from "@components/GapState.astro";
+import ClaimLabel from "@components/ClaimLabel.astro";
+import ResearchJourney from "@components/ResearchJourney.astro";
+import MechanismFigure from "@components/MechanismFigure.astro";
+import { researchOs } from "@utils/researchOs";
+import linkage from "../../../../../outputs/active/results/linkage/cooccurrence_pure_tumor.summary.json";
+
+export async function getStaticPaths() {
+  const gaps = await getCollection("designGaps");
+  return gaps.map((gap) => ({ params: { id: gap.id.toLowerCase() }, props: { gapId: gap.id } }));
+}
+
+const { gapId } = Astro.props;
+const gaps = await getCollection("designGaps");
+const gap = gaps.find((entry) => entry.id === gapId)!;
+const components = await getCollection("detectorComponents");
+const findings = await getCollection("researchFindings");
+const experiments = await getCollection("experimentRegistry");
+const capabilities = await getCollection("ontCapabilities");
+const dailyLogs = await getCollection("dailyLogs");
+
+const component = components.find((entry) => entry.id === gap.data.component)!;
+const subcomponent = component.data.subcomponents.find((sub) => sub.id === gap.data.subcomponent);
+const gapFindings = findings.filter((finding) => finding.data.experiment.includes(gap.id));
+const gapExperiments = experiments.filter((experiment) => experiment.data.id.includes(gap.id));
+const os = researchOs as { active_gap: string };
+
+// Resources this gap actually needs, resolved from the capability inventory rather than listed
+// by hand, so a status change there shows up here.
+const needed = capabilities.filter((cap) => gap.data.required_ont_capability.includes(cap.id));
+
+const strata = linkage.by_seqc2_stratum;
+const dilutionSteps = ["Pure tumor", "1%", "0.1%", "0.01%", "TF0 blanks"];
+
+// Logs that mention this gap's experiment, so a reader can get to the day it happened.
+const relatedLogs = dailyLogs.filter((log) =>
+  gapExperiments.some((experiment) => log.body?.includes(experiment.data.id)) ||
+  gapFindings.some((finding) => log.body?.includes(finding.data.id))
+);
+---
+
+<NarrativeLayout
+  section={gap.id === os.active_gap ? "current" : "map"}
+  title={`${gap.id} — ${gap.data.title}`}
+  description={gap.data.active_question ?? gap.data.title}
+  crumbs={[
+    { label: "Research home", href: "/research-narrative/" },
+    { label: "Detector map", href: "/research-narrative/map/" },
+    { label: component.data.short, href: `/research-narrative/component/${component.id}/` },
+    ...(subcomponent ? [{ label: subcomponent.name }] : []),
+    { label: gap.id }
+  ]}
+>
+  <header class="nv-page-head">
+    <p class="nv-page-head__kicker">
+      Research quest {gap.id}
+      {gap.id === os.active_gap && <span class="nv-live">active</span>}
+      {gap.data.role === "PREREQUISITE" && <span class="nv-prereq">prerequisite</span>}
+    </p>
+    <h1>{gap.data.title}</h1>
+  </header>
+
+  <section class="nv-block">
+    <h2>Where this stands</h2>
+    <GapState state={gap.data.state} />
+  </section>
+
+  {gap.data.journey.length > 0 ? (
+    <section class="nv-block">
+      <h2>The research journey</h2>
+      <ResearchJourney steps={gap.data.journey} />
+
+      <figure class="strata">
+        <figcaption class="strata__title">
+          Step 7 in numbers — share of pairs with at least one both-ALT read
+        </figcaption>
+        <div class="strata__rows">
+          {[
+            { label: "both candidates confirmed by SEQC2", stats: strata.both, tone: "confirmed" },
+            { label: "one confirmed by SEQC2", stats: strata.one, tone: "partial" },
+            { label: "neither confirmed by SEQC2", stats: strata.neither, tone: "unconfirmed" }
+          ].map((row) => (
+            <div class={`strata__row strata__row--${row.tone}`}>
+              <span class="strata__label">{row.label}</span>
+              <span class="strata__track">
+                <span class="strata__bar" style={`width:${(row.stats.pct / 90) * 100}%`}></span>
+              </span>
+              <span class="strata__value">{row.stats.pct}%</span>
+              <span class="strata__n">{row.stats.pairs_with_alt_alt} of {row.stats.pairs_evaluable} pairs</span>
+            </div>
+          ))}
+        </div>
+        <figcaption>
+          The prediction fixed before the run was that confirmed-somatic pairs would lead. They do
+          not. <strong>Absence from SEQC2 is not proof of non-somatic origin</strong> — it covers
+          high-confidence regions only, so the third group is described only as “not confirmed by
+          SEQC2”.
+        </figcaption>
+      </figure>
+    </section>
+  ) : (
+    <section class="nv-block">
+      <h2>The research journey</h2>
+      <p class="nv-nottested">NOT YET TESTED</p>
+      <p>
+        This gap has a rationale and a falsification condition, and no experiment has been run
+        against it. What exists is recorded below; nothing is filled in beyond that.
+      </p>
+      <dl class="nv-deflist">
+        <dt>Why this gap exists</dt>
+        <dd>{gap.data.what_is_actually_different}</dd>
+        <dt>What the data would have to provide</dt>
+        <dd>{gap.data.required_data}</dd>
+        <dt>Feasibility here</dt>
+        <dd>{gap.data.feasibility}</dd>
+      </dl>
+      {gap.id === "G2" && (
+        <details class="branch__more">
+          <summary>Mechanism sketch — why phase and methylation are candidates</summary>
+          <MechanismFigure>
+            <strong>Mechanistic rationale, not a result.</strong> A somatic variant arises on one
+            chromosome copy, so a tumor-derived read should carry it in cis with the same
+            neighbouring alleles; an error is free to land on a read from either haplotype and does
+            not alter that molecule&#39;s methylation. Whether this separates anything at low tumor
+            fraction is unmeasured.
+          </MechanismFigure>
+        </details>
+      )}
+    </section>
+  )}
+
+  <section class="nv-block">
+    <h2>What could still be wrong</h2>
+    <ul class="nv-risks">
+      {gap.data.confounding_risks.map((risk) => <li>{risk}</li>)}
+    </ul>
+    <p class="nv-falsify">
+      <span>How this would be falsified</span>{gap.data.falsification}
+    </p>
+  </section>
+
+  {gap.data.active_question && (
+    <section class="nv-nextq">
+      <p class="nv-nextq__label">Next question <ClaimLabel kind="UNRESOLVED" /></p>
+      <p class="nv-nextq__q">{gap.data.active_question}</p>
+      <p class="nv-nextq__exp">{gap.data.next_experiment}</p>
+      {gap.id === "G1" && (
+        <ol class="nv-ladder" aria-label="Planned tumor-fraction progression">
+          {dilutionSteps.map((step, index) => (
+            <li class={index === 0 ? "nv-ladder__step nv-ladder__step--done" : "nv-ladder__step"}>
+              <span>{step}</span>
+              {index === 0 && <em>measured</em>}
+              {index > 0 && <em>not yet</em>}
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
+  )}
+
+  <section class="nv-block nv-block--quiet">
+    <h2>Related material</h2>
+    <div class="nv-related">
+      {gapExperiments.map((experiment) => (
+        <a href={`/research-narrative/experiments/${experiment.data.id.toLowerCase()}/`}>
+          <strong>{experiment.data.id}</strong><span>{experiment.data.title}</span>
+        </a>
+      ))}
+      {gapFindings.map((finding) => (
+        <a href={`/research-narrative/experiments/${finding.data.experiment.toLowerCase()}/#finding`}>
+          <strong>{finding.data.id}</strong><span>finding</span>
+        </a>
+      ))}
+      {relatedLogs.map((log) => (
+        <a href={`/logs/${log.data.id.toLowerCase()}/`}>
+          <strong>Daily — {log.data.date}</strong><span>the day this happened</span>
+        </a>
+      ))}
+      {needed.length > 0 && (
+        <a href="/research-narrative/resources/">
+          <strong>Resources</strong>
+          <span>{needed.map((cap) => `${cap.data.capability} (${cap.data.status.toLowerCase()})`).join(" · ")}</span>
+        </a>
+      )}
+    </div>
+  </section>
+</NarrativeLayout>

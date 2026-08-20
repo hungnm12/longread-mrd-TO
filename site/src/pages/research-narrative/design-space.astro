@@ -1,0 +1,122 @@
+---
+// Advanced view: the eleven-axis taxonomy. Deliberately behind a click — the beginner model is
+// six detector problems, this is the research model of how each can be solved.
+import { getCollection } from "astro:content";
+import NarrativeLayout from "@layouts/NarrativeLayout.astro";
+import ClaimLabel from "@components/ClaimLabel.astro";
+import KeyMessage from "@components/KeyMessage.astro";
+import CitationMarker from "@components/CitationMarker.astro";
+
+const axes = (await getCollection("designAxes")).sort((a, b) => a.data.order - b.data.order);
+const methods = await getCollection("designMethods");
+const components = await getCollection("detectorComponents");
+const componentOf = (axisId: string) =>
+  components.find((component) => component.data.axes.includes(axisId));
+const matrixAxes = ["marker-discovery", "evidence-per-observation", "background-suppression",
+                    "evidence-linkage", "aggregation", "detection-unit", "decision-threshold"];
+const axisName = (id: string) => axes.find((axis) => axis.id === id)?.data.name ?? id;
+---
+
+<NarrativeLayout
+  section="literature"
+  title="Advanced design-space view"
+  description="The eleven axes behind the six detector components, and every method's position on them."
+  crumbs={[
+    { label: "Research home", href: "/research-narrative/" },
+    { label: "Literature", href: "/research-narrative/literature/" },
+    { label: "Design space" }
+  ]}
+>
+  <header class="nv-page-head">
+    <p class="nv-page-head__kicker">Advanced</p>
+    <h1>The design space behind the six problems</h1>
+    <p>
+      The six components say <em>what</em> a detector must solve. These axes say <em>how</em> each
+      may be solved, and are the level at which methods are actually comparable. You do not need
+      this taxonomy to follow the research.
+    </p>
+  </header>
+
+  <section class="nv-block">
+    <h2>Common principles across the reviewed set</h2>
+    <div class="principle-grid">
+      <article class="principle">
+        <h3>P1 · Make each observation carry more before combining</h3>
+        <p>All five detectors, differing only in how: more loci <CitationMarker refs="mrdetect" />, a learned prior <CitationMarker refs="mrd-edge" />, a second linked variant <CitationMarker refs="phased-seq" />, a consensus <CitationMarker refs="nanorcs" />, a second signal class <CitationMarker refs="ont-realtime" />.</p>
+      </article>
+      <article class="principle">
+        <h3>P2 · Background is modelled, not merely filtered</h3>
+        <p>Nobody treats a filter list as sufficient — the error distribution is modelled, learned, required to fail twice, or constrained at the bench <CitationMarker refs="ont-cfdna-methyl" />.</p>
+      </article>
+      <article class="principle">
+        <h3>P3 · The sample answer is a scalar over many weak observations</h3>
+        <p>The unit at which evidence is gathered differs; the unit at which it is reported does not <CitationMarker refs={["mrdetect", "mrd-edge", "nanorcs"]} />.</p>
+      </article>
+      <article class="principle">
+        <h3>P4 · Evidence classes are not automatically independent</h3>
+        <p>Held explicitly by the fragmentation work <CitationMarker refs="methyl-fragmentation" />, implicitly violated by the multimodal methods.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="nv-block">
+    <h2>The eleven axes</h2>
+    <div class="axis-compact">
+      {axes.map((axis) => {
+        const owner = componentOf(axis.id);
+        return (
+          <article class="axis-compact__item" id={`axis-${axis.id}`}>
+            <header>
+              <h4>{axis.data.name}</h4>
+              {axis.data.added && <span class="axis-compact__tag">added axis</span>}
+            </header>
+            {owner && (
+              <p class="axis-compact__owner">
+                serves <a href={`/research-narrative/component/${owner.id}/`}>{owner.data.short}</a>
+              </p>
+            )}
+            <p class="axis-compact__def">{axis.data.definition}</p>
+            <ul>
+              {axis.data.strategies.map((strategy) => (
+                <li>
+                  <span class="axis-compact__strategy">{strategy.name}</span>
+                  {strategy.methods.length > 0 && <span class="axis-compact__methods">{strategy.methods.join(" · ")}</span>}
+                </li>
+              ))}
+            </ul>
+            {axis.data.measured_locally && (
+              <p class="axis-compact__measured"><ClaimLabel kind="MEASURED" /> {axis.data.measured_locally}</p>
+            )}
+          </article>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="nv-block">
+    <h2>Method × axis</h2>
+    <div class="matrix-scroll" role="region" aria-label="Method by axis comparison" tabindex="0">
+      <table class="axis-matrix">
+        <thead>
+          <tr><th scope="col">Method</th>{matrixAxes.map((id) => <th scope="col">{axisName(id)}</th>)}</tr>
+        </thead>
+        <tbody>
+          {methods.map((method) => (
+            <tr class={method.data.in_reviewed_set ? undefined : "axis-matrix__row--tooling"}>
+              <th scope="row">{method.data.name}</th>
+              {matrixAxes.map((id) => <td>{method.data.axes[id] ?? "—"}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <KeyMessage title="Scope of every coverage claim here" tone="boundary">
+    <p>
+      “Underexplored” means not represented in the seven documents reviewed in this repository. No
+      systematic search has been run, and method positions derive from indexed summaries rather
+      than source PDFs, so nothing here is a claim about the field or about novelty.
+    </p>
+  </KeyMessage>
+</NarrativeLayout>

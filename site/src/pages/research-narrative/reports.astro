@@ -1,0 +1,62 @@
+---
+// Reports, kept out of the research map: what changed on a day, and what a week answered.
+import { getCollection } from "astro:content";
+import NarrativeLayout from "@layouts/NarrativeLayout.astro";
+
+const logs = (await getCollection("dailyLogs")).sort((a, b) => b.data.date.localeCompare(a.data.date));
+const weekly = (await getCollection("weeklyReports")).sort((a, b) =>
+  b.data.period_end.localeCompare(a.data.period_end)
+);
+---
+
+<NarrativeLayout
+  section="reports"
+  title="Reports"
+  description="Daily records of what changed, and weekly reports of what the experiments answered."
+  crumbs={[{ label: "Research home", href: "/research-narrative/" }, { label: "Reports" }]}
+>
+  <header class="nv-page-head">
+    <h1>What changed, and when</h1>
+    <p>
+      A daily entry answers “what evidence changed our understanding today?”. A weekly report
+      answers “what research question did this week's experiments answer?”.
+    </p>
+  </header>
+
+  <section class="nv-block">
+    <h2>Daily</h2>
+    <ul class="nv-reportlist">
+      {logs.map((log) => (
+        <li>
+          <a href={`/logs/${log.data.id.toLowerCase()}/`}>
+            <strong>{log.data.date}</strong>
+            <span>{log.data.public_summary ?? log.data.research_question}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="nv-block">
+    <h2>Weekly</h2>
+    <ul class="nv-reportlist">
+      {weekly.map((report) => (
+        <li>
+          <a href={`/weekly-reports/${report.data.id.toLowerCase()}/`}>
+            <strong>{report.data.period_label}</strong>
+            <span>{report.data.title} — {report.data.status}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="nv-block nv-block--quiet">
+    <h2>Standalone report</h2>
+    <p>
+      The linkage question was also written up as a self-contained research report with figures:
+      <code>outputs/accepted/reports/2026-08-19-ont-linked-evidence.html</code> in the repository,
+      and published to the lab journal.
+    </p>
+  </section>
+</NarrativeLayout>

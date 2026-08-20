@@ -1,0 +1,88 @@
+---
+// Shell for the research site's multi-view structure.
+//
+// Six primary destinations and a breadcrumb — nothing else. The old layout carried a
+// twelve-entry table of contents because the site was one page; a reader now moves between
+// views instead of scrolling past sections they did not ask for.
+import "@styles/global.css";
+import { researchOs } from "@utils/researchOs";
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  /** Nav key of the current destination. */
+  section?: string;
+  crumbs?: Crumb[];
+}
+
+const { title, description, section, crumbs = [] } = Astro.props;
+const activeGap = (researchOs as { active_gap?: string }).active_gap ?? "G1";
+
+const nav = [
+  { key: "home", href: "/research-narrative/", label: "Research home" },
+  { key: "map", href: "/research-narrative/map/", label: "Detector map" },
+  { key: "current", href: `/research-narrative/gap/${activeGap.toLowerCase()}/`, label: "Current research" },
+  { key: "literature", href: "/research-narrative/literature/", label: "Literature" },
+  { key: "resources", href: "/research-narrative/resources/", label: "Resources" },
+  { key: "reports", href: "/research-narrative/reports/", label: "Reports" }
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="nv-body">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="nv-header">
+      <div class="nv-header__inner">
+        <a class="nv-brand" href="/research-narrative/">
+          <span class="nv-brand__name">MRD Research OS</span>
+        </a>
+        <nav class="nv-nav" aria-label="Primary">
+          {nav.map((item) => (
+            <a href={item.href} aria-current={item.key === section ? "page" : undefined}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    {crumbs.length > 0 && (
+      <nav class="nv-crumbs" aria-label="Breadcrumb">
+        <ol class="nv-crumbs__list">
+          {crumbs.map((crumb, index) => (
+            <li>
+              {crumb.href ? <a href={crumb.href}>{crumb.label}</a> : <span aria-current="page">{crumb.label}</span>}
+              {index < crumbs.length - 1 && <span class="nv-crumbs__sep" aria-hidden="true">›</span>}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <main class="nv-main" id="main">
+      <slot />
+    </main>
+
+    <footer class="nv-footer">
+      <div class="nv-footer__inner">
+        <span>Research records live in <code>research/</code>; every page here renders from them.</span>
+        <span>
+          <a href="/">Research OS dashboard</a> · <a href="/research-notes/">Notes archive</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

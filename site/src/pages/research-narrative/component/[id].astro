@@ -1,0 +1,169 @@
+---
+// Level 2 — one component: the problem in plain language, what the field tried, what we are
+// testing here, and what we have learned in this part of the detector.
+//
+// Findings are pulled from the record store and filtered to the gaps that belong to this
+// component, so the same FIND-0001 renders here and on the gap page without being copied.
+import { getCollection } from "astro:content";
+import NarrativeLayout from "@layouts/NarrativeLayout.astro";
+import { researchOs } from "@utils/researchOs";
+
+export async function getStaticPaths() {
+  const components = await getCollection("detectorComponents");
+  return components.map((component) => ({
+    params: { id: component.id },
+    props: { componentId: component.id }
+  }));
+}
+
+const { componentId } = Astro.props;
+const components = (await getCollection("detectorComponents")).sort((a, b) => a.data.order - b.data.order);
+const component = components.find((entry) => entry.id === componentId)!;
+const gaps = await getCollection("designGaps");
+const methods = await getCollection("designMethods");
+const findings = await getCollection("researchFindings");
+const axes = await getCollection("designAxes");
+const os = researchOs as { active_gap: string };
+
+const primaryGaps = gaps.filter((gap) => gap.data.component === componentId);
+const secondaryGaps = gaps.filter((gap) => gap.data.secondary_components.includes(componentId));
+const attachedMethods = methods.filter((method) => method.data.components.includes(componentId));
+const componentAxes = axes.filter((axis) => component.data.axes.includes(axis.id));
+
+// A finding belongs to this component when the gap its experiment serves does.
+const gapIds = new Set(primaryGaps.map((gap) => gap.id));
+const relevantFindings = findings.filter((finding) =>
+  [...gapIds].some((id) => finding.data.experiment.includes(id))
+);
+
+const plainProblem: Record<string, string> = {
+  "marker-discovery":
+    "Before anything can be detected, we have to decide what to watch. Choose the wrong sites and every later number is measured against an undefined denominator.",
+  "molecule-recognition":
+    "An ALT allele alone does not prove a molecule is tumor-derived. Sequencing error, germline variation and other background can generate the same observation.",
+  "background-suppression":
+    "Most of what looks like signal is not. Without a matched normal, germline variation, clonal haematopoiesis and technical artifacts all sit inside the background we must control.",
+  aggregation:
+    "No single rare observation is convincing on its own. The question is how to combine many weak ones without counting the same information twice.",
+  "decision-rule":
+    "At some point a number has to become a yes or a no. That cut needs a reference distribution, or it has no error rate.",
+  validation:
+    "A detector is only as good as the evidence that it works. Analytical claims need replicates; clinical claims need cohorts; neither substitutes for the other."
+};
+
+const stateTone = (value: string) =>
+  ({ SUPPORTED: "yes", "NOT-SUPPORTED": "no", BLOCKED: "blocked", PARKED: "blocked" } as Record<string, string>)[value] ?? "open";
+
+const gapStatusLabel = (gapId: string, stage: string) =>
+  gapId === os.active_gap ? "ACTIVE" : stage === "BLOCKED" ? "BLOCKED / PARTIAL" : stage === "UNEXPLORED" ? "WAITING" : stage.replace(/-/g, " ");
+---
+
+<NarrativeLayout
+  section="map"
+  title={`${component.data.short} — MRD detector component`}
+  description={component.data.question}
+  crumbs={[
+    { label: "Research home", href: "/research-narrative/" },
+    { label: "Detector map", href: "/research-narrative/map/" },
+    { label: component.data.short }
+  ]}
+>
+  <header class="nv-page-head">
+    <p class="nv-page-head__kicker">Detector component {String(component.data.order).padStart(2, "0")}</p>
+    <h1>{component.data.name}</h1>
+    <p class="nv-page-head__q">{component.data.question}</p>
+  </header>
+
+  <section class="nv-block">
+    <h2>The problem</h2>
+    <p class="nv-lead">{plainProblem[componentId] ?? component.data.why}</p>
+  </section>
+
+  {attachedMethods.length > 0 && (
+    <section class="nv-block">
+      <h2>What the field has tried</h2>
+      <ul class="nv-solutions">
+        {attachedMethods.map((method) => (
+          <li>
+            <span class="nv-solutions__mech">{method.data.unique_contribution}</span>
+            <span class="nv-solutions__who">
+              → {method.data.name}
+              {!method.data.in_reviewed_set && <em> (our tooling)</em>}
+            </span>
+            <span class="nv-solutions__limit">Still open: {method.data.limitation_here}</span>
+          </li>
+        ))}
+      </ul>
+      <a class="nv-more" href="/research-narrative/literature/">All methods and references →</a>
+    </section>
+  )}
+
+  {(primaryGaps.length > 0 || secondaryGaps.length > 0) && (
+    <section class="nv-block">
+      <h2>What we are testing here</h2>
+      <div class="nv-gapcards">
+        {primaryGaps.map((gap) => (
+          <a class={`nv-gapcard nv-gapcard--${gap.id === os.active_gap ? "active" : gap.data.stage.toLowerCase()}`}
+             href={`/research-narrative/gap/${gap.id.toLowerCase()}/`}>
+            <span class="nv-gapcard__id">{gap.id}</span>
+            <span class="nv-gapcard__title">{gap.data.title}</span>
+            <span class="nv-gapcard__status">{gapStatusLabel(gap.id, gap.data.stage)}</span>
+            {gap.data.role === "PREREQUISITE" && <span class="nv-gapcard__role">prerequisite for the others</span>}
+            <ul class="nv-gapcard__state">
+              {gap.data.state.slice(0, 3).map((entry) => (
+                <li class={`nv-gapcard__dim nv-gapcard__dim--${stateTone(entry.value)}`}>
+                  {entry.dimension}: <strong>{entry.value.replace(/-/g, " ").toLowerCase()}</strong>
+                </li>
+              ))}
+            </ul>
+          </a>
+        ))}
+        {secondaryGaps.map((gap) => (
+          <a class="nv-gapcard nv-gapcard--secondary" href={`/research-narrative/gap/${gap.id.toLowerCase()}/`}>
+            <span class="nv-gapcard__id">{gap.id}</span>
+            <span class="nv-gapcard__title">{gap.data.title}</span>
+            <span class="nv-gapcard__status">touches this component</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {relevantFindings.length > 0 && (
+    <section class="nv-block">
+      <h2>What we have learned here</h2>
+      {relevantFindings.map((finding) => (
+        <article class="nv-finding">
+          <header>
+            <span class="nv-finding__id">{finding.data.id}</span>
+            <span class="nv-finding__date">{finding.data.created}</span>
+          </header>
+          <p class="nv-finding__obs"><span>Measured</span>{finding.data.observation}</p>
+          <p class="nv-finding__int"><span>Interpretation</span>{finding.data.interpretation}</p>
+          <a href={`/research-narrative/experiments/${finding.data.experiment.toLowerCase()}/`}>
+            See the experiment behind it →
+          </a>
+        </article>
+      ))}
+    </section>
+  )}
+
+  {relevantFindings.length === 0 && (
+    <section class="nv-block">
+      <h2>What we have learned here</h2>
+      <p class="nv-empty">Nothing measured in this component yet.</p>
+    </section>
+  )}
+
+  <section class="nv-block nv-block--quiet">
+    <h2>Where this sits in the design space</h2>
+    <p>
+      In the advanced taxonomy this component covers
+      {" "}{componentAxes.map((axis) => axis.data.name).join(", ")}.
+    </p>
+    <p class="nv-note">
+      <strong>Current state here.</strong> {component.data.local_state}
+    </p>
+    <a class="nv-more" href="/research-narrative/design-space/">Advanced design-space view →</a>
+  </section>
+</NarrativeLayout>

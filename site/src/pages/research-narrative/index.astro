@@ -1,331 +1,139 @@
 ---
-// The MRD research map.
+// Level 0 — for someone who knows biology and nothing about this project.
 //
-// Structure follows what a detector must solve, not what the literature published. The six
-// components are the mental model; gaps hang off the component they belong to; methods attach to
-// the components they address; the design-space axes are the secondary "how" view.
-//
-// Every claim-bearing element on this page comes from research/design-space/*.yaml or the
-// measured summary JSON, so the page cannot assert a position the record store does not hold.
+// Deliberately short: the goal, why it is hard, the six problems, and what we are testing right
+// now. No axes, no matrices, no literature, no gap detail. Everything deeper is one click away.
 import { getCollection } from "astro:content";
-import ResearchLayout from "@layouts/ResearchLayout.astro";
-import ResearchSection from "@components/ResearchSection.astro";
-import DetectorMap from "@components/DetectorMap.astro";
-import QuestLog from "@components/QuestLog.astro";
-import GapState from "@components/GapState.astro";
-import ClaimLabel from "@components/ClaimLabel.astro";
-import ResearchJourney from "@components/ResearchJourney.astro";
-import CitationMarker from "@components/CitationMarker.astro";
-import ReferenceList from "@components/ReferenceList.astro";
-import KeyMessage from "@components/KeyMessage.astro";
-import MechanismFigure from "@components/MechanismFigure.astro";
-import { siteMeta } from "@data/siteMeta";
-import { candidateLandscape } from "@data/week001";
-import linkage from "../../../../outputs/active/results/linkage/cooccurrence_pure_tumor.summary.json";
-
-const summary = candidateLandscape.summary;
-const passSnvs = summary.pass_snvs.toLocaleString("en-US");
+import NarrativeLayout from "@layouts/NarrativeLayout.astro";
+import { researchOs } from "@utils/researchOs";
 
 const components = (await getCollection("detectorComponents")).sort((a, b) => a.data.order - b.data.order);
-const crossCutting = await getCollection("crossCutting");
 const gaps = await getCollection("designGaps");
-const methods = await getCollection("designMethods");
-const axes = (await getCollection("designAxes")).sort((a, b) => a.data.order - b.data.order);
 
-const ACTIVE_GAP = "G1";
-const g1 = gaps.find((gap) => gap.id === ACTIVE_GAP)!;
-const activeComponent = g1.data.component;
-const componentName = (id: string) => components.find((c) => c.id === id)?.data.name ?? id;
-const axisName = (id: string) => axes.find((a) => a.id === id)?.data.name ?? id;
-const otherGaps = gaps.filter((gap) => gap.id !== ACTIVE_GAP).sort((a, b) => a.id.localeCompare(b.id));
+const os = researchOs as {
+  active_gap: string;
+  research_goal: string;
+  current_stage_plain: string;
+};
+const activeGap = gaps.find((gap) => gap.id === os.active_gap)!;
 
-// Citation keys by IEEE number, so a method record resolves to the site's reference list.
-const refKey = ["", "mrdetect", "mrd-edge", "phased-seq", "ont-realtime", "nanorcs",
-                "methyl-fragmentation", "ont-cfdna-methyl", "clairs-to"];
+// One plain-language line per component, and one glyph. The glyph is a mnemonic, not decoration:
+// it marks the same component consistently across the map and the component pages.
+const plain: Record<string, { line: string; glyph: string }> = {
+  "marker-discovery": { line: "What should we track?", glyph: "◎" },
+  "molecule-recognition": { line: "Does this observation look tumor-derived?", glyph: "⧉" },
+  "background-suppression": { line: "Could this signal come from error or normal biology?", glyph: "⊘" },
+  aggregation: { line: "How do weak observations combine?", glyph: "∑" },
+  "decision-rule": { line: "When do we call MRD positive?", glyph: "⟐" },
+  validation: { line: "How do we prove the detector works?", glyph: "✓" }
+};
 
-const strata = linkage.by_seqc2_stratum;
-const barWidth = (pct: number) => `${(pct / 90) * 100}%`;
+const stateGlyph: Record<string, string> = {
+  SUPPORTED: "✓",
+  "NOT-SUPPORTED": "✗",
+  UNRESOLVED: "?",
+  UNEXPLORED: "?",
+  INCONCLUSIVE: "?",
+  BLOCKED: "■",
+  PARKED: "■"
+};
+
+function componentStatus(componentId: string) {
+  const primary = gaps.filter((gap) => gap.data.component === componentId);
+  const active = primary.find((gap) => gap.id === os.active_gap);
+  if (active) return { label: "active research", tone: "active", detail: active.id };
+  if (primary.length > 0) {
+    return { label: `${primary.length} open question${primary.length > 1 ? "s" : ""}`, tone: "open", detail: primary.map((g) => g.id).join(" · ") };
+  }
+  return { label: "not started", tone: "idle", detail: "" };
+}
 ---
 
-<ResearchLayout title={siteMeta.title} description={siteMeta.subtitle}>
-  <ResearchSection
-    id="map"
-    index="01"
-    kicker="Research map"
-    title="What a complete MRD detector has to solve"
-    lede="Six components, the gaps attached to each, and where the work is now."
-  >
-    <DetectorMap
-      centre={{ name: "MRD Detection", problem: "Find rare tumor-derived signal while controlling biological and technical background at very low tumor fraction." }}
-      components={components}
-      gaps={gaps}
-      active={activeComponent}
-    >
-      The centre is the problem; the six nodes are what must be solved to address it. Gap
-      identifiers sit on the component they belong to — they are stages of one detector, not five
-      competing hypotheses.
-    </DetectorMap>
+<NarrativeLayout
+  section="home"
+  title="MRD Research OS"
+  description="Can long-read ONT provide evidence that helps distinguish tumor-derived signal from background?"
+>
+  <section class="nv-hero">
+    <p class="nv-hero__kicker">MRD Research OS</p>
+    <h1>{os.research_goal}</h1>
+    <p class="nv-hero__stage">
+      <span>Current stage</span>
+      {os.current_stage_plain}
+    </p>
+    <a class="nv-cta" href="/research-narrative/map/">Explore the MRD detector map →</a>
+  </section>
 
-    <div class="component-grid">
+  <section class="nv-why">
+    <p>
+      MRD detection is difficult because tumor-derived molecules are extremely rare — and the
+      molecules around them are chemically identical. A complete detector therefore has to solve
+      several different problems, not one.
+    </p>
+  </section>
+
+  <section class="nv-components">
+    <h2>What a detector needs to solve</h2>
+    <div class="nv-grid">
       {components.map((component) => {
-        const primary = gaps.filter((gap) => gap.data.component === component.id);
-        const secondary = gaps.filter((gap) => gap.data.secondary_components.includes(component.id));
+        const info = plain[component.id] ?? { line: component.data.question, glyph: "•" };
+        const status = componentStatus(component.id);
         return (
-          <article class={`component-card${component.id === activeComponent ? " component-card--active" : ""}`} id={`component-${component.id}`}>
-            <header>
-              <span class="component-card__index">{String(component.data.order).padStart(2, "0")}</span>
-              <h3>{component.data.name}</h3>
-            </header>
-            <p class="component-card__question">{component.data.question}</p>
-            <p class="component-card__why">{component.data.why}</p>
-            <p class="component-card__state"><span>Here now</span>{component.data.local_state}</p>
-            <p class="component-card__gaps">
-              {primary.map((gap) => (
-                <a class="component-card__gap" href={`#${gap.id.toLowerCase()}`}>
-                  {gap.id}{gap.data.role === "PREREQUISITE" ? " · prerequisite" : ""}
-                </a>
-              ))}
-              {secondary.map((gap) => (
-                <a class="component-card__gap component-card__gap--secondary" href={`#${gap.id.toLowerCase()}`}>
-                  {gap.id} secondary
-                </a>
-              ))}
-              {primary.length === 0 && secondary.length === 0 && (
-                <span class="component-card__gap component-card__gap--none">no work attached yet</span>
-              )}
-            </p>
-          </article>
-        );
-      })}
-    </div>
-
-    <div class="crosscut">
-      <h3>Cross-cutting properties</h3>
-      <p class="crosscut__lede">
-        Not detector stages — properties that condition several components at once, kept out of the
-        six rather than promoted to a seventh node without justification.
-      </p>
-      {crossCutting.map((entry) => (
-        <article class="crosscut__item">
-          <h4>{entry.data.name}</h4>
-          <p>{entry.data.detail}</p>
-          <p class="crosscut__affects">
-            affects {entry.data.affects.map((id) => componentName(id)).join(" · ")}
-          </p>
-        </article>
-      ))}
-    </div>
-  </ResearchSection>
-
-  <ResearchSection
-    id="active"
-    index="02"
-    kicker="Quest log"
-    title="What we are trying to find out"
-    lede="The open scientific question per branch. Execution detail lives in the research notes."
-  >
-    <QuestLog gaps={gaps} activeGap={ACTIVE_GAP} componentName={componentName} />
-  </ResearchSection>
-
-  <ResearchSection
-    id="g1"
-    index="03"
-    kicker="Drill-down"
-    title={`${g1.id} — ${g1.data.title}`}
-    lede="MRD Detection → molecule recognition → molecular linkage → G1."
-  >
-    <div class="gap-hero">
-      <div class="gap-hero__state">
-        <p class="gap-hero__label">Where this stands</p>
-        <GapState state={g1.data.state} />
-      </div>
-      <div class="gap-hero__numbers">
-        <p class="gap-hero__label">Measured on current data <ClaimLabel kind="MEASURED" /></p>
-        <dl class="numbers">
-          <div><dt>within 5 kb</dt><dd>21.3%</dd></div>
-          <div><dt>within 10 kb</dt><dd>34.8%</dd></div>
-          <div><dt>median read</dt><dd>≈11.3 kb</dd></div>
-          <div><dt>pairs with a both-ALT read</dt><dd>{linkage.pairs_with_alt_alt_pct}%</dd></div>
-        </dl>
-        <p class="gap-hero__note">
-          Of {passSnvs} PASS SNV candidates; co-occurrence over {linkage.pairs_evaluable} evaluable
-          pairs, {linkage.pairs_with_alt_alt_support_2plus} with two or more supporting reads.
-        </p>
-      </div>
-    </div>
-
-    <ResearchJourney steps={g1.data.journey} />
-
-    <h3 class="figure-heading">The result that contradicted the prediction</h3>
-    <figure class="strata">
-      <div class="strata__rows">
-        {[
-          { label: "both candidates confirmed by SEQC2", stats: strata.both, tone: "confirmed" },
-          { label: "one confirmed by SEQC2", stats: strata.one, tone: "partial" },
-          { label: "neither confirmed by SEQC2", stats: strata.neither, tone: "unconfirmed" }
-        ].map((row) => (
-          <div class={`strata__row strata__row--${row.tone}`}>
-            <span class="strata__label">{row.label}</span>
-            <span class="strata__track">
-              <span class="strata__bar" style={`width:${barWidth(row.stats.pct)}`}></span>
+          <a class={`nv-card nv-card--${status.tone}`} href={`/research-narrative/component/${component.id}/`}>
+            <span class="nv-card__glyph" aria-hidden="true">{info.glyph}</span>
+            <span class="nv-card__index">{String(component.data.order).padStart(2, "0")}</span>
+            <span class="nv-card__name">{component.data.short}</span>
+            <span class="nv-card__line">{info.line}</span>
+            <span class="nv-card__status">
+              {status.label}{status.detail && <em>{status.detail}</em>}
             </span>
-            <span class="strata__value">{row.stats.pct}%</span>
-            <span class="strata__n">{row.stats.pairs_with_alt_alt} of {row.stats.pairs_evaluable} pairs</span>
-          </div>
-        ))}
-      </div>
-      <figcaption>
-        Share of pairs with at least one both-ALT read. The prediction fixed before the run was
-        that confirmed-somatic pairs would lead; they do not. <strong>Absence from SEQC2 is not
-        proof of non-somatic origin</strong> — SEQC2 covers high-confidence regions only, so the
-        third group is described only as “not confirmed by SEQC2”.
-      </figcaption>
-    </figure>
-
-    <KeyMessage title="What this does not establish" tone="boundary">
-      <p>
-        Physical linkage exists; linkage alone is not tumor-specific. This does not show that G1
-        improves MRD detection, and it does not show that linked ALT molecules are tumor-derived.
-        Candidate composition <a href="#g5">(G5)</a> and germline haplotype structure are plausible
-        confounders, and separating them is the next work.
-      </p>
-    </KeyMessage>
-
-    <div class="next-quest">
-      <p class="next-quest__label">Next quest <ClaimLabel kind="UNRESOLVED" /></p>
-      <p class="next-quest__q">{g1.data.active_question}</p>
-      <p class="next-quest__exp">{g1.data.next_experiment}</p>
-    </div>
-  </ResearchSection>
-
-  <ResearchSection
-    id="branches"
-    index="04"
-    kicker="Other branches"
-    title="G2–G5 by detector component"
-    lede="Different stages of the same detector. Not competing answers to one question."
-  >
-    <div class="branch-list">
-      {otherGaps.map((gap) => (
-        <article class="branch" id={gap.id.toLowerCase()}>
-          <header class="branch__head">
-            <span class="branch__id">{gap.id}</span>
-            <h3>{gap.data.title}</h3>
-            {gap.data.role === "PREREQUISITE" && <span class="branch__role">prerequisite</span>}
-          </header>
-          <p class="branch__where">
-            <strong>{componentName(gap.data.component)}</strong>
-            {gap.data.cross_cutting && <span> · cross-cutting: measurement quality</span>}
-            {gap.data.secondary_components.length > 0 && (
-              <span> · also touches {gap.data.secondary_components.map((id) => componentName(id)).join(", ")}</span>
-            )}
-          </p>
-          <GapState state={gap.data.state} />
-          <dl class="branch__fields">
-            <dt>Current question</dt>
-            <dd>{gap.data.active_question}</dd>
-            <dt>Next experiment</dt>
-            <dd>{gap.data.next_experiment}</dd>
-            <dt>How it would be falsified</dt>
-            <dd>{gap.data.falsification}</dd>
-          </dl>
-          {gap.id === "G2" && (
-            <details class="branch__more">
-              <summary>Mechanism sketch — why phase and methylation are candidates</summary>
-              <MechanismFigure>
-                <strong>Mechanistic rationale for one candidate, not a proposal.</strong> A somatic
-                variant arises on one chromosome copy, so a tumor-derived read should carry it in
-                cis with the same neighbouring alleles; an error is free to land on a read from
-                either haplotype and does not alter that molecule&#39;s methylation. Whether this
-                separates anything at low tumor fraction is unmeasured.
-              </MechanismFigure>
-            </details>
-          )}
-        </article>
-      ))}
-    </div>
-  </ResearchSection>
-
-  <ResearchSection
-    id="literature"
-    index="05"
-    kicker="Literature"
-    title="Methods, by the component they address"
-    lede="Papers support the components; they are not the structure. A method may address several."
-  >
-    <div class="method-by-component">
-      {components.map((component) => {
-        const attached = methods.filter((method) => method.data.components.includes(component.id));
-        if (attached.length === 0) return null;
-        return (
-          <article class="mbc">
-            <h3>{component.data.name}</h3>
-            <ul>
-              {attached.map((method) => (
-                <li>
-                  <span class="mbc__name">
-                    {method.data.name}
-                    {method.data.ref && <CitationMarker refs={refKey[method.data.ref]} />}
-                    {!method.data.in_reviewed_set && <span class="mbc__tag">local tooling</span>}
-                  </span>
-                  <span class="mbc__mech"><strong>Mechanism.</strong> {method.data.unique_contribution}</span>
-                  <span class="mbc__limit"><strong>Limitation.</strong> {method.data.limitation_here}</span>
-                  {method.data.relation_to_current_gap && (
-                    <span class="mbc__rel"><strong>Relation to our gaps.</strong> {method.data.relation_to_current_gap}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </article>
+          </a>
         );
       })}
     </div>
-  </ResearchSection>
+  </section>
 
-  <ResearchSection
-    id="design-space"
-    index="06"
-    kicker="Secondary view"
-    title="Design space — how each problem can be solved"
-    lede="The six components say what must be solved. These axes say what the options are."
-  >
-    <div class="axis-compact">
-      {axes.map((axis) => (
-        <article class="axis-compact__item" id={`axis-${axis.id}`}>
-          <header>
-            <h4>{axis.data.name}</h4>
-            {axis.data.added && <span class="axis-compact__tag">added axis</span>}
-          </header>
-          <p class="axis-compact__def">{axis.data.definition}</p>
-          <ul>
-            {axis.data.strategies.map((strategy) => (
-              <li>
-                <span class="axis-compact__strategy">{strategy.name}</span>
-                {strategy.methods.length > 0 && (
-                  <span class="axis-compact__methods">{strategy.methods.join(" · ")}</span>
-                )}
-              </li>
-            ))}
-          </ul>
-          {axis.data.measured_locally && (
-            <p class="axis-compact__measured">
-              <ClaimLabel kind="MEASURED" /> {axis.data.measured_locally}
-            </p>
-          )}
-        </article>
-      ))}
+  <section class="nv-current">
+    <p class="nv-current__kicker">Current research</p>
+    <h2>{activeGap.id} — {activeGap.data.title}</h2>
+
+    <p class="nv-current__asking">
+      <span>We are currently asking</span>
+      Does observing multiple ALT alleles on the same long ONT molecule provide tumor-specific
+      evidence?
+    </p>
+
+    <div class="nv-learned">
+      <p class="nv-learned__label">What we learned so far</p>
+      <ul>
+        {activeGap.data.state.map((entry) => (
+          <li class={`nv-learned__row nv-learned__row--${entry.value.toLowerCase().replace(/[^a-z]/g, "")}`}>
+            <span class="nv-learned__glyph" aria-hidden="true">{stateGlyph[entry.value] ?? "?"}</span>
+            <span class="nv-learned__dim">{entry.dimension}</span>
+            <span class="nv-learned__val">{entry.value.replace(/-/g, " ").toLowerCase()}</span>
+          </li>
+        ))}
+      </ul>
     </div>
 
-    <KeyMessage title="Scope of every coverage claim on this page" tone="boundary">
-      <p>
-        “Underexplored” means not represented in the seven documents reviewed here. No systematic
-        search has been run, and method positions derive from indexed summaries rather than source
-        PDFs, so nothing on this page is a claim about the field or about novelty.
-      </p>
-    </KeyMessage>
-  </ResearchSection>
+    <p class="nv-current__next">
+      <span>Next question</span>
+      {activeGap.data.active_question}
+    </p>
 
-  <ResearchSection id="references" index="07" kicker="Bibliography" title="References">
-    <ReferenceList />
-  </ResearchSection>
-</ResearchLayout>
+    <a class="nv-cta nv-cta--strong" href={`/research-narrative/gap/${activeGap.id.toLowerCase()}/`}>
+      Open the {activeGap.id} research journey →
+    </a>
+  </section>
+
+  <section class="nv-deeper">
+    <h2>If you want more detail</h2>
+    <div class="nv-deeper__grid">
+      <a href="/research-narrative/map/"><strong>Detector map</strong><span>the six problems, and where the work sits</span></a>
+      <a href="/research-narrative/literature/"><strong>Literature</strong><span>what the field has tried, by component</span></a>
+      <a href="/research-narrative/resources/"><strong>Resources</strong><span>what this data and platform actually provide</span></a>
+      <a href="/research-narrative/design-space/"><strong>Design space</strong><span>advanced: the eleven axes behind the six problems</span></a>
+      <a href="/research-narrative/reports/"><strong>Reports</strong><span>what changed, day by day and week by week</span></a>
+    </div>
+  </section>
+</NarrativeLayout>
