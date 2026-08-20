@@ -9,6 +9,15 @@
 
 version: 1
 updated: 2026-08-19
+# Gap state is multi-dimensional on purpose. A gap can have a supported physical premise and an
+# unsupported claim to specificity at the same time, and collapsing that into one PASS/FAIL badge
+# would misreport what is known. Dimension values:
+#   UNEXPLORED · OBSERVED · FEASIBILITY-TESTED · HYPOTHESIS-CANDIDATE · EXPERIMENTING
+#   SUPPORTED · NOT-SUPPORTED · INCONCLUSIVE · UNRESOLVED · BLOCKED · PARKED · PREREQUISITE
+#
+# `component` places a gap in the detector model (detector-components.yaml). Gaps are NOT five
+# equivalent hypotheses: they sit at different stages and can be complementary.
+
 scope_limit: >-
   Coverage claims are relative to the seven reviewed documents only. A documented systematic
   search has not been run — see research/knowledge/open-questions.md D3.
@@ -27,6 +36,24 @@ partially_explored:
 
 gaps:
   - id: G1
+    component: molecule-recognition
+    subcomponent: molecular-linkage
+    secondary_components: [background-suppression]
+    stage: FEASIBILITY-TESTED
+    state:
+      - dimension: Physical linkage feasibility
+        value: SUPPORTED
+        basis: EXP-G1-001 — 67.9% of evaluable pairs show at least one both-ALT read
+      - dimension: Somatic specificity
+        value: NOT-SUPPORTED
+        basis: 65.1% for SEQC2-confirmed pairs vs 78.6% where neither candidate is confirmed
+      - dimension: MRD usefulness
+        value: UNRESOLVED
+        basis: Not tested — needs the blank and dilution comparison
+    active_question: >-
+      Does ALT-ALT linkage track tumor fraction, or does it persist in TF0 blanks as background
+      haplotype structure?
+    next_experiment: Same co-occurrence statistic on the five TF0 blanks and the 1%, 0.1%, 0.01% dilutions
     title: Long-range same-molecule linkage for tumor-only detection
     axes_combined: [evidence-linkage, background-suppression, marker-discovery, detection-unit]
     closest_methods: [phased-seq, nanorcs]
@@ -55,8 +82,78 @@ gaps:
     status: premise-measured
     evidence: [EXP-G1-001, FIND-0001, EV-0010]
     tracking: research/design-space/gaps.md#g1
+    journey:
+      - step: Why this gap exists
+        kind: LITERATURE
+        text: >-
+          ONT long reads may span several nearby candidate variants, creating a physical linkage
+          window far larger than a short cfDNA fragment. PhasED-Seq suppresses background by
+          requiring co-occurrence within one fragment; the reach of that window decides how often
+          the opportunity exists at all.
+      - step: Initial observation
+        kind: MEASURED
+        text: >-
+          21.3% of PASS candidates have another PASS candidate within 5 kb; 34.8% within 10 kb;
+          median read length approximately 11.3 kb.
+        caveat: Coordinate proximity is an opportunity. It is not evidence of same-molecule linkage.
+      - step: Research question
+        kind: QUESTION
+        text: Do nearby ALT candidates actually occur together on the same ONT molecule?
+      - step: Experiment
+        kind: EXPERIMENT
+        text: >-
+          candidate proximity → reads spanning both loci → ALT/ALT co-observation → multi-read
+          support. 1,000 seeded pairs within 20 kb, pure tumor, MAPQ >= 20.
+        ref: EXP-G1-001
+      - step: Result
+        kind: MEASURED
+        text: >-
+          ALT-ALT same-molecule co-occurrence is real and routinely observed with multi-read
+          support: 67.9% of 999 evaluable pairs, and 662 pairs with two or more supporting reads.
+      - step: Pre-registered prediction
+        kind: HYPOTHESIS
+        text: >-
+          If linkage is tumor-specific evidence, pairs where both candidates are confirmed somatic
+          should show stronger ALT-ALT enrichment than pairs where neither is.
+      - step: Unexpected result
+        kind: MEASURED
+        text: >-
+          SEQC2-confirmed somatic pairs 65.1%. Pairs with neither candidate confirmed by SEQC2
+          78.6%. The prediction was contradicted, in the opposite direction.
+        caveat: >-
+          Absence from SEQC2 is not proof of non-somatic origin; SEQC2 covers high-confidence
+          regions only.
+      - step: Interpretation
+        kind: INTERPRETATION
+        text: >-
+          Physical linkage exists, but linkage alone is not tumor-specific. Candidate composition
+          and germline haplotype structure are plausible confounders.
+        boundary: >-
+          This does not show that G1 improves MRD detection, and does not show that linked ALT
+          molecules are tumor-derived.
+      - step: Next question
+        kind: UNRESOLVED
+        text: >-
+          Does ALT-ALT linkage track tumor fraction, or does it persist in TF0 blanks as background
+          haplotype structure?
 
   - id: G2
+    component: molecule-recognition
+    subcomponent: epigenetic-state
+    secondary_components: [background-suppression]
+    stage: HYPOTHESIS-CANDIDATE
+    state:
+      - dimension: Evidence availability
+        value: SUPPORTED
+        basis: Native 5mC and 5hmC present on every sampled read; haplotype context abundant
+      - dimension: Phasing feasibility
+        value: UNRESOLVED
+        basis: Nothing phased yet; phase block length at 25x is unmeasured
+      - dimension: Discriminative value
+        value: UNEXPLORED
+        basis: No ablation has been designed or run
+    active_question: How long are phase blocks at 25x, and how many molecules carry allele, phase and methylation together?
+    next_experiment: LongPhase on one region of one dilution BAM, then a joint-availability count
     title: Haplotype-conditioned native methylation on the same molecule
     axes_combined: [evidence-per-observation, evidence-linkage, background-suppression, modality-independence]
     closest_methods: [phased-seq, ont-cfdna-methylation, methylation-fragmentation]
@@ -83,6 +180,22 @@ gaps:
       one candidate among others, with no privileged position.
 
   - id: G3
+    component: molecule-recognition
+    cross_cutting: measurement-quality
+    secondary_components: [background-suppression]
+    stage: BLOCKED
+    state:
+      - dimension: Native side measurable here
+        value: SUPPORTED
+        basis: Per-read quality and modification calls are available in these BAMs
+      - dimension: Consensus side measurable here
+        value: BLOCKED
+        basis: No amplified library exists; the comparison can only be half-run
+      - dimension: Trade-off magnitude
+        value: UNEXPLORED
+        basis: Nothing measures what per-read error costs at the candidate level
+    active_question: What does per-read error cost at the candidate level, and do modification calls offset it?
+    next_experiment: Deferred — half the comparison is unavailable on this material
     title: Native-molecule accuracy versus modality — the unexamined trade
     axes_combined: [measurement-accuracy, evidence-per-observation, platform-deployability]
     closest_methods: [nanorcs, real-time-ont]
@@ -103,6 +216,21 @@ gaps:
     status: candidate-limited
 
   - id: G4
+    component: decision-rule
+    secondary_components: [validation]
+    stage: UNEXPLORED
+    state:
+      - dimension: Resources available
+        value: SUPPORTED
+        basis: Five TF0 replicates on disk, produced by the same pipeline as the others
+      - dimension: Blank distribution characterised
+        value: UNEXPLORED
+        basis: Not attempted
+      - dimension: Independence of blanks
+        value: INCONCLUSIVE
+        basis: The five share one subsampling source, so they are not independent libraries
+    active_question: How wide is the blank distribution, and does any threshold separate 1% from 0%?
+    next_experiment: Characterise the blank distribution across the five TF0 replicates
     title: Blank-anchored decision rule for a tumor-only long-read detector
     axes_combined: [decision-threshold, validation, detection-unit]
     closest_methods: [phased-seq]
@@ -124,6 +252,22 @@ gaps:
     status: candidate
 
   - id: G5
+    component: marker-discovery
+    role: PREREQUISITE
+    secondary_components: [molecule-recognition, background-suppression, validation]
+    stage: EXPERIMENTING
+    state:
+      - dimension: Necessity
+        value: SUPPORTED
+        basis: FIND-0001 — co-occurrence could not be attributed to tumor origin without composition
+      - dimension: Class definitions
+        value: UNEXPLORED
+        basis: Not written; counting before defining classes would have no stable meaning
+      - dimension: Composition estimate
+        value: UNEXPLORED
+        basis: Not attempted
+    active_question: What are the somatic, germline and recurrent-artifact fractions of the PASS candidate set?
+    next_experiment: Define composition classes, then estimate with population resources and the panel of normals
     title: Tumor-naive marker discovery as an MRD strategy
     axes_combined: [marker-discovery, background-suppression]
     closest_methods: []

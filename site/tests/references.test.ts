@@ -109,6 +109,34 @@ describe("website format", () => {
     }
   });
 
+  test("research integrity: the map does not overstate what G1 showed", () => {
+    // Whitespace is collapsed first: these phrases wrap across source lines, and a line break
+    // must not be the reason an integrity check passes or fails.
+    const narrative = readFileSync(
+      resolve(siteRoot, "src", "pages", "research-narrative", "index.astro"),
+      "utf8"
+    ).replace(/\s+/g, " ");
+    // Physical linkage must never be presented as tumor specificity.
+    expect(narrative).toMatch(/linkage alone is not tumor-specific/i);
+    expect(narrative).toMatch(/does not show that G1 improves MRD detection/i);
+    // The unconfirmed stratum is described by what it is, not by an inferred origin.
+    expect(narrative).toMatch(/neither confirmed by SEQC2/);
+    expect(narrative).not.toMatch(/germline pairs|non-somatic pairs|false pairs/i);
+    // G5 is a prerequisite, not a peer hypothesis.
+    expect(narrative).toMatch(/PREREQUISITE/);
+  });
+
+  test("gap state stays multi-dimensional rather than collapsing to pass\/fail", () => {
+    const gaps = readFileSync(
+      resolve(siteRoot, "..", "research", "design-space", "gaps.yaml"),
+      "utf8"
+    );
+    // Every gap carries several dimensions; G1's two headline ones disagree, which is the point.
+    expect((gaps.match(/- dimension:/g) ?? []).length).toBeGreaterThanOrEqual(15);
+    expect(gaps).toMatch(/Physical linkage feasibility[\s\S]{0,60}SUPPORTED/);
+    expect(gaps).toMatch(/Somatic specificity[\s\S]{0,60}NOT-SUPPORTED/);
+  });
+
   test("the previously proposed direction stays demoted to a candidate", () => {
     const narrative = readFileSync(
       resolve(siteRoot, "src", "pages", "research-narrative", "index.astro"),
@@ -140,19 +168,14 @@ describe("website format", () => {
       resolve(siteRoot, "src", "pages", "research-narrative", "index.astro"),
       "utf8"
     );
-    // The section list is the design-space synthesis, not the earlier hypothesis narrative.
+    // The section list is the research map: components first, then the active branch.
     for (const id of [
-      "overview",
-      "mrd-problem",
+      "map",
+      "active",
+      "g1",
+      "branches",
+      "literature",
       "design-space",
-      "common-principles",
-      "unique-mechanisms",
-      "method-matrix",
-      "unresolved",
-      "ont-capabilities",
-      "resources",
-      "explored",
-      "opportunities",
       "references"
     ]) {
       expect(index).toContain(`id="${id}"`);

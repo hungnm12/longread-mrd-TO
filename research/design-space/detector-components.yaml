@@ -1,0 +1,124 @@
+# The six components a complete MRD detector must solve, plus cross-cutting properties.
+#
+# This is the project's primary mental model: what a detector *must solve*. The design-space
+# axes (detector-axes.yaml) answer the different question of *how* each may be solved, and
+# every axis is claimed by exactly one component below.
+#
+# Papers are not the top-level structure. Methods attach to components via
+# method-matrix.yaml `components:`, and gaps attach via gaps.yaml `component:`.
+
+version: 1
+updated: 2026-08-20
+
+centre:
+  id: mrd-detection
+  name: MRD Detection
+  problem: >-
+    Find rare tumor-derived signal while controlling biological and technical background at very
+    low tumor fraction.
+
+components:
+  - id: marker-discovery
+    order: 1
+    name: Marker discovery / candidate definition
+    short: Marker discovery
+    question: What tumor-associated sites or features should we track?
+    why: >-
+      Everything downstream is conditioned on this set. A candidate set of unknown composition
+      makes every later count uninterpretable, because the denominator is undefined.
+    axes: [marker-discovery]
+    local_state: >-
+      48,819 PASS SNV candidates exist from tumor-naive calling. Their somatic, germline and
+      artifact composition is unknown.
+
+  - id: molecule-recognition
+    order: 2
+    name: Tumor-derived observation / molecule recognition
+    short: Molecule recognition
+    question: Which observed molecules or variant observations are likely tumor-derived?
+    why: >-
+      This is where a molecule's evidence is read off: the allele, and whatever else the platform
+      can attach to the same physical molecule. It is the component long reads change most.
+    axes: [evidence-per-observation, evidence-linkage]
+    subcomponents:
+      - id: molecular-linkage
+        name: Molecular linkage
+        detail: Two or more facts known to come from one physical molecule, over some distance.
+      - id: haplotype-context
+        name: Haplotype context
+        detail: The haplotype background a variant observation sits on.
+      - id: epigenetic-state
+        name: Native modification state
+        detail: Base modifications carried by the same molecule, read without a separate assay.
+    local_state: >-
+      Long reads span ~11.3 kb median. Same-molecule ALT co-occurrence is measured and real; its
+      tumor specificity is not supported.
+
+  - id: background-suppression
+    order: 3
+    name: Background / error suppression
+    short: Background suppression
+    question: How do we reduce sequencing error, germline and background signal, and technical noise?
+    why: >-
+      In a tumor-only setting the background includes germline variation with no matched normal to
+      subtract, clonal haematopoiesis, alignment artifacts and protocol bias. Reducing sequencing
+      error alone does not make it small.
+    axes: [background-suppression, modality-independence]
+    local_state: >-
+      Population databases and a panel of normals are applied upstream by the caller. No
+      per-molecule suppression mechanism is in place.
+
+  - id: aggregation
+    order: 4
+    name: Evidence aggregation
+    short: Aggregation
+    question: How do we combine many weak observations into stronger evidence?
+    why: >-
+      At low tumor fraction no single observation is decisive; the sample-level answer is built
+      from many weak ones. Coupled evidence counted twice inflates confidence here.
+    axes: [aggregation, detection-unit]
+    local_state: No aggregation step exists yet; work has not reached this component.
+
+  - id: decision-rule
+    order: 5
+    name: Decision rule / threshold
+    short: Decision rule
+    question: When should a sample be called MRD-positive?
+    why: >-
+      A score without a reference distribution has no error rate. A threshold chosen after seeing
+      results turns an exploratory finding into a false confirmatory one.
+    axes: [decision-threshold]
+    local_state: >-
+      Five tumor-free replicates exist, which is what a blank-anchored rule would be built on.
+      Nothing has been built.
+
+  - id: validation
+    order: 6
+    name: Validation / performance
+    short: Validation
+    question: How do we demonstrate sensitivity, specificity, LoB, LoD, reproducibility and robustness?
+    why: >-
+      Analytical claims need replicate structure; clinical claims need cohorts. Neither transfers
+      from the other, and a cell-line dilution supports neither on its own.
+    axes: [validation]
+    local_state: >-
+      Replicate structure exists (5 blanks, 3 per tumor-bearing level). No performance claim has
+      been attempted, and none is supportable yet.
+
+# Properties that condition several components at once. Represented as cross-cutting rather than
+# promoted to a seventh stage, because they are not a step a detector performs.
+cross_cutting:
+  - id: measurement-quality
+    name: Measurement quality
+    detail: >-
+      Per-read accuracy and what the platform preserves while achieving it. It conditions molecule
+      recognition and background suppression, and trades against native modification evidence:
+      amplification-based consensus buys accuracy and is not expected to preserve base
+      modifications.
+    axes: [measurement-accuracy]
+    affects: [molecule-recognition, background-suppression]
+  - id: deployability
+    name: Platform and deployability
+    detail: Turnaround, sample type, and whether the measurement needs a separate assay.
+    axes: [platform-deployability]
+    affects: [marker-discovery, molecule-recognition]

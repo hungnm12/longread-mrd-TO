@@ -14,6 +14,9 @@ verification: All positions derive from indexed summaries; none confirmed agains
 methods:
 
   - id: mrdetect
+    components: ["marker-discovery", "aggregation", "background-suppression"]
+    relation_to_current_gap: >-
+      Shares G1"s premise that weak evidence must be combined, but aggregates across loci rather than within a molecule.
     name: MRDetect
     ref: 1
     in_reviewed_set: true
@@ -37,6 +40,9 @@ methods:
       Tumor-informed, so it presupposes a tumor profile this project does not have.
 
   - id: mrd-edge
+    components: ["background-suppression", "molecule-recognition", "aggregation"]
+    relation_to_current_gap: >-
+      The other occupant of background suppression. Its feature space is short-read context, so the per-molecule properties G1 and G2 use are not available to it.
     name: MRD-EDGE
     ref: 2
     in_reviewed_set: true
@@ -59,6 +65,9 @@ methods:
       inputs, and it needs labelled training data this project does not have.
 
   - id: phased-seq
+    components: ["molecule-recognition", "background-suppression", "decision-rule", "validation"]
+    relation_to_current_gap: >-
+      The closest relative of G1: same mechanism, but linkage limited to one short fragment, tumor-informed, matched-normal. G4"s blank-anchored framing also comes from here.
     name: PhasED-Seq
     ref: 3
     in_reviewed_set: true
@@ -83,6 +92,9 @@ methods:
       disease, scarcest exactly where tumor fraction is lowest. Not tumor-only.
 
   - id: real-time-ont
+    components: ["molecule-recognition", "marker-discovery"]
+    relation_to_current_gap: >-
+      Establishes that native long-read readouts are practical; leaves the single-nucleotide question G1 asks untouched.
     name: Real-time nanopore cfDNA genome and fragmentome
     ref: 4
     in_reviewed_set: true
@@ -106,6 +118,9 @@ methods:
       single-nucleotide evidence at low tumor fraction.
 
   - id: nanorcs
+    components: ["molecule-recognition", "aggregation"]
+    relation_to_current_gap: >-
+      Holds the read length G1 exploits but spends it on consensus and multimodality. Its amplification step is the trade G3 examines.
     name: NanoRCS
     ref: 5
     in_reviewed_set: true
@@ -130,6 +145,9 @@ methods:
       methylation.
 
   - id: methylation-fragmentation
+    components: ["background-suppression", "aggregation"]
+    relation_to_current_gap: >-
+      Constrains G2: methylation and fragmentation are coupled, so an apparent multimodal gain may be re-encoded information.
     name: Methylation and cell-free DNA fragmentation
     ref: 6
     in_reviewed_set: true
@@ -154,6 +172,9 @@ methods:
       method.
 
   - id: ont-cfdna-methylation
+    components: ["molecule-recognition", "background-suppression"]
+    relation_to_current_gap: >-
+      Sets the conditions under which G2"s methylation evidence may be used at all.
     name: ONT cfDNA methylation requirements
     ref: 7
     in_reviewed_set: true
@@ -180,6 +201,9 @@ methods:
 # Local tooling, included so the project's own position on the axes is legible. Not a reviewed
 # MRD method and not counted when judging what the literature covers.
   - id: clairs-to
+    components: ["marker-discovery", "background-suppression"]
+    relation_to_current_gap: >-
+      Produces the candidate set G1 and G5 operate on, and is the only tumor-naive position in the matrix.
     name: ClairS-TO (local tooling)
     ref: 8
     in_reviewed_set: false

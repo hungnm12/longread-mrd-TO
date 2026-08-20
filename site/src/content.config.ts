@@ -596,6 +596,8 @@ const designMethods = defineCollection({
     name: z.string(),
     ref: z.number().nullable().default(null),
     in_reviewed_set: z.boolean().default(true),
+    components: z.array(z.string()).default([]),
+    relation_to_current_gap: z.string().optional(),
     is_detector: z.boolean().default(true),
     axes: z.record(z.string(), z.string()),
     unique_contribution: z.string(),
@@ -621,7 +623,66 @@ const designGaps = defineCollection({
     note: z.string().optional(),
     // Set once a gap's premise has been measured rather than argued.
     evidence: z.array(z.string()).default([]),
-    tracking: z.string().optional()
+    tracking: z.string().optional(),
+
+    // Placement in the detector model. Gaps are not five equivalent hypotheses: they sit at
+    // different stages, and `role: PREREQUISITE` marks one that gates the others.
+    component: z.string(),
+    subcomponent: z.string().optional(),
+    secondary_components: z.array(z.string()).default([]),
+    cross_cutting: z.string().optional(),
+    role: z.string().optional(),
+    stage: z.string(),
+
+    // Multi-dimensional, deliberately: a supported premise and an unsupported specificity claim
+    // are both true of G1 at once, and one badge cannot say that.
+    state: z
+      .array(z.object({ dimension: z.string(), value: z.string(), basis: z.string() }))
+      .default([]),
+    active_question: z.string().optional(),
+    next_experiment: z.string().optional(),
+
+    // The drill-down: motivation → observation → question → experiment → result → prediction →
+    // unexpected result → interpretation → next. `kind` drives the claim label.
+    journey: z
+      .array(
+        z.object({
+          step: z.string(),
+          kind: z.enum(["LITERATURE", "MEASURED", "QUESTION", "EXPERIMENT", "HYPOTHESIS",
+                        "INTERPRETATION", "UNRESOLVED"]),
+          text: z.string(),
+          caveat: z.string().optional(),
+          boundary: z.string().optional(),
+          ref: z.string().optional()
+        })
+      )
+      .default([])
+  })
+});
+
+const detectorComponents = defineCollection({
+  loader: file("../research/design-space/detector-components.yaml", { parser: yamlList("components") }),
+  schema: z.object({
+    order: z.number(),
+    name: z.string(),
+    short: z.string(),
+    question: z.string(),
+    why: z.string(),
+    axes: z.array(z.string()).default([]),
+    subcomponents: z
+      .array(z.object({ id: z.string(), name: z.string(), detail: z.string() }))
+      .default([]),
+    local_state: z.string()
+  })
+});
+
+const crossCutting = defineCollection({
+  loader: file("../research/design-space/detector-components.yaml", { parser: yamlList("cross_cutting") }),
+  schema: z.object({
+    name: z.string(),
+    detail: z.string(),
+    axes: z.array(z.string()).default([]),
+    affects: z.array(z.string()).default([])
   })
 });
 
@@ -644,6 +705,8 @@ const ontCapabilities = defineCollection({
 });
 
 export const collections = {
+  detectorComponents,
+  crossCutting,
   designAxes,
   designMethods,
   designGaps,

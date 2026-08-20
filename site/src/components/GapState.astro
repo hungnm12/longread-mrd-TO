@@ -1,0 +1,22 @@
+---
+// A gap's state, shown across its dimensions rather than collapsed to a badge.
+//
+// G1 is supported on physical feasibility and not supported on somatic specificity at the same
+// time; a single PASS/FAIL would have to discard one of those facts.
+interface Dimension { dimension: string; value: string; basis: string; }
+interface Props { state: Dimension[]; compact?: boolean; }
+const { state, compact = false } = Astro.props;
+const tone = (value: string) =>
+  ({ SUPPORTED: "yes", "NOT-SUPPORTED": "no", UNRESOLVED: "open", UNEXPLORED: "open",
+     INCONCLUSIVE: "open", BLOCKED: "blocked", PARKED: "blocked", PREREQUISITE: "prereq"
+   } as Record<string, string>)[value] ?? "open";
+---
+<ul class={compact ? "gapstate gapstate--compact" : "gapstate"}>
+  {state.map((entry) => (
+    <li class={`gapstate__row gapstate__row--${tone(entry.value)}`}>
+      <span class="gapstate__dim">{entry.dimension}</span>
+      <span class="gapstate__val">{entry.value.replace(/-/g, " ")}</span>
+      {!compact && <span class="gapstate__basis">{entry.basis}</span>}
+    </li>
+  ))}
+</ul>

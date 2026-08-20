@@ -1,0 +1,44 @@
+---
+// The persistent panel: what scientific question is open, per gap.
+//
+// The research question leads; execution detail is deliberately absent. Opening the site should
+// answer "what am I trying to find out?", not "what did the pipeline do".
+import GapState from "@components/GapState.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  gaps: CollectionEntry<"designGaps">[];
+  activeGap: string;
+  componentName: (id: string) => string;
+}
+const { gaps, activeGap, componentName } = Astro.props;
+const ordered = [...gaps].sort((a, b) =>
+  a.id === activeGap ? -1 : b.id === activeGap ? 1 : a.id.localeCompare(b.id)
+);
+---
+<aside class="quest" aria-label="Active research">
+  <p class="quest__label">Active research</p>
+  {ordered.map((gap) => {
+    const isActive = gap.id === activeGap;
+    return (
+      <article class={isActive ? "quest__item quest__item--active" : "quest__item"}>
+        <header class="quest__head">
+          {isActive && <span class="quest__marker" aria-hidden="true">▶</span>}
+          <a class="quest__id" href={`#${gap.id.toLowerCase()}`}>{gap.id}</a>
+          <span class="quest__title">{gap.data.title}</span>
+          {gap.data.role === "PREREQUISITE" && <span class="quest__role">prerequisite</span>}
+        </header>
+        <p class="quest__where">{componentName(gap.data.component)}</p>
+        {isActive ? (
+          <>
+            <p class="quest__q"><span>Current question</span>{gap.data.active_question}</p>
+            <p class="quest__next"><span>Next experiment</span>{gap.data.next_experiment}</p>
+            <GapState state={gap.data.state} compact />
+          </>
+        ) : (
+          <GapState state={gap.data.state.slice(0, 2)} compact />
+        )}
+      </article>
+    );
+  })}
+</aside>

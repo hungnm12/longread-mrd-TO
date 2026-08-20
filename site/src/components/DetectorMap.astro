@@ -1,0 +1,114 @@
+---
+// The radial MRD detector map — the site's primary mental model.
+//
+// One centre (the problem) and six components (what a detector must solve), with the gaps
+// attached to the component they belong to. Geometry is computed from the component list, so
+// adding a seventh component re-lays the map rather than breaking it.
+//
+// The map is a diagram, not a chart: nothing here encodes a quantity, and the only visual
+// weight is on which component currently has work attached to it.
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  centre: { name: string; problem: string };
+  components: CollectionEntry<"detectorComponents">[];
+  gaps: CollectionEntry<"designGaps">[];
+  /** Component id the project is working in now. */
+  active: string;
+}
+
+const { centre, components, gaps, active } = Astro.props;
+
+const W = 980;
+const H = 620;
+const CX = W / 2;
+const CY = H / 2;
+const RADIUS = 224;
+const NODE_W = 210;
+const NODE_H = 92;
+
+const ordered = [...components].sort((a, b) => a.data.order - b.data.order);
+const nodes = ordered.map((component, index) => {
+  // Start at the top and go clockwise, so reading order matches component order.
+  const angle = (-90 + (360 / ordered.length) * index) * (Math.PI / 180);
+  const x = CX + RADIUS * Math.cos(angle) * 1.42; // wider than tall: the canvas is landscape
+  const y = CY + RADIUS * Math.sin(angle);
+  const attached = gaps.filter(
+    (gap) => gap.data.component === component.id || gap.data.secondary_components.includes(component.id)
+  );
+  return {
+    component,
+    x,
+    y,
+    isActive: component.id === active,
+    primary: attached.filter((gap) => gap.data.component === component.id),
+    secondary: attached.filter((gap) => gap.data.component !== component.id)
+  };
+});
+---
+
+<figure class="detector-map">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="map-title map-desc">
+    <title id="map-title">The six components of an MRD detector</title>
+    <desc id="map-desc">
+      A central node, {centre.name}, surrounded by six components a detector must solve:
+      {ordered.map((c) => c.data.short).join(", ")}. Research gaps are attached to the component
+      they belong to. The component currently being worked on is highlighted.
+    </desc>
+
+    <!-- spokes, drawn first so nodes sit on top -->
+    {nodes.map((node) => (
+      <line
+        x1={CX} y1={CY} x2={node.x} y2={node.y}
+        class={node.isActive ? "map-spoke map-spoke--active" : "map-spoke"}
+      />
+    ))}
+
+    <!-- centre: the problem itself -->
+    <ellipse cx={CX} cy={CY} rx="132" ry="74" class="map-centre" />
+    <text x={CX} y={CY - 12} class="map-centre__name" text-anchor="middle">{centre.name}</text>
+    <text x={CX} y={CY + 10} class="map-centre__line" text-anchor="middle">rare tumor signal ·</text>
+    <text x={CX} y={CY + 27} class="map-centre__line" text-anchor="middle">controlled background ·</text>
+    <text x={CX} y={CY + 44} class="map-centre__line" text-anchor="middle">very low tumor fraction</text>
+
+    {nodes.map((node) => (
+      <g class={node.isActive ? "map-node map-node--active" : "map-node"}>
+        <rect
+          x={node.x - NODE_W / 2} y={node.y - NODE_H / 2}
+          width={NODE_W} height={NODE_H} rx="12"
+          class="map-node__box"
+        />
+        <text x={node.x} y={node.y - NODE_H / 2 + 22} class="map-node__index" text-anchor="middle">
+          {String(node.component.data.order).padStart(2, "0")}
+        </text>
+        <text x={node.x} y={node.y - 2} class="map-node__name" text-anchor="middle">
+          {node.component.data.short}
+        </text>
+        {node.primary.length > 0 && (
+          <text x={node.x} y={node.y + 20} class="map-node__gaps" text-anchor="middle">
+            {node.primary.map((gap) => gap.id).join(" · ")}
+          </text>
+        )}
+        {node.primary.length === 0 && node.secondary.length > 0 && (
+          <text x={node.x} y={node.y + 20} class="map-node__gaps map-node__gaps--secondary" text-anchor="middle">
+            {node.secondary.map((gap) => gap.id).join(" · ")} (secondary)
+          </text>
+        )}
+        {node.primary.length === 0 && node.secondary.length === 0 && (
+          <text x={node.x} y={node.y + 20} class="map-node__gaps map-node__gaps--empty" text-anchor="middle">
+            no work attached
+          </text>
+        )}
+        {node.isActive && (
+          <text x={node.x} y={node.y + NODE_H / 2 + 18} class="map-node__active" text-anchor="middle">
+            ▲ working here now
+          </text>
+        )}
+      </g>
+    ))}
+  </svg>
+
+  <figcaption class="detector-map__caption">
+    <slot />
+  </figcaption>
+</figure>

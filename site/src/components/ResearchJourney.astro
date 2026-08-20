@@ -1,0 +1,49 @@
+---
+// A research branch, told as the sequence a researcher actually walks:
+// motivation → observation → question → experiment → result → prediction → unexpected result
+// → interpretation → next question.
+//
+// Every step carries a claim label, because the whole point is that a measured number and an
+// interpretation of it must not look alike. Steps come from the gap record, so the page cannot
+// tell a story the artifacts do not hold.
+import ClaimLabel from "@components/ClaimLabel.astro";
+
+interface Step {
+  step: string;
+  kind: "LITERATURE" | "MEASURED" | "QUESTION" | "EXPERIMENT" | "HYPOTHESIS" | "INTERPRETATION" | "UNRESOLVED";
+  text: string;
+  caveat?: string;
+  boundary?: string;
+  ref?: string;
+}
+
+interface Props {
+  steps: Step[];
+}
+
+const { steps } = Astro.props;
+---
+
+<ol class="journey">
+  {steps.map((entry, index) => (
+    <li class={`journey__step journey__step--${entry.kind.toLowerCase()}`}>
+      <div class="journey__rail" aria-hidden="true">
+        <span class="journey__dot"></span>
+        {index < steps.length - 1 && <span class="journey__line"></span>}
+      </div>
+      <div class="journey__body">
+        <header class="journey__head">
+          <span class="journey__index">{String(index + 1).padStart(2, "0")}</span>
+          <h4>{entry.step}</h4>
+          <ClaimLabel kind={entry.kind} />
+          {entry.ref && <span class="journey__ref">{entry.ref}</span>}
+        </header>
+        <p class="journey__text">{entry.text}</p>
+        {entry.caveat && <p class="journey__caveat">{entry.caveat}</p>}
+        {entry.boundary && (
+          <p class="journey__boundary"><strong>Does not show.</strong> {entry.boundary}</p>
+        )}
+      </div>
+    </li>
+  ))}
+</ol>

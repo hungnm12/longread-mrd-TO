@@ -1,0 +1,10 @@
+---
+// The single most important visual rule on the site: a measured number must never look like a
+// hypothesis. Every claim-bearing statement carries one of these.
+interface Props {
+  kind: "MEASURED" | "INTERPRETATION" | "HYPOTHESIS" | "UNRESOLVED" | "LITERATURE" | "BLOCKED" | "QUESTION" | "EXPERIMENT";
+  note?: string;
+}
+const { kind, note } = Astro.props;
+---
+<span class={`claim claim--${kind.toLowerCase()}`} title={note}>{kind}</span>

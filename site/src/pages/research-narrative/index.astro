@@ -1,552 +1,331 @@
 ---
-// The research narrative, organised as a field-level design-space synthesis rather than as an
-// argument for one hypothesis.
+// The MRD research map.
 //
-// Everything structural on this page is rendered from the artifacts in research/design-space/
-// and research/knowledge/, so the page cannot assert a position the YAML does not hold. The
-// previously proposed phase + methylation direction appears once, as G2 among five candidate
-// opportunities, with no privileged status — which is why the page no longer needs a parked
-// banner: the demotion is structural rather than a note on top of an unchanged argument.
+// Structure follows what a detector must solve, not what the literature published. The six
+// components are the mental model; gaps hang off the component they belong to; methods attach to
+// the components they address; the design-space axes are the secondary "how" view.
+//
+// Every claim-bearing element on this page comes from research/design-space/*.yaml or the
+// measured summary JSON, so the page cannot assert a position the record store does not hold.
 import { getCollection } from "astro:content";
 import ResearchLayout from "@layouts/ResearchLayout.astro";
 import ResearchSection from "@components/ResearchSection.astro";
+import DetectorMap from "@components/DetectorMap.astro";
+import QuestLog from "@components/QuestLog.astro";
+import GapState from "@components/GapState.astro";
+import ClaimLabel from "@components/ClaimLabel.astro";
+import ResearchJourney from "@components/ResearchJourney.astro";
 import CitationMarker from "@components/CitationMarker.astro";
 import ReferenceList from "@components/ReferenceList.astro";
 import KeyMessage from "@components/KeyMessage.astro";
 import MechanismFigure from "@components/MechanismFigure.astro";
 import { siteMeta } from "@data/siteMeta";
 import { candidateLandscape } from "@data/week001";
+import linkage from "../../../../outputs/active/results/linkage/cooccurrence_pure_tumor.summary.json";
 
 const summary = candidateLandscape.summary;
-const totalCalls = summary.total_calls.toLocaleString("en-US");
 const passSnvs = summary.pass_snvs.toLocaleString("en-US");
 
-const axes = (await getCollection("designAxes")).sort((a, b) => a.data.order - b.data.order);
-const methods = await getCollection("designMethods");
+const components = (await getCollection("detectorComponents")).sort((a, b) => a.data.order - b.data.order);
+const crossCutting = await getCollection("crossCutting");
 const gaps = await getCollection("designGaps");
-const capabilities = await getCollection("ontCapabilities");
+const methods = await getCollection("designMethods");
+const axes = (await getCollection("designAxes")).sort((a, b) => a.data.order - b.data.order);
 
-const reviewed = methods.filter((m) => m.data.in_reviewed_set);
-const detectors = reviewed.filter((m) => m.data.is_detector);
-
-// Reference keys by their IEEE number, so a method's `ref` resolves to the site's citation key.
-const refKeyByNumber = [
-  "",
-  "mrdetect",
-  "mrd-edge",
-  "phased-seq",
-  "ont-realtime",
-  "nanorcs",
-  "methyl-fragmentation",
-  "ont-cfdna-methyl",
-  "clairs-to"
-];
-
-// The matrix is wide; these axes go in the table and the rest live in the axis cards above it.
-const matrixAxes = [
-  "marker-discovery",
-  "evidence-per-observation",
-  "background-suppression",
-  "evidence-linkage",
-  "aggregation",
-  "detection-unit",
-  "decision-threshold"
-];
+const ACTIVE_GAP = "G1";
+const g1 = gaps.find((gap) => gap.id === ACTIVE_GAP)!;
+const activeComponent = g1.data.component;
+const componentName = (id: string) => components.find((c) => c.id === id)?.data.name ?? id;
 const axisName = (id: string) => axes.find((a) => a.id === id)?.data.name ?? id;
+const otherGaps = gaps.filter((gap) => gap.id !== ACTIVE_GAP).sort((a, b) => a.id.localeCompare(b.id));
 
-const statusOrder = ["AVAILABLE", "DERIVABLE", "UNKNOWN", "MISSING"] as const;
-const capabilityGroups = statusOrder.map((status) => ({
-  status,
-  note: {
-    AVAILABLE: "In the BAMs now, checked by reading them",
-    DERIVABLE: "Obtainable here by a named path that has not been run",
-    UNKNOWN: "Cannot be stated without a check or an answer",
-    MISSING: "Not obtainable from this data, for a stated reason"
-  }[status],
-  items: capabilities.filter((c) => c.data.status === status)
-}));
+// Citation keys by IEEE number, so a method record resolves to the site's reference list.
+const refKey = ["", "mrdetect", "mrd-edge", "phased-seq", "ont-realtime", "nanorcs",
+                "methyl-fragmentation", "ont-cfdna-methyl", "clairs-to"];
+
+const strata = linkage.by_seqc2_stratum;
+const barWidth = (pct: number) => `${(pct / 90) * 100}%`;
 ---
 
 <ResearchLayout title={siteMeta.title} description={siteMeta.subtitle}>
   <ResearchSection
-    id="overview"
+    id="map"
     index="01"
-    kicker="Field synthesis"
-    title={siteMeta.title}
-    lede={siteMeta.subtitle}
+    kicker="Research map"
+    title="What a complete MRD detector has to solve"
+    lede="Six components, the gaps attached to each, and where the work is now."
   >
-    <p>
-      This page reads the MRD literature as a design space rather than as a sequence of papers.
-      Each reviewed method is a set of choices along the same axes; the useful question is which
-      combinations of choices the reviewed set does <em>not</em> contain, and which of those this
-      project's data could actually test.
-    </p>
+    <DetectorMap
+      centre={{ name: "MRD Detection", problem: "Find rare tumor-derived signal while controlling biological and technical background at very low tumor fraction." }}
+      components={components}
+      gaps={gaps}
+      active={activeComponent}
+    >
+      The centre is the problem; the six nodes are what must be solved to address it. Gap
+      identifiers sit on the component they belong to — they are stages of one detector, not five
+      competing hypotheses.
+    </DetectorMap>
 
-    <div class="overview-grid">
-      <article class="overview-card">
-        <h3>What is compared</h3>
-        <p>
-          {reviewed.length} reviewed documents — {detectors.length} detection methods, and two that
-          constrain rather than detect — positioned on {axes.length} axes.
-        </p>
-      </article>
-      <article class="overview-card">
-        <h3>What is measured</h3>
-        <p>
-          Platform capabilities are inventoried against the actual BAMs, not against what ONT
-          supports in principle: {capabilityGroups[0].items.length} available,
-          {" "}{capabilityGroups[1].items.length} derivable, {capabilityGroups[2].items.length} unknown,
-          {" "}{capabilityGroups[3].items.length} missing.
-        </p>
-      </article>
-      <article class="overview-card">
-        <h3>What is proposed</h3>
-        <p>
-          Nothing yet. {gaps.length} candidate opportunities are recorded with their falsification
-          conditions; none is selected, and this project's previous direction is one of them.
-        </p>
-      </article>
-      <article class="overview-card">
-        <h3>Local starting point</h3>
-        <p>
-          Tumor-only calling <CitationMarker refs="clairs-to" /> produced {totalCalls} candidate
-          records, of which {passSnvs} are PASS SNV candidates — a caller retention label, not
-          confirmed somatic truth.
-        </p>
-      </article>
+    <div class="component-grid">
+      {components.map((component) => {
+        const primary = gaps.filter((gap) => gap.data.component === component.id);
+        const secondary = gaps.filter((gap) => gap.data.secondary_components.includes(component.id));
+        return (
+          <article class={`component-card${component.id === activeComponent ? " component-card--active" : ""}`} id={`component-${component.id}`}>
+            <header>
+              <span class="component-card__index">{String(component.data.order).padStart(2, "0")}</span>
+              <h3>{component.data.name}</h3>
+            </header>
+            <p class="component-card__question">{component.data.question}</p>
+            <p class="component-card__why">{component.data.why}</p>
+            <p class="component-card__state"><span>Here now</span>{component.data.local_state}</p>
+            <p class="component-card__gaps">
+              {primary.map((gap) => (
+                <a class="component-card__gap" href={`#${gap.id.toLowerCase()}`}>
+                  {gap.id}{gap.data.role === "PREREQUISITE" ? " · prerequisite" : ""}
+                </a>
+              ))}
+              {secondary.map((gap) => (
+                <a class="component-card__gap component-card__gap--secondary" href={`#${gap.id.toLowerCase()}`}>
+                  {gap.id} secondary
+                </a>
+              ))}
+              {primary.length === 0 && secondary.length === 0 && (
+                <span class="component-card__gap component-card__gap--none">no work attached yet</span>
+              )}
+            </p>
+          </article>
+        );
+      })}
     </div>
 
-    <KeyMessage title="What “underexplored” means on this page" tone="boundary">
-      <p>
-        Underexplored means <strong>not represented in the seven documents reviewed here</strong>. A
-        systematic literature search has not been run, so nothing on this page is a claim about the
-        field as a whole, and nothing is described as novel. Method positions derive from indexed
-        summaries rather than from source PDFs read locally.
+    <div class="crosscut">
+      <h3>Cross-cutting properties</h3>
+      <p class="crosscut__lede">
+        Not detector stages — properties that condition several components at once, kept out of the
+        six rather than promoted to a seventh node without justification.
       </p>
-    </KeyMessage>
+      {crossCutting.map((entry) => (
+        <article class="crosscut__item">
+          <h4>{entry.data.name}</h4>
+          <p>{entry.data.detail}</p>
+          <p class="crosscut__affects">
+            affects {entry.data.affects.map((id) => componentName(id)).join(" · ")}
+          </p>
+        </article>
+      ))}
+    </div>
   </ResearchSection>
 
   <ResearchSection
-    id="mrd-problem"
+    id="active"
     index="02"
-    kicker="The problem"
-    title="A rare signal in an identical background"
+    kicker="Quest log"
+    title="What we are trying to find out"
+    lede="The open scientific question per branch. Execution detail lives in the research notes."
   >
-    <p>
-      <strong>Minimal — or measurable — residual disease</strong> is the small amount of tumor that
-      can persist after treatment while remaining invisible to imaging. Detecting it matters because
-      it is the earliest available evidence about the outcome of treatment.
-    </p>
-    <p>
-      The difficulty is proportion. Tumor-derived molecules are heavily outnumbered by molecules
-      from normal tissue that are chemically identical to them. Three constraints follow, and every
-      method below is a response to them: tumor-derived molecules are <strong>few</strong>, so any
-      single locus carries little evidence; sequencing errors <strong>imitate</strong> true
-      mutations; and a molecule described by a single fact cannot be told apart from a background
-      molecule described by the same fact.
-    </p>
-    <p class="display-ratio">
-      <span class="display-ratio__num">Tumor signal</span>
-      <span class="display-ratio__bar" aria-hidden="true"></span>
-      <span class="display-ratio__den">Background noise</span>
-    </p>
-    <p>
-      Background is more than sequencing error. In a tumor-only setting it also contains germline
-      variation with no matched normal to subtract it, clonal haematopoiesis, alignment artifacts,
-      and — for methylation specifically — bias introduced during library preparation
-      <CitationMarker refs="ont-cfdna-methyl" />.
-    </p>
+    <QuestLog gaps={gaps} activeGap={ACTIVE_GAP} componentName={componentName} />
+  </ResearchSection>
+
+  <ResearchSection
+    id="g1"
+    index="03"
+    kicker="Drill-down"
+    title={`${g1.id} — ${g1.data.title}`}
+    lede="MRD Detection → molecule recognition → molecular linkage → G1."
+  >
+    <div class="gap-hero">
+      <div class="gap-hero__state">
+        <p class="gap-hero__label">Where this stands</p>
+        <GapState state={g1.data.state} />
+      </div>
+      <div class="gap-hero__numbers">
+        <p class="gap-hero__label">Measured on current data <ClaimLabel kind="MEASURED" /></p>
+        <dl class="numbers">
+          <div><dt>within 5 kb</dt><dd>21.3%</dd></div>
+          <div><dt>within 10 kb</dt><dd>34.8%</dd></div>
+          <div><dt>median read</dt><dd>≈11.3 kb</dd></div>
+          <div><dt>pairs with a both-ALT read</dt><dd>{linkage.pairs_with_alt_alt_pct}%</dd></div>
+        </dl>
+        <p class="gap-hero__note">
+          Of {passSnvs} PASS SNV candidates; co-occurrence over {linkage.pairs_evaluable} evaluable
+          pairs, {linkage.pairs_with_alt_alt_support_2plus} with two or more supporting reads.
+        </p>
+      </div>
+    </div>
+
+    <ResearchJourney steps={g1.data.journey} />
+
+    <h3 class="figure-heading">The result that contradicted the prediction</h3>
+    <figure class="strata">
+      <div class="strata__rows">
+        {[
+          { label: "both candidates confirmed by SEQC2", stats: strata.both, tone: "confirmed" },
+          { label: "one confirmed by SEQC2", stats: strata.one, tone: "partial" },
+          { label: "neither confirmed by SEQC2", stats: strata.neither, tone: "unconfirmed" }
+        ].map((row) => (
+          <div class={`strata__row strata__row--${row.tone}`}>
+            <span class="strata__label">{row.label}</span>
+            <span class="strata__track">
+              <span class="strata__bar" style={`width:${barWidth(row.stats.pct)}`}></span>
+            </span>
+            <span class="strata__value">{row.stats.pct}%</span>
+            <span class="strata__n">{row.stats.pairs_with_alt_alt} of {row.stats.pairs_evaluable} pairs</span>
+          </div>
+        ))}
+      </div>
+      <figcaption>
+        Share of pairs with at least one both-ALT read. The prediction fixed before the run was
+        that confirmed-somatic pairs would lead; they do not. <strong>Absence from SEQC2 is not
+        proof of non-somatic origin</strong> — SEQC2 covers high-confidence regions only, so the
+        third group is described only as “not confirmed by SEQC2”.
+      </figcaption>
+    </figure>
+
+    <KeyMessage title="What this does not establish" tone="boundary">
+      <p>
+        Physical linkage exists; linkage alone is not tumor-specific. This does not show that G1
+        improves MRD detection, and it does not show that linked ALT molecules are tumor-derived.
+        Candidate composition <a href="#g5">(G5)</a> and germline haplotype structure are plausible
+        confounders, and separating them is the next work.
+      </p>
+    </KeyMessage>
+
+    <div class="next-quest">
+      <p class="next-quest__label">Next quest <ClaimLabel kind="UNRESOLVED" /></p>
+      <p class="next-quest__q">{g1.data.active_question}</p>
+      <p class="next-quest__exp">{g1.data.next_experiment}</p>
+    </div>
+  </ResearchSection>
+
+  <ResearchSection
+    id="branches"
+    index="04"
+    kicker="Other branches"
+    title="G2–G5 by detector component"
+    lede="Different stages of the same detector. Not competing answers to one question."
+  >
+    <div class="branch-list">
+      {otherGaps.map((gap) => (
+        <article class="branch" id={gap.id.toLowerCase()}>
+          <header class="branch__head">
+            <span class="branch__id">{gap.id}</span>
+            <h3>{gap.data.title}</h3>
+            {gap.data.role === "PREREQUISITE" && <span class="branch__role">prerequisite</span>}
+          </header>
+          <p class="branch__where">
+            <strong>{componentName(gap.data.component)}</strong>
+            {gap.data.cross_cutting && <span> · cross-cutting: measurement quality</span>}
+            {gap.data.secondary_components.length > 0 && (
+              <span> · also touches {gap.data.secondary_components.map((id) => componentName(id)).join(", ")}</span>
+            )}
+          </p>
+          <GapState state={gap.data.state} />
+          <dl class="branch__fields">
+            <dt>Current question</dt>
+            <dd>{gap.data.active_question}</dd>
+            <dt>Next experiment</dt>
+            <dd>{gap.data.next_experiment}</dd>
+            <dt>How it would be falsified</dt>
+            <dd>{gap.data.falsification}</dd>
+          </dl>
+          {gap.id === "G2" && (
+            <details class="branch__more">
+              <summary>Mechanism sketch — why phase and methylation are candidates</summary>
+              <MechanismFigure>
+                <strong>Mechanistic rationale for one candidate, not a proposal.</strong> A somatic
+                variant arises on one chromosome copy, so a tumor-derived read should carry it in
+                cis with the same neighbouring alleles; an error is free to land on a read from
+                either haplotype and does not alter that molecule&#39;s methylation. Whether this
+                separates anything at low tumor fraction is unmeasured.
+              </MechanismFigure>
+            </details>
+          )}
+        </article>
+      ))}
+    </div>
+  </ResearchSection>
+
+  <ResearchSection
+    id="literature"
+    index="05"
+    kicker="Literature"
+    title="Methods, by the component they address"
+    lede="Papers support the components; they are not the structure. A method may address several."
+  >
+    <div class="method-by-component">
+      {components.map((component) => {
+        const attached = methods.filter((method) => method.data.components.includes(component.id));
+        if (attached.length === 0) return null;
+        return (
+          <article class="mbc">
+            <h3>{component.data.name}</h3>
+            <ul>
+              {attached.map((method) => (
+                <li>
+                  <span class="mbc__name">
+                    {method.data.name}
+                    {method.data.ref && <CitationMarker refs={refKey[method.data.ref]} />}
+                    {!method.data.in_reviewed_set && <span class="mbc__tag">local tooling</span>}
+                  </span>
+                  <span class="mbc__mech"><strong>Mechanism.</strong> {method.data.unique_contribution}</span>
+                  <span class="mbc__limit"><strong>Limitation.</strong> {method.data.limitation_here}</span>
+                  {method.data.relation_to_current_gap && (
+                    <span class="mbc__rel"><strong>Relation to our gaps.</strong> {method.data.relation_to_current_gap}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </article>
+        );
+      })}
+    </div>
   </ResearchSection>
 
   <ResearchSection
     id="design-space"
-    index="03"
-    kicker="Taxonomy"
-    title="The detector design space"
-    lede="Eleven axes along which a method makes a choice. Every reviewed method is a position on each."
+    index="06"
+    kicker="Secondary view"
+    title="Design space — how each problem can be solved"
+    lede="The six components say what must be solved. These axes say what the options are."
   >
-    <KeyMessage title="Three things that are not the same axis" tone="message">
-      <p>
-        <strong>Signal enrichment</strong> selects which observations are worth aggregating.
-        <strong>Background suppression</strong> stops a non-tumor observation from imitating a tumor
-        one. <strong>Aggregation</strong> combines many weak observations into one number. They act
-        at different points, and conflating them is the most common way this space is misread.
-      </p>
-    </KeyMessage>
-
-    <div class="axis-list">
+    <div class="axis-compact">
       {axes.map((axis) => (
-        <article class="axis-card" id={`axis-${axis.id}`}>
-          <header class="axis-card__head">
-            <span class="axis-card__number">{String(axis.data.order).padStart(2, "0")}</span>
-            <h3>{axis.data.name}</h3>
-            {axis.data.added && <span class="axis-card__tag">added axis</span>}
+        <article class="axis-compact__item" id={`axis-${axis.id}`}>
+          <header>
+            <h4>{axis.data.name}</h4>
+            {axis.data.added && <span class="axis-compact__tag">added axis</span>}
           </header>
-          <p class="axis-card__definition">{axis.data.definition}</p>
-          <p class="axis-card__why"><strong>Why it matters.</strong> {axis.data.why_it_matters}</p>
-          {axis.data.justification && (
-            <p class="axis-card__why"><strong>Why it is an axis.</strong> {axis.data.justification}</p>
-          )}
-          <ul class="axis-card__strategies">
+          <p class="axis-compact__def">{axis.data.definition}</p>
+          <ul>
             {axis.data.strategies.map((strategy) => (
               <li>
-                <span class="axis-card__strategy">{strategy.name}</span>
-                {strategy.detail && <span class="axis-card__detail">{strategy.detail}</span>}
+                <span class="axis-compact__strategy">{strategy.name}</span>
                 {strategy.methods.length > 0 && (
-                  <span class="axis-card__methods">{strategy.methods.join(" · ")}</span>
+                  <span class="axis-compact__methods">{strategy.methods.join(" · ")}</span>
                 )}
-                {strategy.cost && <span class="axis-card__caveat">{strategy.cost}</span>}
-                {strategy.note && <span class="axis-card__caveat">{strategy.note}</span>}
               </li>
             ))}
           </ul>
-          {(axis.data.open_position || axis.data.note || axis.data.tension || axis.data.constraint) && (
-            <p class="axis-card__open">
-              {axis.data.open_position ?? axis.data.note ?? axis.data.tension ?? axis.data.constraint}
-            </p>
-          )}
           {axis.data.measured_locally && (
-            <p class="axis-card__measured">Measured on this data — {axis.data.measured_locally}</p>
+            <p class="axis-compact__measured">
+              <ClaimLabel kind="MEASURED" /> {axis.data.measured_locally}
+            </p>
           )}
         </article>
       ))}
     </div>
-  </ResearchSection>
 
-  <ResearchSection
-    id="common-principles"
-    index="04"
-    kicker="Synthesis A"
-    title="Common principles"
-    lede="Listed only where at least three reviewed methods rest on the same idea."
-  >
-    <div class="principle-grid">
-      <article class="principle">
-        <h3>P1 · Make each observation carry more before combining</h3>
-        <p>
-          Present in all five detectors, which differ almost entirely in <em>how</em>: more loci
-          <CitationMarker refs="mrdetect" />, a learned prior <CitationMarker refs="mrd-edge" />, a
-          second linked variant <CitationMarker refs="phased-seq" />, a physical consensus
-          <CitationMarker refs="nanorcs" />, a second signal class <CitationMarker refs="ont-realtime" />.
-        </p>
-      </article>
-      <article class="principle">
-        <h3>P2 · Background is modelled, not merely filtered</h3>
-        <p>
-          Nobody in the set treats a filter list as sufficient: the error distribution is modelled
-          <CitationMarker refs="mrdetect" />, learned <CitationMarker refs="mrd-edge" />, required to
-          fail twice <CitationMarker refs="phased-seq" />, or constrained at the bench
-          <CitationMarker refs="ont-cfdna-methyl" />.
-        </p>
-      </article>
-      <article class="principle">
-        <h3>P3 · The sample answer is a scalar over many weak observations</h3>
-        <p>
-          The unit at which evidence is gathered differs across methods; the unit at which it is
-          reported does not <CitationMarker refs={["mrdetect", "mrd-edge", "nanorcs"]} />.
-        </p>
-      </article>
-      <article class="principle">
-        <h3>P4 · Evidence classes are not automatically independent</h3>
-        <p>
-          Held explicitly by the fragmentation work <CitationMarker refs="methyl-fragmentation" />,
-          and implicitly violated by the multimodal methods, which combine channels without testing
-          independence.
-        </p>
-      </article>
-    </div>
-  </ResearchSection>
-
-  <ResearchSection
-    id="unique-mechanisms"
-    index="05"
-    kicker="Synthesis B"
-    title="Unique mechanisms"
-    lede="What only one method in the reviewed set does — the reason it exists, not a summary of it."
-  >
-    <div class="mechanism-list">
-      {reviewed.map((method) => (
-        <article class="mechanism-row">
-          <div class="mechanism-row__name">
-            <strong>{method.data.name}</strong>
-            {method.data.ref && <CitationMarker refs={refKeyByNumber[method.data.ref]} />}
-            {!method.data.is_detector && <span class="mechanism-row__tag">not a detector</span>}
-          </div>
-          <div class="mechanism-row__body">
-            <p>{method.data.unique_contribution}</p>
-            <p class="mechanism-row__limit">
-              <strong>Limitation for a tumor-only long-read setting.</strong> {method.data.limitation_here}
-            </p>
-          </div>
-        </article>
-      ))}
-    </div>
-  </ResearchSection>
-
-  <ResearchSection
-    id="method-matrix"
-    index="06"
-    kicker="Comparison"
-    title="Method × axis"
-    lede="Each method's position on seven of the eleven axes. Read down a column to see how crowded an axis is."
-  >
-    <div class="matrix-scroll" role="region" aria-label="Method by axis comparison" tabindex="0">
-      <table class="axis-matrix">
-        <thead>
-          <tr>
-            <th scope="col">Method</th>
-            {matrixAxes.map((id) => <th scope="col">{axisName(id)}</th>)}
-          </tr>
-        </thead>
-        <tbody>
-          {methods.map((method) => (
-            <tr class={method.data.in_reviewed_set ? undefined : "axis-matrix__row--tooling"}>
-              <th scope="row">
-                {method.data.name}
-                {!method.data.in_reviewed_set && <span class="axis-matrix__tag">local tooling</span>}
-              </th>
-              {matrixAxes.map((id) => <td>{method.data.axes[id] ?? "—"}</td>)}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    <p class="figure-note">
-      Positions derive from indexed summaries, not from source PDFs read locally. No performance
-      figure appears anywhere on this page: the studies use different assays, sample types and
-      cohorts, so their numbers are not comparable.
-    </p>
-  </ResearchSection>
-
-  <ResearchSection
-    id="unresolved"
-    index="07"
-    kicker="Open"
-    title="Unresolved challenges"
-    lede="Problems the reviewed set names but does not settle."
-  >
-    <ul class="synthesis-list">
-      <li>
-        <strong>Tumor-naive detection.</strong> Every reviewed detector is tumor-informed. Without a
-        prior tumor profile the marker set carries its own false-positive structure, and no reviewed
-        method addresses that.
-      </li>
-      <li>
-        <strong>Modality independence is assumed, not tested.</strong> Two methods combine channels;
-        one paper shows two of those channels are coupled <CitationMarker refs="methyl-fragmentation" />.
-        Nothing in the set resolves the conflict with an ablation.
-      </li>
-      <li>
-        <strong>Linkage reach is a platform property nobody spends.</strong> Long reads co-observe
-        everything within a read by construction, and both long-read methods use that for
-        multimodality and accuracy rather than for background suppression
-        <CitationMarker refs={["ont-realtime", "nanorcs"]} />.
-      </li>
-      <li>
-        <strong>Accuracy and modality pull against each other.</strong> Consensus buys per-read
-        confidence through amplification <CitationMarker refs="nanorcs" />; native sequencing keeps
-        base modifications and accepts the error rate <CitationMarker refs="ont-cfdna-methyl" />.
-        Nothing measures what each choice costs on the same material.
-      </li>
-      <li>
-        <strong>Validation frameworks do not transfer.</strong> The only analytical-validation
-        framing in the set is short-read, targeted and tumor-informed
-        <CitationMarker refs="phased-seq" />.
-      </li>
-    </ul>
-  </ResearchSection>
-
-  <ResearchSection
-    id="ont-capabilities"
-    index="08"
-    kicker="Platform"
-    title="ONT capability space"
-    lede="What this data provides — checked against the BAMs, not against what the platform supports in principle."
-  >
-    <div class="capability-groups">
-      {capabilityGroups.map((group) => (
-        <article class={`capability-group capability-group--${group.status.toLowerCase()}`}>
-          <header>
-            <h3>{group.status}</h3>
-            <p>{group.note}</p>
-          </header>
-          <ul>
-            {group.items.map((item) => (
-              <li>
-                <span class="capability__name">{item.data.capability}</span>
-                <span class="capability__evidence">{item.data.evidence}</span>
-                {item.data.path && <span class="capability__path">Route — {item.data.path}</span>}
-                {item.data.caveat && <span class="capability__caveat">{item.data.caveat}</span>}
-                {item.data.consequence && <span class="capability__caveat">{item.data.consequence}</span>}
-                {item.data.restriction && <span class="capability__caveat">{item.data.restriction}</span>}
-              </li>
-            ))}
-          </ul>
-        </article>
-      ))}
-    </div>
-  </ResearchSection>
-
-  <ResearchSection
-    id="resources"
-    index="09"
-    kicker="Materials"
-    title="Available experimental resources"
-    lede="What can be run, with what, against what. Source data is read-only throughout."
-  >
-    <div class="resource-grid">
-      <article class="resource-card">
-        <h3>Material</h3>
-        <ul>
-          <li>HCC1395 tumor, ONT with native modification calls — candidate discovery</li>
-          <li>HCC1395BL normal — <strong>evaluation only</strong>, never an inference input</li>
-          <li>Dilution series at ~25×: <strong>5 blanks</strong>, plus 3 replicates each at 1%, 0.1% and 0.01%</li>
-        </ul>
-      </article>
-      <article class="resource-card">
-        <h3>Truth and background</h3>
-        <ul>
-          <li>SEQC2 high-confidence somatic calls and regions — evaluation only</li>
-          <li>Orthogonal-tools benchmark — evaluation only</li>
-          <li>Population and panel-of-normals databases, including a long-read population set</li>
-        </ul>
-      </article>
-      <article class="resource-card">
-        <h3>Tooling</h3>
-        <ul>
-          <li>LongPhase 2.0.2 — present but unrun; needs a heterozygous variant set first</li>
-          <li>ClairS-TO v0.5.0 — produced the candidate set; its wrapper currently does not start</li>
-          <li>112 cores, 503 GB RAM, <strong>no GPU</strong></li>
-        </ul>
-      </article>
-      <article class="resource-card">
-        <h3>Blocking unknowns</h3>
-        <ul>
-          <li>The basecaller model is not recorded in the BAM header</li>
-          <li>Phase block length at 25× is unmeasured</li>
-          <li>Composition of the candidate set is unknown</li>
-        </ul>
-      </article>
-    </div>
-    <p class="figure-note">
-      The five blank replicates are the most consequential item here: they are what makes a
-      blank-anchored decision rule possible at all.
-    </p>
-  </ResearchSection>
-
-  <ResearchSection
-    id="explored"
-    index="10"
-    kicker="Coverage"
-    title="Explored vs underexplored"
-    lede="Within the reviewed set only. A systematic search has not been run."
-  >
-    <div class="coverage-grid">
-      <article class="coverage coverage--well">
-        <h3>Well explored</h3>
-        <ul>
-          <li>Genome-wide aggregation of weak per-locus SNV evidence, tumor-informed</li>
-          <li>Learned background suppression on short-read sequence context</li>
-          <li>Linkage-based suppression within a short cfDNA fragment</li>
-          <li>Physical accuracy improvement by consensus on long reads</li>
-          <li>Native multi-class readout from one ONT library, at region scale</li>
-          <li>Analytical validation framing — limit of blank, limit of detection, precision</li>
-        </ul>
-      </article>
-      <article class="coverage coverage--partial">
-        <h3>Partially explored</h3>
-        <ul>
-          <li>Long reads used for multimodality, but not for linkage-based background suppression</li>
-          <li>Multimodal aggregation with modality independence assumed rather than tested</li>
-        </ul>
-      </article>
-      <article class="coverage coverage--infeasible">
-        <h3>Not testable on this data</h3>
-        <ul>
-          <li><strong>Fragmentomics</strong> — this is cell-line genomic DNA, not cfDNA: fragment ends reflect library preparation, not nuclease biology</li>
-          <li><strong>Consensus-accuracy designs</strong> — the data is simplex, with no amplification-based consensus</li>
-          <li><strong>Any clinical MRD performance claim</strong> — no cohort, and dilution material is not plasma</li>
-        </ul>
-      </article>
-    </div>
-  </ResearchSection>
-
-  <ResearchSection
-    id="opportunities"
-    index="11"
-    kicker="Candidates"
-    title="Candidate research opportunities"
-    lede="Five candidates, each with the condition that would kill it. None is selected."
-  >
-    <div class="gap-list">
-      {gaps.map((gap) => (
-        <article class="gap-card" id={`gap-${gap.id.toLowerCase()}`}>
-          <header class="gap-card__head">
-            <span class="gap-card__id">{gap.id}</span>
-            <h3>{gap.data.title}</h3>
-            <span class={`gap-card__status gap-card__status--${gap.data.status.split("-")[0]}`}>
-              {gap.data.status.replace(/-/g, " ")}
-            </span>
-          </header>
-          <p class="gap-card__axes">
-            {gap.data.axes_combined.map((id) => <span class="gap-card__axis">{axisName(id)}</span>)}
-          </p>
-          <dl class="gap-card__fields">
-            <dt>What is actually different</dt>
-            <dd>{gap.data.what_is_actually_different}</dd>
-            <dt>Closest existing methods</dt>
-            <dd>
-              {gap.data.closest_methods.length > 0
-                ? gap.data.closest_methods
-                    .map((id) => methods.find((m) => m.id === id)?.data.name ?? id)
-                    .join(", ")
-                : "None in the reviewed set"}
-            </dd>
-            <dt>Feasibility here</dt>
-            <dd>{gap.data.feasibility}</dd>
-            <dt>Confounding risks</dt>
-            <dd>
-              <ul>{gap.data.confounding_risks.map((risk) => <li>{risk}</li>)}</ul>
-            </dd>
-            <dt>How it would be falsified</dt>
-            <dd class="gap-card__falsify">{gap.data.falsification}</dd>
-            {gap.data.evidence.length > 0 && (
-              <>
-                <dt>Evidence so far</dt>
-                <dd class="gap-card__evidence">{gap.data.evidence.join(" · ")}</dd>
-              </>
-            )}
-          </dl>
-          {gap.data.note && <p class="gap-card__note">{gap.data.note}</p>}
-        </article>
-      ))}
-    </div>
-
-    <h3 class="figure-heading">Mechanism sketch for G2, the previously proposed direction</h3>
-    <p>
-      G2 is the direction this project pursued before the synthesis. The figure is kept because the
-      mechanistic argument is worth reading; the direction is demoted because it is one candidate
-      among five rather than the answer.
-    </p>
-    <MechanismFigure>
-      <strong>Mechanistic rationale for one candidate, not a proposal.</strong> A somatic variant
-      arises on one chromosome copy, so a tumor-derived read should carry it in cis with the same
-      neighbouring alleles every time; an error is free to land on a read from either haplotype, and
-      it does not alter that molecule&#39;s methylation. Whether that separates anything at low
-      tumor fraction is unmeasured — see G2's falsification condition above.
-    </MechanismFigure>
-
-    <KeyMessage title="Nothing here is selected" tone="boundary">
+    <KeyMessage title="Scope of every coverage claim on this page" tone="boundary">
       <p>
-        These are candidates, ordered by identifier and not by preference. Choosing among them needs
-        the composition of the candidate set (G5), phase block length at 25×, and joint availability
-        per molecule — none of which has been measured. That selection is a researcher's decision,
-        not one this synthesis makes.
+        “Underexplored” means not represented in the seven documents reviewed here. No systematic
+        search has been run, and method positions derive from indexed summaries rather than source
+        PDFs, so nothing on this page is a claim about the field or about novelty.
       </p>
     </KeyMessage>
   </ResearchSection>
 
-  <ResearchSection id="references" index="12" kicker="Bibliography" title="References">
+  <ResearchSection id="references" index="07" kicker="Bibliography" title="References">
     <ReferenceList />
   </ResearchSection>
 </ResearchLayout>
