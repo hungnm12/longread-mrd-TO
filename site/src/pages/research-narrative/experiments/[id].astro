@@ -60,10 +60,19 @@ const component = gap ? components.find((entry) => entry.id === gap.data.compone
     </dl>
   </section>
 
-  {experiment.data.result && (
+  {experiment.data.result ? (
     <section class="nv-block">
       <h2>Outcome <ClaimLabel kind="MEASURED" /></h2>
       <p class="nv-lead">{experiment.data.result}</p>
+    </section>
+  ) : (
+    <section class="nv-block">
+      <h2>Outcome</h2>
+      <p class="nv-nottested">NOT YET RUN</p>
+      <p class="nv-note">
+        Registered on {experiment.data.status === "registered" ? "the date in the record" : "an earlier date"};
+        criteria above are fixed and the result section stays empty until the run produces one.
+      </p>
     </section>
   )}
 

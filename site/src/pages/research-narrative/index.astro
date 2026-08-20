@@ -6,6 +6,7 @@
 import { getCollection } from "astro:content";
 import NarrativeLayout from "@layouts/NarrativeLayout.astro";
 import { researchOs } from "@utils/researchOs";
+import linkage from "../../../../outputs/active/results/linkage/cooccurrence_pure_tumor.summary.json";
 
 const components = (await getCollection("detectorComponents")).sort((a, b) => a.data.order - b.data.order);
 const gaps = await getCollection("designGaps");
@@ -16,6 +17,7 @@ const os = researchOs as {
   current_stage_plain: string;
 };
 const activeGap = gaps.find((gap) => gap.id === os.active_gap)!;
+const strata = linkage.by_seqc2_stratum;
 
 // One plain-language line per component, and one glyph. The glyph is a mnemonic, not decoration:
 // it marks the same component consistently across the map and the component pages.
@@ -99,9 +101,38 @@ function componentStatus(componentId: string) {
 
     <p class="nv-current__asking">
       <span>We are currently asking</span>
-      Does observing multiple ALT alleles on the same long ONT molecule provide tumor-specific
-      evidence?
+      If one ONT molecule carries two mutated alleles, is that stronger evidence that it came from
+      tumor?
     </p>
+
+    <div class="nv-found">
+      <p class="nv-found__label">What we found</p>
+      <p class="nv-found__yes">
+        <span aria-hidden="true">✓</span>
+        Multiple mutated alleles really do occur together on the same long read.
+      </p>
+      <p class="nv-found__no">
+        <span aria-hidden="true">✗</span>
+        But pairs that are independently confirmed tumor mutations were <em>not</em> more enriched
+        than pairs that are not confirmed.
+      </p>
+      <div class="nv-measured">
+        <p class="nv-measured__label">Measured</p>
+        <div class="nv-measured__row">
+          <span>independently confirmed tumor mutations</span>
+          <span class="nv-measured__bar"><i style={`width:${(strata.both.pct / 90) * 100}%`}></i></span>
+          <strong>{strata.both.pct}%</strong>
+        </div>
+        <div class="nv-measured__row nv-measured__row--other">
+          <span>not confirmed by the reference set</span>
+          <span class="nv-measured__bar"><i style={`width:${(strata.neither.pct / 90) * 100}%`}></i></span>
+          <strong>{strata.neither.pct}%</strong>
+        </div>
+      </div>
+      <p class="nv-takeaway">
+        Linkage is physically real, but linkage alone does not identify tumor origin.
+      </p>
+    </div>
 
     <div class="nv-learned">
       <p class="nv-learned__label">What we learned so far</p>

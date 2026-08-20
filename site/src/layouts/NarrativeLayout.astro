@@ -21,6 +21,9 @@ interface Props {
 }
 
 const { title, description, section, crumbs = [] } = Astro.props;
+
+// Stamped at build time. Its only job is to make "am I looking at a stale copy?" answerable.
+const built = new Date().toISOString().slice(0, 16).replace("T", " ");
 const activeGap = (researchOs as { active_gap?: string }).active_gap ?? "G1";
 
 const nav = [
@@ -81,6 +84,7 @@ const nav = [
         <span>Research records live in <code>research/</code>; every page here renders from them.</span>
         <span>
           <a href="/">Research OS dashboard</a> · <a href="/research-notes/">Notes archive</a>
+          <span class="nv-build">build {built} UTC</span>
         </span>
       </div>
     </footer>

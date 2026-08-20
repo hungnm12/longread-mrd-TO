@@ -1,0 +1,112 @@
+# Registered BEFORE execution. Thresholds fixed here may not be changed after results are seen.
+# Schema: orchestration/schemas/experiment.schema.yaml
+
+id: EXP-G1-002
+title: Is the ALT-ALT excess in the non-somatic stratum germline haplotype structure?
+hypothesis: >-
+  EXP-G1-001 left one suspicion open. Same-molecule ALT-ALT co-occurrence was *less* frequent
+  among SEQC2-confirmed somatic pairs (65.1%) than among pairs where neither candidate is
+  confirmed (78.6%) — the opposite of the pre-registered prediction. FIND-0001 offered the most
+  economical reading as a theory, not a result: the excess in the "neither" stratum is germline
+  heterozygous (and homozygous) variants sitting in cis on the same haplotype, which a candidate
+  set of unknown composition would produce. A competing theory is that nearby candidate pairs are
+  enriched for a shared artifact class. This experiment tests both.
+question: >-
+  For the same 1,000 pairs, does the ALT-ALT co-occurrence seen in the pure tumor also appear in
+  the matched normal, and are the "neither"-stratum candidates population variants? If yes, the
+  excess is germline haplotype structure. If no, it is not, and the artifact theory or genuine
+  unconfirmed somatic variation takes over.
+
+unit_of_analysis: >-
+  One candidate pair — the SAME 1,000 pairs as EXP-G1-001, reproduced by identical window, seed
+  and sampling procedure. Counts of reads are per pair, per BAM.
+
+inputs:
+  - path: outputs/active/results/tumor_only/HCC1395/candidate_pass_snvs.tsv
+    role: Candidate positions and their ALT alleles — the pair set is regenerated from this, unchanged
+    read_only: true
+  - path: outputs/active/results/linkage/cooccurrence_pure_tumor.tsv
+    role: The EXP-G1-001 per-pair tumor counts, joined to the new measurements
+    read_only: true
+  - path: /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395BL.bam
+    role: ARM A, EVALUATION ONLY — matched B-lymphoblastoid normal. Germline variants are present here; somatic ones are not
+    read_only: true
+  - path: /big8_disk/data/PON/clairs-to_databases/gnomad.r2.1.af-ge-0.001.sites.vcf.gz
+    role: ARM B, discovery-legal — population allele frequency, the resource ClairS-TO itself uses for suppression
+    read_only: true
+  - path: /big8_disk/data/PON/clairs-to_databases/dbsnp.b138.non-somatic.sites.vcf.gz
+    role: ARM B, discovery-legal — known non-somatic sites
+    read_only: true
+  - path: /big8_disk/data/PON/clairs-to_databases/1000g-pon.sites.vcf.gz
+    role: ARM B, discovery-legal — panel of normals
+    read_only: true
+  - path: /big8_disk/data/PON/clairs-to_databases/CoLoRSdb.GRCh38.v1.1.0.deepvariant.glnexus.af-ge-0.001.vcf.gz
+    role: ARM B, discovery-legal — long-read population database, the one that would carry ONT-specific common variation
+    read_only: true
+  - path: /big8_disk/data/HCC1395/SEQC2/high-confidence_sSNV_in_HC_regions_v1.2.1.vcf.gz
+    role: EVALUATION ONLY — the same stratification as EXP-G1-001, attached after counting
+    read_only: true
+
+method: >-
+  Arm A. Regenerate the identical pair sample (same window, same seed) and run the EXP-G1-001
+  read classification unchanged against the matched normal BAM. A germline pair carries both ALT
+  alleles on normal molecules; a somatic pair does not.
+  Arm B. Look up each candidate position in the four population/PoN databases by exact
+  chrom-pos-ref-alt where the database records the allele, position otherwise. Report membership
+  per SEQC2 stratum.
+  Arm C. Label a pair "germline-supported" if either arm marks either of its candidates, then
+  recompute the EXP-G1-001 tumor ALT-ALT rate by stratum on the residual pairs only. This asks
+  whether the reversal that failed criterion 3 of EXP-G1-001 survives composition control.
+  No filtering, reweighting or model is involved anywhere. Nothing is written near any input.
+
+parameters:
+  pair_window_bp: 20000          # identical to EXP-G1-001, so the pair set is the same
+  sample_pairs: 1000             # identical
+  seed: 20260819                 # identical — this is what makes the pair set reproducible
+  min_base_quality: 10
+  min_mapping_quality: 20
+  normal_germline_min_alt_alt_reads: 2   # a pair counts as seen in the normal at >=2 ALT-ALT reads
+  residual_sampling_error_pp: 5.0        # +-5 percentage points at n~=400 per stratum
+
+thresholds:
+  # Fixed now. Read as: what confirms the germline theory, and what kills it.
+  confirm_normal_neither_pct: 60.0   # >=60% of "neither" tumor-ALT-ALT pairs also ALT-ALT in the normal
+  control_normal_both_pct: 15.0      # <=15% of SEQC2-somatic tumor-ALT-ALT pairs ALT-ALT in the normal
+  confirm_popdb_enrichment_ratio: 3.0  # "neither" candidates in a population DB >=3x the rate for SEQC2-confirmed ones
+  refute_normal_neither_pct: 25.0    # <25% seen in the normal refutes the germline theory
+  refute_popdb_enrichment_ratio: 2.0 # <2x enrichment refutes it on the annotation side
+
+success_criteria:
+  # "Success" here means the open suspicion is resolved either way, not that the theory holds.
+  - ARM A CONFIRMS — at least 60% of "neither"-stratum pairs that showed ALT-ALT in the tumor also show at least 2 ALT-ALT reads in the matched normal, among pairs evaluable in the normal.
+  - ARM A CONTROL HOLDS — at most 15% of both-somatic pairs that showed ALT-ALT in the tumor do so in the normal. If this control fails the arm is uninterpretable, not confirmatory.
+  - ARM B CONFIRMS — population-database membership among "neither" candidates is at least 3x the membership among SEQC2-confirmed candidates.
+  - ARM C RESOLVES — after removing germline-supported pairs, the residual "neither" ALT-ALT rate is not more than 5 percentage points above the residual both-somatic rate, i.e. the reversal is explained by composition.
+
+failure_criteria:
+  - ARM A REFUTES — fewer than 25% of "neither" tumor-ALT-ALT pairs are seen in the normal, so the excess is not germline presence.
+  - ARM B REFUTES — enrichment ratio below 2x, so the "neither" candidates are not preferentially population variants.
+  - BOTH REFUTE — the germline-in-cis theory of FIND-0001 is wrong and the shared-artifact theory, or genuine somatic variation outside SEQC2 high-confidence regions, becomes the leading explanation. G1's confounding_risks must be rewritten.
+  - ARM C LEAVES IT OPEN — the reversal persists in the residual pairs even after both germline filters, which would mean neither theory accounts for it.
+
+controls:
+  - "The both-somatic stratum in the normal is the negative control: SEQC2 high-confidence somatic SNVs must be near-absent from the matched normal. A high rate there would indicate contamination, mismapping or a broken lookup rather than germline structure."
+  - "Reads covering both positions are counted in the normal exactly as in the tumor, so a pair with no normal coverage is reported as not-evaluable rather than as absent."
+  - "Four population databases rather than one, reported separately, so a single database's coverage gap cannot masquerade as a result."
+  - "Per-pair ALT-ALT read fraction is reported alongside the binary rate: a germline heterozygous pair in cis sits near 0.5 and a germline homozygous pair near 1.0, which is a different fingerprint from a subclonal somatic pair."
+
+leakage_guard: >-
+  SEQC2 and the matched normal are evaluation-only and are read after the tumor counts already
+  exist — the tumor counts are not recomputed here at all, they are joined from EXP-G1-001's
+  table. No candidate is selected, filtered or weighted by truth membership at discovery time.
+  The population databases are discovery-legal (ClairS-TO uses them for exactly this purpose),
+  but in this experiment they are used only to describe composition, not to filter a call set.
+
+status: registered
+run_records: []
+result: null
+notes: >-
+  This experiment cannot show that linkage helps MRD detection. It can only establish what the
+  co-occurrence signal is made of at 100% tumor fraction. The tumor-fraction question — does
+  ALT-ALT linkage track dilution or persist in the TF0 blanks — is EXP-G1-003 and is not
+  addressed here.

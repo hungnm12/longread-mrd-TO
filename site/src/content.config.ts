@@ -693,9 +693,9 @@ const experimentRegistry = defineCollection({
     controls: z.array(z.string()).default([]),
     leakage_guard: z.string(),
     status: z.string(),
-    result: z.string().optional(),
+    result: z.string().nullable().optional(),
     run_records: z.array(z.string()).default([]),
-    notes: z.string().optional()
+    notes: z.string().nullable().optional()
   })
 });
 
