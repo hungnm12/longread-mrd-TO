@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REPORT-2026-08-24</title>
+<style>
+:root {
+  --bg: #f7f3eb; --panel: #fffdf8; --ink: #1f1b16; --muted: #695f56; --line: #d4c8bb;
+  --accent: #1f5c4e; --accent-soft: #d8ebe5; --warning: #8d5c14; --warning-soft: #f7ebc7;
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --sans: "Segoe UI", Calibri, system-ui, sans-serif;
+  --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans);
+  line-height: 1.6; font-size: 16px;
+}
+.page { width: min(52rem, calc(100% - 3rem)); margin: 0 auto; padding: 2.5rem 0 4rem; }
+.masthead {
+  border-bottom: 2px solid var(--accent); padding-bottom: 0.9rem; margin-bottom: 2rem;
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; align-items: baseline;
+  justify-content: space-between;
+}
+.masthead__project { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--accent); }
+.masthead__meta { font-size: 0.82rem; color: var(--muted); }
+h1 { font-family: var(--serif); font-size: 2.1rem; line-height: 1.2; margin: 0 0 1.2rem; }
+h2 {
+  font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--accent); margin: 2.2rem 0 0.6rem; padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--line);
+}
+h3 { font-family: var(--serif); font-size: 1.15rem; margin: 1.5rem 0 0.5rem; }
+p { margin: 0 0 0.9rem; }
+/* The lead paragraph is the day's summary; it earns larger type. */
+h1 + p { font-size: 1.1rem; color: var(--ink); border-left: 3px solid var(--accent-soft);
+  padding-left: 1rem; }
+ul, ol { margin: 0 0 1rem; padding-left: 1.3rem; }
+li { margin-bottom: 0.35rem; }
+li > ul { margin-top: 0.35rem; }
+blockquote {
+  margin: 0 0 1rem; padding: 0.7rem 1.1rem; background: var(--panel);
+  border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 8px;
+  font-family: var(--serif); font-size: 1.02rem;
+}
+code { font-family: var(--mono); font-size: 0.88em; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0.05rem 0.3rem; }
+pre { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 0.9rem 1.1rem; overflow-x: auto; }
+pre code { border: none; background: none; padding: 0; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; margin: 0 0 1.2rem; }
+th, td { border-bottom: 1px solid var(--line); padding: 0.5rem 0.6rem; text-align: left;
+  vertical-align: top; }
+th { font-family: var(--mono); font-size: 0.74rem; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--muted); }
+hr { border: none; border-top: 1px solid var(--line); margin: 2rem 0 1.2rem; }
+a { color: var(--accent); }
+em { color: var(--muted); }
+.footer { margin-top: 2.5rem; padding-top: 0.9rem; border-top: 1px solid var(--line);
+  font-size: 0.82rem; color: var(--muted); }
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .page { width: 100%; padding: 0; }
+  h2 { break-after: avoid; }
+  blockquote, pre, table { break-inside: avoid; }
+  .no-print { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <span class="masthead__project">Tumor-only long-read MRD — daily report</span>
+    <span class="masthead__meta">Rendered 2026-08-24</span>
+  </header>
+  <h1>Daily report — 2026-08-24</h1>
+  <p><strong>Subject:</strong> why a day of literature survey ended up testing a within-sample statistic, and why
+  that statistic was falsified the same day.</p>
+  <p><strong>A note on naming.</strong> This report deliberately gives the tested statistic <strong>no proper name</strong>. It is
+  not a new method belonging to this project — it is one instance of a published family (see §2).
+  It is referred to by description: <strong>allele fraction computed within a single haplotype</strong>. Giving it
+  a name of our own would be claiming authorship of something that is not ours.</p>
+  <p><strong>One-line conclusion.</strong> The survey&rsquo;s primary direction was falsified by the failure criterion it
+  registered before the run — but the gap it was invented to close is still there, still measured,
+  and does not depend on that direction having been right.</p>
+  <hr>
+  <h2>1. The question the day opened with: what is binding?</h2>
+  <p>The day did not begin with &ldquo;which idea should we try&rdquo;. It began with <strong>which constraint blocks
+  everything else</strong> — the binding constraint.</p>
+  <p>The answer came from a finding that already existed:</p>
+  <blockquote>
+  <p><code>FIND-0002</code> — <strong>30.4%</strong> of clustered PASS candidates carry their ALT allele on <strong>≥2 reads of the
+  matched normal</strong>, meaning inherited variation rather than tumor variation. <strong>65.9%</strong> of those are
+  absent from the SEQC2 somatic truth set.</p>
+  </blockquote>
+  <p>Why this is binding rather than merely a bad number: <strong>every other research direction in this
+  project sits downstream of it.</strong> Methylation, same-molecule linkage, MRD detection — all operate on
+  the candidate set. If ~30% of that set is inherited variation, every statistic downstream is
+  measuring partly noise. There is no way around it.</p>
+  <p><strong>Consequence for direction-picking:</strong> candidate-set composition was ranked as the problem to solve
+  first.</p>
+  <hr>
+  <h2>2. Literature review — what the field says, and where the gap is</h2>
+  <h3>2.1 The field says this is already solved</h3>
+  <p>The systematic search of 2026-08-21 and the 80-source deep research run today converge on the same
+  conclusion:</p>
+  <table>
+  <thead>
+  <tr>
+  <th>Source</th>
+  <th>Contribution</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td><strong>SGZ</strong> (Sun et al., PLoS Comput Biol 2018)</td>
+  <td>Somatic/germline separation without a matched normal, using allele fraction plus purity/ploidy/copy number</td>
+  </tr>
+  <tr>
+  <td><strong>smrest</strong> (Simpson 2024, PMC10925087)</td>
+  <td><strong>Haplotype phasing</strong> as the primary information source for tumor-only somatic calling on long reads</td>
+  </tr>
+  <tr>
+  <td><strong>ClairS-TO</strong> (Nat Commun 2025)</td>
+  <td>Ships <code>MultiHap</code>, <code>NoAncestry</code>, and <code>Verdict</code> — Verdict described in the paper as <em>&ldquo;similar to and improved from SGZ&rdquo;</em></td>
+  </tr>
+  <tr>
+  <td><strong>UNMASC</strong> (PMC8494212)</td>
+  <td>An unmatched-normal design</td>
+  </tr>
+  </tbody>
+  </table>
+  <p>The lab&rsquo;s conclusion on 2026-08-21, verbatim: <em>&ldquo;not a research question — it is an integration
+  task&rdquo;</em>.</p>
+  <p><strong>That conclusion is correct about the literature.</strong> Stopping there closes the direction.</p>
+  <h3>2.2 But counting it on our own data does not agree</h3>
+  <p><code>[measured 2026-08-24]</code> — <code>week4/expA_full/HCC1395_pure/snv.vcf.gz</code>, 3,169,996 records / 48,819 PASS:</p>
+  <table>
+  <thead>
+  <tr>
+  <th>Tag</th>
+  <th>On PASS candidates</th>
+  <th>Anywhere in the file</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td><code>H</code> (haplotype-support flag)</td>
+  <td>28,799 / 48,819 (<strong>59.0%</strong>)</td>
+  <td>—</td>
+  </tr>
+  <tr>
+  <td><code>MultiHap</code></td>
+  <td><strong>0</strong></td>
+  <td>204 records (0.0064%), all co-tagged <code>LowQual</code></td>
+  </tr>
+  <tr>
+  <td><code>NoAncestry</code></td>
+  <td><strong>0</strong></td>
+  <td>242 records (0.0076%), all co-tagged <code>LowQual</code></td>
+  </tr>
+  <tr>
+  <td><code>Verdict</code></td>
+  <td><strong>0</strong></td>
+  <td>0 — disabled at launch (<code>--disable_verdict</code>, missing <code>alleleCounter</code> and the CNA bundle)</td>
+  </tr>
+  </tbody>
+  </table>
+  <p>To check this is not a configuration artifact of one run, the same census on <strong>four independent
+  tumor-only ONT runs</strong> on this server, each of which completed its phasing step:</p>
+  <table>
+  <thead>
+  <tr>
+  <th>Sample</th>
+  <th>Records</th>
+  <th>PASS</th>
+  <th><code>MultiHap</code></th>
+  <th><code>NoAncestry</code></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>H1437</td>
+  <td>3,415,364</td>
+  <td>65,448</td>
+  <td>153</td>
+  <td>134</td>
+  </tr>
+  <tr>
+  <td>H2009</td>
+  <td>3,447,798</td>
+  <td>153,854</td>
+  <td>173</td>
+  <td>391</td>
+  </tr>
+  <tr>
+  <td>HCC1937</td>
+  <td>3,124,945</td>
+  <td>29,503</td>
+  <td>147</td>
+  <td>73</td>
+  </tr>
+  <tr>
+  <td>HCC1954</td>
+  <td>3,775,749</td>
+  <td>74,996</td>
+  <td>145</td>
+  <td>264</td>
+  </tr>
+  <tr>
+  <td><strong>HCC1395 (this project)</strong></td>
+  <td>3,169,996</td>
+  <td>48,819</td>
+  <td>204</td>
+  <td>242</td>
+  </tr>
+  </tbody>
+  </table>
+  <p>Across five independent samples the two haplotype-based germline separators touch <strong>0.002–0.011%</strong>
+  of records and reach <strong>no PASS candidate at all</strong> in this project&rsquo;s run.</p>
+  <p><code>NonSomatic</code> alone accounts for 3,082,216 records — the population panel-of-normals is doing
+  essentially all of the filtering.</p>
+  <h3>2.3 The gap, stated precisely</h3>
+  <p>Both of these are true and <strong>they do not conflict</strong>:</p>
+  <ul>
+  <li>The field <strong>has</strong> a mechanism for matched-normal-free germline separation.</li>
+  <li>The shipped implementation, run on this ONT tumor-only data, removes <strong>approximately nothing</strong>.</li>
+  </ul>
+  <table>
+  <thead>
+  <tr>
+  <th>One end</th>
+  <th>The other end</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>Real germline contamination, measured with a matched normal: <strong>30.4%</strong> (clustered candidates) · <strong>28.0%</strong> (per candidate, chr1)</td>
+  <td>Removed by the shipped filters: <strong>0 PASS candidates</strong> across 5 runs</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>The distance between those two numbers is the gap.</strong> It is not the novelty of an idea — it is the
+  novelty of a measurement. It is the only thing produced today that could open a paper.</p>
+  <hr>
+  <h2>3. Evidence measured during the day</h2>
+  <p>All measured, none inferred from documentation.</p>
+  <table>
+  <thead>
+  <tr>
+  <th>#</th>
+  <th>Content</th>
+  <th>Numbers</th>
+  <th>Source</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td><strong>E1</strong></td>
+  <td>The data <strong>has been phased since week 4</strong> and nobody noticed</td>
+  <td>261 GB of haplotagged BAMs and phased VCFs in a <code>tmp/</code> directory. chr1: 147,165 phased heterozygous records, 161 blocks, 234.1 Mb spanned (~94% of the chromosome), <strong>N50 = 5.26 Mb</strong></td>
+  <td><code>01</code> §4.1</td>
+  </tr>
+  <tr>
+  <td><strong>E2</strong></td>
+  <td>Allele, haplotype and methylation are co-observed on the same molecules</td>
+  <td>In the sampled window: 124/224 reads (55.4%) carry <code>HP</code> and <code>PS</code>; <strong>224/224 (100%)</strong> carry <code>MM</code>/<code>ML</code></td>
+  <td><code>01</code> §4.1</td>
+  </tr>
+  <tr>
+  <td><strong>E3</strong></td>
+  <td>The shipped germline filters do not fire</td>
+  <td>Tables in §2.2 — 0 PASS candidates, 0.002–0.011% of records, 5 independent samples</td>
+  <td><code>01</code> §4.2</td>
+  </tr>
+  <tr>
+  <td><strong>E4</strong></td>
+  <td>Independent negative controls exist and had never been inventoried</td>
+  <td>5 independent genomes (H1437, H2009, HCC1937, HCC1954, COLO829) with ONT tumor+normal, ClairS-TO output, and orthogonal truth</td>
+  <td><code>01</code> §4.3</td>
+  </tr>
+  <tr>
+  <td><strong>E5</strong></td>
+  <td>PDF-level verification: MRDetect anchors its threshold <strong>parametrically</strong></td>
+  <td><code>Z = (det_rate − μ)/σ</code>, μ and σ fitted over 30 control plasmas, thresholds at Z&gt;3 and Z&gt;4, 95–98% clinical specificity</td>
+  <td><code>02</code> §2 (PDF verification); threshold detail: daily log 2026-08-24</td>
+  </tr>
+  <tr>
+  <td><strong>E6</strong></td>
+  <td>This project&rsquo;s haplotags are the <strong>clean</strong> kind — no label leakage</td>
+  <td>Run log: plain <code>longphase phase</code> — no <code>--somaticMode</code>, no <code>--tumor-*</code>. Tag census: <code>HP:i:2</code> 506 reads, <code>HP:i:1</code> 12 reads, <strong>zero <code>HP:Z:</code></strong>. Value domain is 1/2 only</td>
+  <td>daily log 2026-08-24</td>
+  </tr>
+  <tr>
+  <td><strong>E7</strong></td>
+  <td><strong>EV-0019</strong> — the falsification experiment&rsquo;s result</td>
+  <td>See §5</td>
+  <td><code>exp-s1-001/results/</code></td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>E6 deserves separate attention.</strong> A colleague working on the same server recorded on 2026-08-21
+  that the lab&rsquo;s ready-made haplotag file <strong>could not be used as a feature</strong>, because it was produced
+  with <code>longphase haplotag --somaticMode --tumor-bam-file &lt;pure tumor BAM&gt;</code>, which gives tumor reads
+  <code>HP:Z:1-1 / 2-1 / 3</code> values that normal reads can never receive — so the tag itself reveals tumor
+  origin. Had this project&rsquo;s files been the same, the experiment would have been broken at its input.
+  Two commands answered it: they are not. This is the only finding of the day that was <strong>verified
+  rather than inferred</strong>, and the only one that came through undamaged.</p>
+  <hr>
+  <h2>4. The reasoning chain that led to the tested statistic</h2>
+  <p>Five links, each anchored to a number above.</p>
+  <p><strong>Link 1 — Identify the binding constraint.</strong> Candidate-set composition, ~30% private germline
+  contamination (§1). Every other direction sits behind it.</p>
+  <p><strong>Link 2 — The literature says it is solved.</strong> SGZ / smrest / <code>MultiHap</code> / <code>NoAncestry</code> / <code>Verdict</code>
+  (§2.1). Normally the direction closes here.</p>
+  <p><strong>Link 3 — The measurement contradicts the literature.</strong> 0 PASS candidates touched across 5
+  independent samples (§2.2). The gap is quantified at both ends (§2.3). <strong>This is the decisive
+  link</strong> — it turns an &ldquo;integration task&rdquo; back into a measurable question.</p>
+  <p><strong>Link 4 — The material turns out to be free.</strong> A haplotype-based mechanism needs reads assigned to
+  haplotypes, which costs compute. E1 shows 261 GB already on disk since week 4. The cost of testing
+  drops to near zero, and this is why the direction outranked the alternatives — <strong>equally worth
+  doing, far cheaper, and killable in a single run</strong>.</p>
+  <p><strong>Link 5 — The mechanism, in one sentence.</strong> An inherited variant <strong>defines</strong> one of the two
+  ancestral haplotypes, so nearly every read of that haplotype carries it → the within-haplotype
+  fraction ≈ 1. A <strong>subclonal</strong> somatic variant merely <em>rides</em> a haplotype in a fraction of cells →
+  that fraction &lt; 1. Whole-locus VAF cannot see the difference because it averages across both
+  haplotypes.</p>
+  <blockquote>
+  <p><strong>This is where the argument broke, and it broke as it was being written, not when it was run.</strong>
+  Link 5 depends on the word <strong>&ldquo;subclonal&rdquo;</strong>. The reason given for believing it: <code>FIND-0002</code>
+  measured HCC1395&rsquo;s somatic pairs as largely subclonal — median ALT-ALT fraction 0.200, 45.7%
+  below 0.15.
+  Read again: <strong>0.200 is a pair-level molecule statistic, not a per-candidate one.</strong> Measured per
+  candidate today, somatic VAF is centred between <strong>0.3 and 0.7</strong>. Not the distribution the
+  argument required.</p>
+  </blockquote>
+  <hr>
+  <h2>5. The falsification experiment and its result</h2>
+  <p><code>EXP-S1-001</code> — designed to be <strong>killable in one run</strong>, on files that already exist, in hours rather
+  than days. Every threshold was fixed <strong>before</strong> the run (<code>08</code> §10–§11).</p>
+  <p><strong>Leakage guard, and how it was enforced:</strong></p>
+  <table>
+  <thead>
+  <tr>
+  <th>Rule</th>
+  <th>What happened</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>The feature function must not see truth</td>
+  <td>Its arguments are only the tumor BAM, the candidate VCF and the reference</td>
+  </tr>
+  <tr>
+  <td>Features must be written to disk <strong>before</strong> any label is read</td>
+  <td>Feature step began 09:20:45Z and closed its file at 09:24; labelling began 09:26:28Z</td>
+  </tr>
+  <tr>
+  <td>The matched normal may be opened only at labelling</td>
+  <td>It was</td>
+  </tr>
+  <tr>
+  <td>No threshold tuning after seeing labels</td>
+  <td>AUC is threshold-free; the single reported operating point was fixed in advance from the mechanism</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>Result:</strong></p>
+  <table>
+  <thead>
+  <tr>
+  <th></th>
+  <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>Candidates with features</td>
+  <td>3,925 (chr1)</td>
+  </tr>
+  <tr>
+  <td>Meeting the inclusion rule (inside a SEQC2 high-confidence region, labelled, ≥10 reads on <strong>both</strong> haplotypes)</td>
+  <td><strong>1,627</strong> — 556 germline, 1,071 somatic</td>
+  </tr>
+  <tr>
+  <td>AUC(whole-locus VAF) — baseline</td>
+  <td><strong>0.6318</strong> [0.6023–0.6595]</td>
+  </tr>
+  <tr>
+  <td>AUC(within-haplotype fraction) — condition</td>
+  <td><strong>0.5972</strong> [0.5716–0.6214]</td>
+  </tr>
+  <tr>
+  <td><strong>ΔAUC</strong></td>
+  <td><strong>−0.0346</strong>, paired bootstrap 95% CI [−0.0676, +0.0015]</td>
+  </tr>
+  <tr>
+  <td>Registered H0 (ΔAUC ≤ 0.02)</td>
+  <td><strong>not rejected</strong></td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>Pre-fixed operating point</strong> (≥ 0.90 → call germline): removes 520/556 germline (93.5%) but
+  discards 772/1,071 somatic (72.1%); precision for germline is 0.4025. Not usable.</p>
+  <p><strong>Distribution — the mechanism made visible:</strong> 468/556 germline (<strong>84.2%</strong>) sit at ≥ 0.95, <strong>exactly
+  as predicted</strong>. But 688/1,071 somatic (<strong>64.2%</strong>) sit there too. Under whole-locus VAF the two
+  classes peak in different places: germline at 0.60–0.75, somatic at 0.30–0.45.</p>
+  <p><strong>Control 1 — haplotype-swap null.</strong> Reallocating each candidate&rsquo;s tagged ALT reads across its two
+  haplotypes at random (hypergeometric), depths held fixed: ΔAUC mean −0.0106, 95% range
+  [−0.0177, −0.0033]. The observed −0.0346 falls <strong>below</strong> that range. Conditioning on the <strong>true</strong>
+  haplotype assignment is worse than allocating the same ALT counts at random. The statistic is not
+  merely uninformative on this material — it is <strong>anti-informative</strong>.</p>
+  <p><strong>Control 2 — coverage stratification.</strong> ΔAUC = −0.0078 below the median tagged depth of 75, and
+  −0.0604 above it. The deficit <strong>grows with depth</strong> rather than shrinking — the signature of a
+  ceiling effect, not of noise.</p>
+  <p><strong>Two reasons it died:</strong></p>
+  <ol>
+  <li><strong>Purity.</strong> HCC1395 is a ~100% pure tumor line. A clonal somatic variant occupies one haplotype
+     <strong>exactly as</strong> an inherited heterozygote does. The statistic separates &ldquo;occupies the whole
+     haplotype&rdquo; from &ldquo;occupies part of it&rdquo; — it does not separate &ldquo;inherited&rdquo; from &ldquo;acquired early
+     and clonally expanded&rdquo;.</li>
+  <li><strong>The statistic&rsquo;s own definition excludes the regions that need solving.</strong> 1,895 of 3,522
+     labelled in-region candidates <strong>never reach</strong> the comparison for want of reads on a second
+     haplotype, and <strong>809 (42.7%) have zero reads</strong> on one haplotype. Those are the hemizygous and
+     loss-of-heterozygosity regions — where germline contamination is worst. <strong>The method is defined
+     where the problem is mild and undefined where it is severe.</strong> More chromosomes do not fix this.</li>
+  </ol>
+  <p><strong>The failure criterion, written before the run</strong> (<code>08</code> §11): <em>&ldquo;If ΔAUC ≤ 0.02, this direction is
+  abandoned. No re-analysis with a different statistic may be substituted after the fact.&rdquo;</em> →
+  <strong>The direction is abandoned.</strong> The publication plan stops at stage S1; S2–S5 do not run.</p>
+  <hr>
+  <h2>6. Findings registered during the day</h2>
+  <table>
+  <thead>
+  <tr>
+  <th>Id</th>
+  <th>Content</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td><strong>FIND-0004</strong></td>
+  <td>Allele fraction computed within a single haplotype does not separate germline from somatic better than whole-locus VAF on this material. Observation and interpretation kept apart; denominator, caveats and a &ldquo;what this does not show&rdquo; section recorded in full</td>
+  </tr>
+  <tr>
+  <td><strong>EV-0019</strong></td>
+  <td>The evidence record behind FIND-0004 — commands, versions, inputs, denominators</td>
+  </tr>
+  <tr>
+  <td><strong>LOG-2026-08-24</strong></td>
+  <td>Daily log, day closed, passes the validator</td>
+  </tr>
+  <tr>
+  <td><code>07</code> §R1</td>
+  <td>Marked <strong>FALSIFIED</strong>, with the original proposal text left unedited as the record of what was proposed</td>
+  </tr>
+  <tr>
+  <td><code>PUBLICATION-PLAN</code> §8</td>
+  <td>The outcome of S1 and what it does to the plan</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>What FIND-0004 deliberately does NOT claim:</strong></p>
+  <ul>
+  <li>Not that haplotype information is useless for tumor-only calling in general. Only that <strong>this
+    statistic, on a ~100%-purity sample,</strong> cannot work — because the two classes become structurally
+    identical under it.</li>
+  <li>Not that the 28.0% germline contamination is irremovable by some other within-sample statistic.
+    Only that <strong>this one</strong> does not remove it.</li>
+  <li>The setting where the premise would differ is a <strong>low-purity</strong> sample — and that is precisely the
+    setting this material cannot test, because at 0.01% tumor fraction there is no tumor read
+    population at a locus to assign a haplotype to.</li>
+  </ul>
+  <hr>
+  <h2>7. Literature-review gaps still open</h2>
+  <p>This is what could not be closed, and it bears on any novelty claim made later.</p>
+  <table>
+  <thead>
+  <tr>
+  <th>#</th>
+  <th>Question</th>
+  <th>Status</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td><strong>D4</strong></td>
+  <td>Does smrest already contain this exact statistic?</td>
+  <td><strong>Abstract only.</strong> Full text not retrievable. If it does, novelty drops from 3 to 1</td>
+  </tr>
+  <tr>
+  <td><strong>D8</strong></td>
+  <td>Does <em>&ldquo;Read-level DNA methylation deconvolution enhances circulating tumor DNA detection&rdquo;</em> (PMC12536878) already contain the premise of the per-molecule methylation direction?</td>
+  <td>Title only. <strong>That direction&rsquo;s novelty score was downgraded to &ldquo;provisional&rdquo;</strong> rather than silently kept</td>
+  </tr>
+  <tr>
+  <td><strong>D9</strong></td>
+  <td>Does <em>&ldquo;Ultra-sensitive MRD detection through WGS with single-read error correction&rdquo;</em> (PMC11393307) pre-empt the read-level background-suppression framing?</td>
+  <td>Not retrievable</td>
+  </tr>
+  <tr>
+  <td><strong>D5</strong></td>
+  <td>Does UNMASC&rsquo;s unmatched-normal design pre-empt the cross-sample background direction?</td>
+  <td>Abstract only</td>
+  </tr>
+  <tr>
+  <td><strong>D6</strong></td>
+  <td>Is the PhasED-Seq fragment-length constraint sourced?</td>
+  <td>The repository holds the validation paper, not the source. Open since 2026-08-21</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>Technical cause, recorded in <code>10-provenance</code> §6.2.</strong> PMC, Europe PMC, bioRxiv, nature.com,
+  academic.oup.com and embopress.org are all WAF-blocked from this environment. More dangerous:
+  <strong>captcha interstitial pages were still marked <code>ready</code></strong> by NotebookLM and would have been cited as
+  real sources. 22 junk sources (15 captcha pages of ~450 characters, 7 outright failures) were
+  deleted from two notebooks during the day.</p>
+  <p>Reachable: PLOS, Frontiers, PNAS, Taylor &amp; Francis, MDPI, medRxiv (PDF), doi.org.</p>
+  <p><strong>The cheapest outstanding task:</strong> download four PDFs by hand from a machine with an ordinary
+  browser — PMC10925087 (smrest), PMC12536878, PMC11393307, PMC10155347 — and load them into the
+  notebook. Until then, <strong>no novelty claim is defensible.</strong></p>
+  <hr>
+  <h2>8. Errors made during the day, recorded as they happened</h2>
+  <table>
+  <thead>
+  <tr>
+  <th>Error</th>
+  <th>Impact</th>
+  <th>Handling</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>Reported that <code>research_import</code> fetches PMC without trouble — stated without checking</td>
+  <td>22 junk sources across 2 notebooks, marked <code>ready</code> and citable; 6 had been sitting there since an earlier import under a claim that it had succeeded</td>
+  <td>All deleted, both notebooks re-listed to confirm. New rule: call <code>source_wait</code> and read the warning field before treating any source as usable</td>
+  </tr>
+  <tr>
+  <td>Quoted <code>MultiHap</code> at 195 and <code>NoAncestry</code> at 235 — added rows from a truncated top-15 table instead of counting</td>
+  <td>Two wrong numbers reached the survey documents</td>
+  <td>Counted exactly: 204 and 242. Percentage range corrected from 0.004–0.011% to 0.002–0.011%</td>
+  </tr>
+  <tr>
+  <td>Recommended a four-cell-line cohort as negative controls <strong>without checking which model produced our own candidate set</strong></td>
+  <td>The model is <code>ont_r10_dorado_sup_5khz_ssrs</code>; the lab knowledge base records that ClairS SSRS training <strong>includes</strong> those four lines. Background would be depleted where it should fire → specificity inflated</td>
+  <td>Recorded. Three repairs already exist on this machine (COLO829, which carries no training record; the synthetic-only <code>ss</code> model call sets; and the chr1 held-out convention). Found by reading a colleague&rsquo;s work log, not by finding it ourselves</td>
+  </tr>
+  <tr>
+  <td>Misread <code>FIND-0002</code> — took a pair-level statistic as evidence for a per-candidate property</td>
+  <td>This is the premise of link 5, i.e. of the whole experiment</td>
+  <td>Recorded in FIND-0004 and <code>PUBLICATION-PLAN</code> §8. This is an error <strong>upstream</strong> of the experiment</td>
+  </tr>
+  <tr>
+  <td>The null-control verdict line in the scoring script tested only one tail</td>
+  <td>Read literally, it understates the result</td>
+  <td>Corrected to two-sided and re-run; <strong>the pre-fix output is retained</strong>. The correction was made <strong>after</strong> the result was known, so it is recorded as a caveat on FIND-0004 rather than left implicit</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>On where the errors come from.</strong> Three of the first four are <strong>knowledge errors</strong>, not
+  experimental-discipline errors: stating without checking, adding instead of counting, recommending
+  controls without checking the provenance of our own data. The systematic search of 2026-08-21 was
+  the fix for <strong>external</strong> knowledge; there is still <strong>no equivalent step for knowledge held inside
+  the lab</strong> — the model-contamination problem had been documented three days earlier by someone ten
+  metres away.</p>
+  <hr>
+  <h2>9. What remains after the primary direction died</h2>
+  <p>Three things, none of which depend on the falsified statistic:</p>
+  <table>
+  <thead>
+  <tr>
+  <th></th>
+  <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>The shipped matched-normal-free germline filters remove</td>
+  <td><strong>0 PASS candidates</strong>; 0.002–0.011% of records across <strong>5</strong> independent ONT tumor-only runs</td>
+  </tr>
+  <tr>
+  <td>Private germline surviving into the tumor-only PASS set, chr1, per candidate</td>
+  <td><strong>28.0%</strong> (1,098 / 3,925)</td>
+  </tr>
+  <tr>
+  <td>Best within-sample discrimination found so far</td>
+  <td><strong>whole-locus VAF at AUC 0.63</strong> — and haplotype conditioning makes it <strong>worse</strong></td>
+  </tr>
+  </tbody>
+  </table>
+  <p>The third number deserves separate attention: <strong>the baseline is stronger than assumed.</strong> Any future
+  proposal has to beat 0.63, not 0.5.</p>
+  <h3>The decision belongs to a person, not to a tool</h3>
+  <p><code>PUBLICATION-PLAN</code> §8 proposes a reframing — <strong>from</strong> <em>&ldquo;we propose a method&rdquo;</em> <strong>to</strong> <em>&ldquo;we benchmark
+  the problem and show that the shipped solutions do not work on this platform&rdquo;</em>:</p>
+  <blockquote>
+  <p><strong>How much germline survives tumor-only somatic calling on ONT long reads, and which
+  matched-normal-free signal removes any of it?</strong> — measured across the six cell lines on this
+  server against public truth, over ClairS-TO (<code>H</code>, <code>MultiHap</code>, <code>NoAncestry</code>, and <code>Verdict</code> once
+  built) and DeepSomatic tumor-only, whose outputs already exist.</p>
+  </blockquote>
+  <p>That is a <strong>benchmark</strong> contribution rather than a <strong>method</strong> contribution. <code>PROJECT.md</code> reserves a
+  change of research direction to the researcher. <strong>Nothing has been started on it.</strong></p>
+  <p><strong>Honest position on venue:</strong> benchmarks do reach Genome Biology and Briefings in Bioinformatics,
+  but usually with more breadth than six cell lines and one platform. Do not promise Q1.</p>
+  <hr>
+  <h2>10. Provenance</h2>
+  <p><strong>Run during the day:</strong> the ten-phase survey → 12 documents; environment re-verification (one
+  discrepancy: PyYAML is 6.0.3, the docs say 5.4.1); PDF-level verification of MRDetect; deep research
+  over 80 and then 72 sources; a cross-read of a colleague&rsquo;s work log (4 entries, 20–23 August);
+  <code>EXP-S1-001</code> (3 scripts, 2 result files).</p>
+  <p><strong>Experiment tooling:</strong> pysam 0.24.0, numpy 2.2.6, Python 3.10.12, RNG seed 42. No GPU, no fitted
+  model, no new installation.</p>
+  <p><strong>Cost:</strong> one afternoon, one chromosome, one CPU core.</p>
+  <p><strong>What that cost bought:</strong> the end of a research direction by measurement rather than by argument.
+  No amount of further reading would have found this — the decisive confounder <strong>had already been
+  written down</strong>, as item (i) in the proposal&rsquo;s own confounder list, and was still filed as &ldquo;a caveat
+  to report&rdquo; rather than &ldquo;the thing that could decide the outcome&rdquo;.</p>
+  <hr>
+  <p><em>References: <code>FIND-0002</code>, <code>FIND-0003</code>, <code>FIND-0004</code>, <code>EV-0014</code>, <code>EV-0018</code>, <code>EV-0019</code>,
+  <code>LOG-2026-08-24</code>, <code>EXP-S1-001</code>. Survey documents: <code>00</code>–<code>10</code>, <code>SURVEY_SUMMARY</code>,
+  <code>PUBLICATION-PLAN</code>.</em></p>
+  <p class="footer">Observations are what an artifact showed; interpretations are the researcher&#x27;s reading of them. Internal paths and dataset locations are redacted.</p>
+</div>
+</body>
+</html>
