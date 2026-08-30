@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide pad-std">
+    <div class="slide-label">SIMMA method</div>
+    <h2>One library prep, split in two — four signals out of a single WGS run</h2>
+    <p class="lead">Precision matters here: "multimodal from one sample" is <b class="old">one prep then split into two aliquots</b>, not a single aliquot, and the targeted branch still uses PCR. Everything below is the paper's own assertion.</p>
+
+    <div class="cols" style="gap:16px">
+      <div class="col">
+        <div class="info-card blue" style="margin-bottom:8px">
+          <div class="card-title">Wet lab — one end-repair + A-tailing, then split</div>
+          <div style="font-size:13.5px;line-height:1.65">
+            <b>WGS branch:</b> native barcode &rarr; pool 16&ndash;32 samples &rarr; adapter &rarr; nanopore. <b>No PCR</b>, so the original molecule and its base modifications survive.<br>
+            <b>Targeted branch (optional):</b> PCR + 76-cancer-gene capture panel with UMIs.
+          </div>
+        </div>
+        <table class="ruletable" style="font-size:13.5px">
+          <tr><th>Measured</th><th>Value</th></tr>
+          <tr><td>Minimum input</td><td><b>5 ng</b> total cfDNA</td></tr>
+          <tr><td>Yield vs commercial protocol</td><td>~<b>2x</b></td></tr>
+          <tr class="hl"><td>Yield vs DNA loaded</td><td><b>R = 0.97</b> (predictable, even with unbalanced multiplex)</td></tr>
+          <tr><td>Targeted consensus depth</td><td><b>2,282x</b> effective</td></tr>
+          <tr><td>Targeted error rate</td><td>~<b>5e-4</b></td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <table class="ruletable" style="font-size:13.5px">
+          <tr><th style="width:30%">Signal</th><th>How it is extracted</th><th style="width:26%">Tool</th></tr>
+          <tr><td><b>Copy number &rarr; TF</b></td><td>read depth in 500 kb bins</td><td><code>COPYBARA</code> (works at 0.5x mean cov.)</td></tr>
+          <tr><td><b>Methylation 5mC + 5hmC</b></td><td>from the electrical signal of the molecule itself, <b>no bisulfite</b>; aligned to T2T-CHM13 to reach repeats</td><td>&mdash;</td></tr>
+          <tr><td><b>Fragment length, end motif</b></td><td>read length directly</td><td>&mdash;</td></tr>
+          <tr class="hl"><td><b>SV / ecDNA</b></td><td>breakpoints from long reads, then de novo assembly of the circle</td><td><code>SAVANA</code> + <code>hifiasm</code>, <code>COPYBARA-focal</code></td></tr>
+          <tr><td colspan="3" style="background:#fafafa"><b>Integration:</b> 7 concatenated feature blocks (copy number, methylation at several scales, fragment length, end motif) &rarr; Random Forest &rarr; TF <b>with a per-sample confidence interval</b> (conformal prediction)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Two things not to write wrong: <b>conformal prediction does not make the assay more sensitive</b> — it only changes how the result is reported, and a wide interval means "do not trust this sample". And the tumour-agnostic path contains <b>no SNV feature at all</b>: all 7 blocks are copy number, methylation or fragment length.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>

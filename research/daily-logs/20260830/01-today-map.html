@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide pad-std">
+    <div class="slide-label">Today's map</div>
+    <h2>One paper read, three of my own claims overturned, and the material inventoried</h2>
+    <p class="lead">A first serious pass over the SIMMA preprint (Sauer et al. 2026, medRxiv, <b class="old">not peer reviewed</b>) was turned into a thesis position: what the paper claims, where it stops, and which sentences in my own note would not survive a reviewer. Then the disk was surveyed so the remaining gap can actually be tested.</p>
+
+    <table class="ruletable" style="font-size:15px">
+      <tr><th style="width:23%">Theme</th><th style="width:47%">What moved</th><th style="width:30%">State at end of day</th></tr>
+      <tr>
+        <td><b>A · What SIMMA claims</b></td>
+        <td>Seven problems ordered into a dependency chain; <b>P5 is the hinge</b> — if low-input single-molecule cfDNA fails, nothing else in the paper exists</td>
+        <td class="new-c">Clarified — P5(b) is where the thesis sits</td>
+      </tr>
+      <tr>
+        <td><b>B · What SIMMA does</b></td>
+        <td>One library prep split in two; four signals from a single WGS run; COPYBARA / SAVANA+hifiasm / RF+conformal</td>
+        <td class="new-c">Mechanism mapped, 2 caveats fixed</td>
+      </tr>
+      <tr class="hl">
+        <td><b>C · Claims that must survive the defence</b></td>
+        <td>"short-read cannot dig into plasma biology" and "ecDNA is a free 24th chromosome" — both <b class="old">overturned</b> and replaced</td>
+        <td class="old-c">Replacement claims fixed; counter-arguments still unwritten</td>
+      </tr>
+      <tr>
+        <td><b>D · Note correction loop on <code>30.md</code></b></td>
+        <td>4 issues named against the paper's own wording, copy-over rewrite supplied</td>
+        <td>2 fixed, 1 partly, <span class="old-c">1 unfixed</span></td>
+      </tr>
+      <tr>
+        <td><b>E · Material and operating point</b></td>
+        <td>Disk holds <b>two</b> 14-BAM dilution series (~2.1 TB), not the one the docs record; signal comparison gated behind arithmetic at 25x, TF=1e-4</td>
+        <td class="old-c">Inventory done; Question 1 unanswered</td>
+      </tr>
+    </table>
+
+    <div class="cols" style="gap:14px;margin-top:12px">
+      <div class="col"><div class="info-card blue"><div class="card-title">Where the day was spent</div><div style="font-size:13px;line-height:1.6">3 working sessions, 21 turns, 15:03&ndash;20:39 Taipei, all in <code>/big8_disk/hung114/ONT_MRD</code>. Two ran in parallel on the same paper; the third opened the experimental thread.</div></div></div>
+      <div class="col"><div class="info-card green"><div class="card-title">What is now settled</div><div style="font-size:13px;line-height:1.6">SIMMA integrates modalities at <b>sample level</b>; the thesis targets <b>molecule level</b>. ecDNA is context, not implementation. The ONT premise is material cost, not depth of insight.</div></div></div>
+      <div class="col"><div class="info-card yellow"><div class="card-title">What decides tomorrow</div><div style="font-size:13px;line-height:1.6">Three questions were put to me and left unanswered: the TF=1e-4 arithmetic, the <code>30.md</code> overwrite, and the COLO829_PAO registry. Everything else queues behind them.</div></div></div>
+    </div>
+
+    <div class="takeaway">Takeaway: the day's real product is not paper notes but <b>a shorter list of things I am allowed to claim</b> — and one arithmetic question that decides whether the multimodal comparison is worth any compute at all.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>

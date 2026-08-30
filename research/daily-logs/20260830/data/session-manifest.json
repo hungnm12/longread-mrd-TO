@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "report_kind": "daily",
+  "report_date": "2026-08-30",
+  "selected_tool": "all",
+  "source_mode": "scan",
+  "sessions": [
+    {
+      "source": "claude",
+      "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/d6b1f878-b601-4756-835b-f5b9a4992c49.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-08-30T07:03:13.455Z",
+      "ended_at": "2026-08-30T11:42:25.249Z",
+      "turn_count": 8
+    },
+    {
+      "source": "claude",
+      "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/5a081983-86c3-4800-9831-7b33599ea8a1.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-08-30T07:29:11.824Z",
+      "ended_at": "2026-08-30T12:56:13.405Z",
+      "turn_count": 10
+    },
+    {
+      "source": "claude",
+      "session_id": "f4fb3dd7-99bf-4b47-b03f-57ba3307cb77",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/f4fb3dd7-99bf-4b47-b03f-57ba3307cb77.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-08-30T12:30:56.184Z",
+      "ended_at": "2026-08-30T12:39:18.075Z",
+      "turn_count": 4
+    },
+    {
+      "source": "claude",
+      "session_id": "3870f36f-b2a0-4023-9e3e-9af86c314291",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/3870f36f-b2a0-4023-9e3e-9af86c314291.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-08-30T12:54:34.598Z",
+      "ended_at": "2026-08-30T13:51:10.377Z",
+      "turn_count": 22
+    }
+  ]
+}

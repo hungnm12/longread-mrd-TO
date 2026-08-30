@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<style>
+.d7 .ruletable th, .d7 .ruletable td { padding:4px 7px; }
+.d7 .info-card { padding:8px 12px; }
+.d7 .lead { margin-bottom:8px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d7">
+    <div class="slide-label">Material on disk</div>
+    <h2>The disk holds two complete dilution series, not one &mdash; the docs are behind</h2>
+    <p class="lead">Surveyed on disk directly, not read from documentation. Every dilution BAM carries a <code>.meta.json</code> with real provenance (actual <code>tumor_fraction</code>, seed, fraction, the <code>samtools merge</code> command, tool version); verify logs show depth ~25.0x, <code>primary_dup=0</code>, <code>MM/ML=present</code> throughout.</p>
+
+    <div class="cols" style="gap:16px">
+      <div class="col">
+        <table class="ruletable" style="font-size:12px">
+          <tr><th colspan="3" style="background:#e6f4ff;color:#003a8c">1 &middot; Source BAMs &mdash; ONT with methylation (5mC + 5hmC)</th></tr>
+          <tr><th style="width:44%">File</th><th style="width:16%">Size</th><th>Role</th></tr>
+          <tr><td><code>HCC1395.bam</code></td><td>292 GB</td><td>Pure tumour &mdash; discovery candidate</td></tr>
+          <tr><td><code>HCC1395BL.bam</code></td><td>149 GB</td><td class="old-c">Matched normal &mdash; evaluation only, never an inference input</td></tr>
+          <tr><td><code>COLO829/ONT_PAO/PAO29420.bam</code></td><td>100 GB</td><td>Tumour</td></tr>
+          <tr><td><code>COLO829/ONT_PAO/PAO33946.bam</code></td><td>125 GB</td><td>Normal. Ships with ClairS v0.4.0/0.4.1, ClairS-TO v0.3.0, DeepSomatic(-TO) v1.8.0</td></tr>
+          <tr><th colspan="3" style="background:#e6f4ff;color:#003a8c">2 &middot; Dilution series &mdash; <code>/bip7_disk/pingting114/mixed_bam/</code></th></tr>
+          <tr><th>Set</th><th>BAMs</th><th>Levels / replicates</th></tr>
+          <tr><td><code>HCC1395/</code></td><td><b>14</b> &middot; ~1.06 TB</td><td>TF0, 1e-2, 1e-3, 1e-4 @25x &mdash; 5 blank + 3/3/3</td></tr>
+          <tr class="hl"><td><code>COLO829_PAO/</code></td><td><b>14</b> &middot; ~1.03 TB</td><td>Same layout &mdash; <b>created 2026-08-23/24</b></td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <table class="ruletable" style="font-size:12px">
+          <tr><th colspan="2" style="background:#e6f4ff;color:#003a8c">3 &middot; Truth / benchmark &mdash; evaluation only</th></tr>
+          <tr><td><code>HCC1395/SEQC2/</code></td><td>high-confidence sSNV + sINDEL v1.2.1, merged VCF, <code>High-Confidence_Regions_v1.2.bed</code>, <code>CNV/</code></td></tr>
+          <tr><td><code>colo829_nygc/</code></td><td><code>colo829_truth.vcf.gz</code> + Illumina BAM 50x / BL 25x</td></tr>
+          <tr><th colspan="2" style="background:#e6f4ff;color:#003a8c">4 &middot; PoN / population</th></tr>
+          <tr><td><code>PON/clairs-to_databases/</code></td><td>gnomAD r2.1, dbSNP b138 non-somatic, 1000g-PoN, <b>CoLoRSdb</b> (long-read &mdash; notable for ONT artefacts)</td></tr>
+          <tr><th colspan="2" style="background:#e6f4ff;color:#003a8c">5 &middot; Reference &amp; unused lines</th></tr>
+          <tr><td><code>GRCh38_no_alt_analysis_set.fasta</code></td><td>3.14 GB + <code>.fai</code>, matches the BAM headers</td></tr>
+          <tr><td>Unused cell lines</td><td><code>H1437</code>, <code>H2009</code>, <code>HCC1937</code>, <code>HCC1954</code></td></tr>
+        </table>
+
+        <div class="info-card red" style="margin-top:10px">
+          <div class="card-title">Two doc/disk drifts found &mdash; both unfixed</div>
+          <div style="font-size:11.5px;line-height:1.55">
+            <b>1.</b> <code>mrd/configs/datasets/hcc1395_dilution.yaml</code> registers only <b>rep1 per level (4 samples)</b> and says <code>replicates: 1</code>. There are <b>14</b> BAMs. <code>datasets.md</code> already carries a 2026-08-20 correction about this; the config never followed.<br>
+            <b>2.</b> No <code>configs/datasets/colo829_pao_dilution.yaml</code> exists at all. <code>datasets.md</code> (surveyed <b>2026-08-19</b>) still calls a second cell line "potential material" &mdash; it has been fully on disk since <b>2026-08-23/24</b>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">Takeaway: the second cell line is not a plan, it is <b>14 verified BAMs sitting on disk</b> &mdash; the material for <code>issues/17-second-cell-line.md</code>. The registry should be written from the 12 <code>.meta.json</code> files so it carries <b>real</b> tumour fractions, not the nominal ratios.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+</script>
+</body>
+</html>

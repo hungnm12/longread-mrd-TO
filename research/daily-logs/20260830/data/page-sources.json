@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "report_kind": "daily",
+  "report_date": "2026-08-30",
+  "manifest": "session-manifest.json",
+  "pages": [
+    {
+      "page": "01-today-map.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        },
+        {
+          "source": "claude",
+          "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1"
+        },
+        {
+          "source": "claude",
+          "session_id": "f4fb3dd7-99bf-4b47-b03f-57ba3307cb77"
+        }
+      ]
+    },
+    {
+      "page": "02-simma-problem-structure.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        }
+      ]
+    },
+    {
+      "page": "03-simma-method.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        },
+        {
+          "source": "claude",
+          "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1"
+        }
+      ]
+    },
+    {
+      "page": "04-shortread-premise.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1"
+        }
+      ]
+    },
+    {
+      "page": "05-ecdna-model.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1"
+        }
+      ]
+    },
+    {
+      "page": "06-note-corrections.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1"
+        },
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        }
+      ]
+    },
+    {
+      "page": "07-datasets-inventory.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "f4fb3dd7-99bf-4b47-b03f-57ba3307cb77"
+        }
+      ]
+    },
+    {
+      "page": "08-signal-arithmetic.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "f4fb3dd7-99bf-4b47-b03f-57ba3307cb77"
+        }
+      ]
+    },
+    {
+      "page": "09-open-decisions.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        },
+        {
+          "source": "claude",
+          "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1"
+        },
+        {
+          "source": "claude",
+          "session_id": "f4fb3dd7-99bf-4b47-b03f-57ba3307cb77"
+        }
+      ]
+    },
+    {
+      "page": "10-open-backlog.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        },
+        {
+          "source": "claude",
+          "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1"
+        },
+        {
+          "source": "claude",
+          "session_id": "f4fb3dd7-99bf-4b47-b03f-57ba3307cb77"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<style>
+  .np { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:11.5px; line-height:1.55;
+        white-space:pre-wrap; margin:0; padding:8px 10px; border-radius:5px; }
+  .np.bad  { background:#fff1f0; border:1px solid #ffa39e; color:#5c1a1a; }
+  .np.good { background:#f6ffed; border:1px solid #b7eb8f; color:#1a4d1a; }
+  .d6 .ruletable th, .d6 .ruletable td { padding:5px 8px; }
+  .d6 .lead { margin-bottom:8px; }
+  .d6 .np { font-size:12px; padding:7px 9px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d6">
+    <div class="slide-label">Note correction loop</div>
+    <h2>Four issues in <code>30.md</code> checked against the paper's own wording &mdash; two closed the same day</h2>
+    <p class="lead">The structure of the note was right (it separates "the field's problems" from "SIMMA's problems" exactly as the paper does). The content errors were reversals of meaning, not typos &mdash; the kind that get caught in a defence.</p>
+
+    <table class="ruletable" style="font-size:12.5px">
+      <tr><th style="width:20%">Issue</th><th style="width:25%">What the note said</th><th style="width:33%">What the paper says</th><th style="width:22%">State on disk, 20:56</th></tr>
+      <tr><td><b>1 &mdash; reversed meaning</b></td><td><code>similarity</code> between tumor sites</td><td>misses intra-/inter-site <b>heterogeneity</b> &mdash; the opposite word</td><td class="new-c">Fixed</td></tr>
+      <tr><td><b>2 &mdash; wrong metric</b></td><td>"less specify and mutants may become a noise background problem"</td><td>agnostic has <b>lower sensitivity</b>; mutation-based variants separately <b>lose specificity</b> to <b>non-neoplastic clonal expansions</b> &mdash; two failures, merged into one</td><td class="old-c">Half fixed &mdash; specificity clause still merged in</td></tr>
+      <tr><td><b>3 &mdash; wrong term</b></td><td>cannot read through <code>overlapping</code> region</td><td>blind to <b>repetitive</b> regions. "Overlapping reads" means something else here, and something good</td><td class="new-c">Fixed</td></tr>
+      <tr><td><b>4 &mdash; wrong category</b></td><td>ecDNA is a "cancer-gathered <b>chromosome</b>"</td><td>circular and <b>acentric</b>; calling it a chromosome erases the reason it is dangerous</td><td>Partly &mdash; now "fragment", still no <i>circular / acentric</i></td></tr>
+      <tr class="hl"><td><b>5 &mdash; missing section</b></td><td>note stopped at P4</td><td><b>P5 is the hinge</b>: (a) no low-input protocol, (b) no computational method for integration. Without it the note never says what SIMMA contributes</td><td class="new-c">Added</td></tr>
+      <tr><td><b>6 &mdash; missing caveat</b></td><td>&mdash;</td><td>a medRxiv preprint, <b>not peer reviewed</b>; <code>sauer-2026-simma.md</code> says it is "not a licence to write 'SIMMA achieves X'"</td><td class="old-c">Not added</td></tr>
+    </table>
+
+    <div class="cols" style="gap:16px;margin-top:8px">
+      <div class="col">
+        <div style="font-size:11.5px;font-weight:700;color:#a8071a;margin-bottom:4px">Still on disk (line 5)</div>
+        <pre class="np bad">- tumor-agnostic (tumor-only) is scalable but has
+  lower sensitivity and mutants may become a noise
+  background problem for filtering</pre>
+      </div>
+      <div class="col">
+        <div style="font-size:11.5px;font-weight:700;color:#135200;margin-bottom:4px">Replacement supplied</div>
+        <pre class="np good">- tumour-agnostic scales but has lower sensitivity;
+  mutation-based variants additionally lose specificity,
+  because non-neoplastic clonal expansions shed
+  mutation-bearing cfDNA that mimics tumour signal</pre>
+      </div>
+    </div>
+
+    <div class="takeaway warn">This is the exact problem my <b>oracle-free tumour-only</b> topic sits inside &mdash; getting sensitivity and specificity merged here costs the most marks of any error on the list. Also still missing from line 3: <b>"cannot be sampled serially"</b>, which for MRD is the most important half, since MRD <i>is</i> repeated monitoring.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+</script>
+</body>
+</html>

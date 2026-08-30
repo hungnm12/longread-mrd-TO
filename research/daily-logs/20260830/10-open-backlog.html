@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<style>
+  .d10 .ruletable th, .d10 .ruletable td { padding:5px 9px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d10">
+    <div class="slide-label">Open items</div>
+    <h2>Six things already known and simply not done</h2>
+    <p class="lead">None of these needs a decision. Four of them are edits to <code>30.md</code> and one config file, and they close the moment decision&nbsp;#2 on the previous page is answered.</p>
+
+    <table class="ruletable" style="font-size:13px">
+      <tr><th style="width:5%">#</th><th style="width:34%">Item</th><th style="width:32%">Stuck where</th><th style="width:29%">Consequence if left</th></tr>
+
+      <tr><th colspan="4" style="background:#e6f4ff;color:#003a8c">Known, small, simply not done</th></tr>
+      <tr class="hl"><td>5</td><td><code>30.md</code> line 5: split <b>lower sensitivity</b> from <b>loss of specificity to non-neoplastic clonal expansions</b></td><td>Flagged 16:03, replacement supplied; only the sensitivity half applied</td><td>The costliest error on the list &mdash; it is this topic's own problem</td></tr>
+      <tr><td>6</td><td><code>30.md</code> line 3: add <b>"cannot be sampled serially"</b></td><td>Flagged, not applied</td><td>Drops the half of P1 that motivates MRD &mdash; MRD <i>is</i> repeated monitoring</td></tr>
+      <tr><td>7</td><td><code>30.md</code>: add the <b>"medRxiv preprint, not peer reviewed"</b> source caveat</td><td>Flagged, not applied</td><td>The note gets cited as verified &mdash; the exact failure <code>sauer-2026-simma.md</code> warns about</td></tr>
+      <tr><td>8</td><td><code>30.md</code> line 13: ecDNA still lacks <b>circular / acentric / random segregation</b></td><td>"chromosome" became "fragment"; the rest was not carried over</td><td>No longer wrong, but no longer says why ecDNA matters</td></tr>
+      <tr class="hl"><td>9</td><td><code>configs/datasets/hcc1395_dilution.yaml</code>: registers 4 of 14 BAMs, <code>replicates: 1</code></td><td>Known since the 2026-08-20 <code>datasets.md</code> correction; config never followed</td><td>Any run silently uses a quarter of the available replicates</td></tr>
+
+      <tr><th colspan="4" style="background:#f5f5f5;color:#595959">Raised in discussion, unscheduled</th></tr>
+      <tr><td>10</td><td>Name <b>EM-seq</b> and <b>Duet / TAPS</b> in the thesis; move the ONT argument to end-motif + native fragment length at single-molecule resolution</td><td>Identified as a defence risk; no text written</td><td>A reviewer raises it instead, and the chapter-1 premise wobbles</td></tr>
+      <tr><td>11</td><td>Re-search the novelty claim for <b>same-molecule co-occurrence of &ge;2 variants</b>, dated at submission</td><td><code>02-literature-landscape.md</code> already warns the landscape moves fast (Lumos, TumorLens, ecDNA cfDNA monitoring)</td><td>The novelty claim may already be stale by submission</td></tr>
+    </table>
+
+    <div class="takeaway">Takeaway: items 5&ndash;8 are all the same edit to the same file, and item 9 is one line in one YAML. <b>Five of the six close in under an hour</b> &mdash; they are not hard, they are just unowned.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+</script>
+</body>
+</html>

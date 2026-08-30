@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<style>
+.d5 .ruletable th, .d5 .ruletable td { padding:5px 8px; }
+.d5 .info-card { padding:8px 12px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d5">
+    <div class="slide-label">Thesis premise</div>
+    <h2>ecDNA is not a 24th chromosome &mdash; and the word "chromosome" deletes the whole argument</h2>
+    <p class="lead">My working model was "one of the 23 chromosomes gets torn off and becomes a free 24th chromosome". About <b>70% right</b>: origin and lawlessness are correct, the rest is not &mdash; and the part that is wrong is the part that matters.</p>
+
+    <table class="ruletable" style="font-size:12px">
+      <tr><th style="width:26%">What I said</th><th style="width:8%">Verdict</th><th>What is actually the case</th><th style="width:26%">Why the correction matters</th></tr>
+      <tr><td>Originates from chromosomal DNA</td><td class="new-c">Correct</td><td>Yes &mdash; more precisely, the tearing-apart <i>causes</i> the cancer, it does not follow it</td><td>&mdash;</td></tr>
+      <tr><td>Outside, free, follows no rules</td><td class="new-c">Correct</td><td>Keep this instinct &mdash; it is exactly right</td><td>&mdash;</td></tr>
+      <tr class="hl"><td>Comes from <b>one</b> chromosome</td><td class="old-c">Usually not</td><td><b>Chromothripsis</b>: a chromosome shatters into hundreds of pieces and fragments &mdash; often from several chromosomes, some inverted, plus a hijacked enhancer &mdash; are stitched back into a circle</td><td>This is why <code>SAVANA</code> (breakpoints) + <code>hifiasm</code> (assembly) are needed at all. A clean excision would only need copy number</td></tr>
+      <tr class="hl"><td>There is <b>one</b> of them</td><td class="old-c">Wrong</td><td>Cell A: 800 copies. Cell B next to it: 120. Cell C: 0. <b>There is no "copy number for this patient"</b>, only a distribution with enormous variance</td><td>You are not measuring a scalar &mdash; ">800 copies" is a mean inferred from the mixed signal of millions of dead cells</td></tr>
+      <tr class="hl"><td>It is a <b>chromosome</b></td><td class="old-c">Fatal</td><td>It has <b>no centromere</b> &mdash; it is <b>acentric</b>, so the mitotic spindle cannot grip it and it segregates <b>randomly</b>. Size ~1&ndash;3 Mb vs chr21's ~46.7 Mb</td><td>The missing centromere <i>is</i> the danger: random segregation manufactures population diversity every division, which is how the tumour escapes therapy</td></tr>
+    </table>
+
+    <div class="cols" style="gap:16px;margin-top:10px">
+      <div class="col">
+        <div class="info-card blue">
+          <div class="card-title">The sentence that can go into the thesis</div>
+          <div style="font-size:12px;line-height:1.55">ecDNA is a circular, <b>acentric</b> DNA element assembled from fragments of one or more chromosomes (chromothripsis); lacking a centromere it segregates randomly at mitosis, so copy number per cell is a random variable from 0 to thousands. ecDNA-derived molecules enter plasma as ctDNA.</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="info-card yellow">
+          <div class="card-title">The trap in the paper &mdash; do not get this backwards</div>
+          <div style="font-size:12px;line-height:1.55">"ecDNA is 1 Mb, so long reads read the whole circle" is <b>wrong</b>, and SIMMA says so itself: in cfDNA ecDNA is <i>fragmented like chromosomal DNA</i> and is <b>not</b> the source of the longest fragments or the hypomethylation. Long reads win by <b>spanning breakpoints inside repeats</b> &mdash; and by a clean copy-number spike: <b>&gt;800 MYCN copies at 0.6x coverage</b>, assembly 1.3 Mb / 6 contigs, N50 843,316 bp.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">Scope call taken today: this thesis's core contribution is <b>same-molecule co-occurrence of &ge;2 variants on one long read</b> &mdash; that is not ecDNA. ecDNA stays <b>context</b> (why long reads are worth it, and what SIMMA already claimed), <b>not something to implement</b>. That call saves weeks, and is worth confirming with the professor.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+</script>
+</body>
+</html>

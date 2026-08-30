@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide pad-std">
+    <div class="slide-label">SIMMA problem structure</div>
+    <h2>The seven problems are not equal — P5 carries the paper</h2>
+    <p class="lead">P1–P2 are the opening of every liquid-biopsy paper and explain nothing about this one. P3–P4 are SIMMA's own. <b class="new">P5 is the hinge</b>: single-molecule sequencing solves P3+P4 in principle but was unrealised, and P6–P7 only open once P5 is solved.</p>
+
+    <div class="mermaid" style="width:100%;">
+%%{init: {"themeVariables": {"fontSize":"15px"}}}%%
+flowchart LR
+    subgraph G["Generic to the field"]
+      P1["P1 - tissue not always<br/>obtainable, not serial,<br/>misses intra/inter-site<br/>heterogeneity"]
+      P2["P2 - informed = ppm but<br/>needs tissue; agnostic<br/>scales but lower sensitivity<br/>+ loses specificity"]
+    end
+    subgraph S["SIMMA's own"]
+      P3["P3 - multimodal needs<br/>N assays = N aliquots;<br/>paediatric plasma is<br/>a few ng. Physical."]
+      P4["P4 - short reads blind to<br/>repetitive regions, long<br/>fragments, complex SVs<br/>=> ecDNA undetectable"]
+    end
+    P5["P5 - THE HINGE<br/>single-molecule solves both<br/>in principle, but lacks:<br/>(a) low-input protocol<br/>(b) multimodal integration"]
+    subgraph O["Only open after P5"]
+      P6["P6 - AI reports global<br/>metrics, cannot say if<br/>THIS sample is trustworthy"]
+      P7["P7 - paediatric relapse /<br/>metastasis; brain tumours<br/>shed almost nothing"]
+    end
+    P3 --> P5
+    P4 --> P5
+    P5 --> P6
+    P5 --> P7
+    P1 -.-> P3
+    P2 -.-> P4
+    classDef gen fill:#f5f5f5,stroke:#bfbfbf,color:#595959;
+    classDef own fill:#e6f4ff,stroke:#1677ff,color:#003a8c;
+    classDef hinge fill:#fffbe6,stroke:#faad14,color:#613400,stroke-width:3px;
+    classDef post fill:#f6ffed,stroke:#52c41a,color:#135200;
+    class P1,P2 gen;
+    class P3,P4 own;
+    class P5 hinge;
+    class P6,P7 post;
+    </div>
+
+    <div class="cols" style="gap:14px;margin-top:6px">
+      <div class="col"><div class="info-card yellow"><div class="card-title">Why P5 is the hinge, in the project's own words</div><div style="font-size:13px;line-height:1.6">"P5 is the hinge &mdash; if low-input single-molecule cfDNA does not work, nothing else in the paper exists." Everything downstream (per-sample confidence, paediatric relapse, CSF for brain tumours) is conditional on it.</div></div></div>
+      <div class="col"><div class="info-card red"><div class="card-title">What P1&ndash;P2 are not</div><div style="font-size:13px;line-height:1.6">They open every liquid-biopsy paper, so quoting them explains nothing about SIMMA. A note that stops at P1&ndash;P4 answers "what are the problems" but never "what did this paper contribute".</div></div></div>
+    </div>
+
+    <div class="takeaway">Takeaway: SIMMA fills <b>P5(b)</b> with Random Forest + conformal prediction over concatenated covariate blocks — that is integration at <b>sample level</b>. The gap left is integration at <b>molecule level</b>, which is exactly where this thesis sits.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>
