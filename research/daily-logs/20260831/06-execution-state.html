@@ -11,47 +11,38 @@
 <div class="wrap">
 <!-- SLIDE:START -->
 <div class="slide-outer">
-  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:8px;">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:12px;">
     <div class="slide-label">Execution state</div>
-    <h2 style="font-size:26px;margin:0 0 2px;">28 BAM passes launched with provenance captured first &mdash; and every log carries an unexplained base-modification error</h2>
-    <p class="lead">Execution began at 16:20 local under locked protocol v1.0. Provenance was written <b>before</b> any result, exactly as the protocol requires. As of <b>16:39</b>, <b>14 of 28 passes have finished, all with exit code 0</b>, at ~580&nbsp;s each; the COLO829_PAO half is still running on 13 workers.</p>
+    <h2 style="font-size:26px;margin:0 0 2px;">The run finished clean, and reproduced a months-old result to four figures</h2>
+    <p class="lead">16:24 &rarr; 17:02 local. <b>42 BAM passes, 0 failures, 21,043&nbsp;s CPU</b> (mean 513&nbsp;s), 27/27 artifacts written and checksummed, 5 deviations all classified <code>Methodology changed: NO</code>.</p>
 
-    <div style="display:flex;gap:16px;align-items:stretch;">
-      <div style="flex:1.15;display:flex;flex-direction:column;gap:6px;">
-        <div style="font-size:13.5px;font-weight:700;color:#262626;">What was launched</div>
-        <table class="ruletable" style="font-size:13.5px;">
-          <tr><th style="width:118px;">Item</th><th>Detail</th></tr>
-          <tr><td>Primary passes</td><td><b>28</b> = 2 individuals &times; (5 blanks + 9 dilutions) &mdash; HCC1395 and COLO829_PAO at TF0 / 1e-2 / 1e-3 / 1e-4, 25&times;</td></tr>
-          <tr><td>Parallelism</td><td>1 smoke pass + <b>27</b> via <code>xargs -P 13</code>; 14 workers observed concurrently, as the locked protocol constrains</td></tr>
-          <tr class="hl"><td>Not launched</td><td><b class="old">Exploratory COLO829 chr1 arm</b> &mdash; 14 further passes, declared in <code>jobs_exploratory.txt</code>, never started</td></tr>
-          <tr><td>Provenance</td><td><code>inputs_manifest.tsv</code>, <code>feature_provenance.tsv</code>, <code>random_seeds.yaml</code>, <code>split_manifest.tsv</code>, <code>candidate_universe.tsv</code>, <code>environment.txt</code>, <code>pg_chains.txt</code>, <code>execution_manifest.yaml</code></td></tr>
-          <tr><td>Statistics</td><td><code>statistical_tests.tsv</code> records <code>test: NONE</code> with the reason: 3 replicates are subsamples of one library, so a p-value would have a denominator known to be wrong (FIND-0018/EV-0038)</td></tr>
+    <div style="display:flex;gap:14px;align-items:stretch;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#135200;">Reproducibility &mdash; two implementations written months apart</div>
+        <table class="ruletable" style="font-size:15.5px;">
+          <tr><th>Quantity (HCC1395 TF0 rep1)</th><th style="width:105px;">EXP-S1-022</th><th style="width:105px;">This run</th></tr>
+          <tr><td>consensus positions</td><td>1,153,835</td><td class="new-c">1,153,835</td></tr>
+          <tr><td>confident positions</td><td>353,719</td><td class="new-c">353,719</td></tr>
+          <tr><td>cut / gated / kept</td><td>0.0769 / 39 / 10</td><td class="new-c">0.0769 / 39 / 10</td></tr>
+          <tr class="hl"><td><code>zlo_min</code> B0 at 0.1%</td><td>+0.74</td><td class="new-c">+0.7396</td></tr>
+          <tr class="hl"><td><code>zlo_min</code> B1 at 0.1%</td><td>+2.30</td><td class="new-c">+2.2995</td></tr>
         </table>
       </div>
 
-      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
-        <div style="font-size:13.5px;font-weight:700;color:#a8071a;">What the logs actually say</div>
-        <pre style="margin:0;font-size:11.5px;line-height:1.45;background:#fff1f0;border:1px solid #ffccc7;border-radius:4px;padding:8px 10px;overflow:hidden;">$ grep -oE '\[[EW]::[a-z_0-9]+\]' smoke.err \
-    | sort | uniq -c
-
-   <b>1935 [E::bam_parse_basemod2]</b>
-   3199 [W::hts_idx_load3]
-
-[E::bam_parse_basemod2] 89606cc1-c54f-...:
-  <b>MM/MN data length is incompatible
-  with SEQ length</b>
-
-[W::hts_idx_load3] The index file is older
-  than the data file:
-  .../HCC1395/TF0_25x/TF0_25x.rep2.bam.bai</pre>
-        <div class="info-card red" style="font-size:12.5px;">
-          <div class="card-title">Why this matters</div>
-          The benchmark's whole treatment arm reads MM/ML base-modification tags. 1,935 reads in a single 25&times; pass had their tags rejected outright &mdash; and the protocol has no missingness rule written for <i>this</i> failure mode.
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#135200;">Leakage &mdash; verified by evidence, not declared</div>
+        <div class="info-card green" style="font-size:14.5px;">
+          <div class="card-title">31 paths opened by 42 workers, all captured</div>
+          28 dilution BAMs + 2 candidate frames + <code>mrdz/score.py</code>. <b>No matched-normal BAM, no SEQC2 or orthogonal truth VCF, no panel of normals, no population database.</b> Consensus, confident-position set and cutoff are fitted per sample on that sample alone.
+        </div>
+        <div class="info-card yellow" style="font-size:14.5px;">
+          <div class="card-title">Negative results kept, not dropped</div>
+          0.01% not detected in any arm (<code>z_lo</code> &minus;4.11 to +0.38). The exploratory COLO829 chr1 arm is reported <b>degenerate</b> &mdash; consensus 97,789 vs the primary run's 1,153,835, every blank yields zero kept ALT reads &rarr; <code>no estimate</code>. Exactly the consensus-limited failure review_003 predicted in advance.
         </div>
       </div>
     </div>
 
-    <div class="takeaway warn">Takeaway: the run is healthy &mdash; but <b>the smoke pass has still not been compared against the prior EXP-S1-022 result</b>, which is the one check that the reimplementation matches the frozen one. <code>workflow_state.yaml</code> remains at <code>EXECUTION</code>, <code>execution_iteration: 0</code>; nothing has been aggregated and QC has not been reached.</div>
+    <div class="takeaway">Takeaway: nothing about the execution is in dispute &mdash; and that is what makes the next page's finding a <b>methodology</b> finding rather than a bug.</div>
   </div>
 </div>
 <!-- SLIDE:END -->

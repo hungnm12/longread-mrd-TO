@@ -311,8 +311,8 @@ body.slides .nav-toggle { display: flex; }
 <div class="slide-outer">
   <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:10px;">
     <div class="slide-label">Today's map</div>
-    <h2 style="font-size:26px;margin:0 0 2px;">Two threads, one sentence: methylation is the only addable signal — and it became a locked experiment the same day</h2>
-    <p class="lead">Five sessions, 2026-08-31. A paper-reading thread and an autonomous benchmark thread ran in parallel and landed on the same conclusion. Nothing was committed; the run is still in flight.</p>
+    <h2 style="font-size:26px;margin:0 0 2px;">Methylation went from "the one addable signal" to a locked benchmark, a positive result, and a QC refusal — in one day</h2>
+    <p class="lead">Five sessions, 2026-08-31. A paper-reading thread and an autonomous benchmark thread ran in parallel and landed on the same conclusion. The benchmark then ran to completion and its own QC sent it back. Nothing is committed.</p>
 
     <table class="ruletable" style="font-size:16.5px;">
       <tr><th style="width:170px;">Theme</th><th>What moved</th><th style="width:250px;">Representative evidence</th><th style="width:150px;">State at end of day</th></tr>
@@ -329,10 +329,10 @@ body.slides .nav-toggle { display: flex; }
         <td><b>Done</b> — checksum recorded, nothing committed</td>
       </tr>
       <tr class="hl">
-        <td><b>Execution state</b><br><span style="font-size:12px;color:#888;">1 task · 16:20–16:26</span></td>
+        <td><b>Execution &amp; QC</b><br><span style="font-size:12px;color:#888;">2 tasks · 16:20&ndash;17:10</span></td>
         <td>28 BAM passes launched at parallelism 13–14 with inputs, seeds, feature provenance and environment captured before any number existed.</td>
-        <td>1,935 <code>MM/MN data length is incompatible</code> errors in one pass · <code>execution/raw/</code> empty after 8 min</td>
-        <td><b class="old">Unfinished</b> — QC stage not entered</td>
+        <td>42 passes, 0 failures, 21,043 s CPU · reproduced EXP-S1-022 to 4 figures · S1&ndash;S4 all HELD &rarr; <b>H1 SUPPORTED</b></td>
+        <td><b class="old">REDESIGN_REQUIRED</b> &mdash; result preserved, not usable yet</td>
       </tr>
     </table>
 
@@ -573,82 +573,174 @@ body.slides .nav-toggle { display: flex; }
 </div>
 
 <div class="slide-outer">
-  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:8px;">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:12px;">
     <div class="slide-label">Execution state</div>
-    <h2 style="font-size:26px;margin:0 0 2px;">28 BAM passes launched with provenance captured first &mdash; and every log carries an unexplained base-modification error</h2>
-    <p class="lead">Execution began at 16:20 local under locked protocol v1.0. Provenance was written <b>before</b> any result, exactly as the protocol requires. As of <b>16:39</b>, <b>14 of 28 passes have finished, all with exit code 0</b>, at ~580&nbsp;s each; the COLO829_PAO half is still running on 13 workers.</p>
+    <h2 style="font-size:26px;margin:0 0 2px;">The run finished clean, and reproduced a months-old result to four figures</h2>
+    <p class="lead">16:24 &rarr; 17:02 local. <b>42 BAM passes, 0 failures, 21,043&nbsp;s CPU</b> (mean 513&nbsp;s), 27/27 artifacts written and checksummed, 5 deviations all classified <code>Methodology changed: NO</code>.</p>
 
-    <div style="display:flex;gap:16px;align-items:stretch;">
-      <div style="flex:1.15;display:flex;flex-direction:column;gap:6px;">
-        <div style="font-size:13.5px;font-weight:700;color:#262626;">What was launched</div>
-        <table class="ruletable" style="font-size:13.5px;">
-          <tr><th style="width:118px;">Item</th><th>Detail</th></tr>
-          <tr><td>Primary passes</td><td><b>28</b> = 2 individuals &times; (5 blanks + 9 dilutions) &mdash; HCC1395 and COLO829_PAO at TF0 / 1e-2 / 1e-3 / 1e-4, 25&times;</td></tr>
-          <tr><td>Parallelism</td><td>1 smoke pass + <b>27</b> via <code>xargs -P 13</code>; 14 workers observed concurrently, as the locked protocol constrains</td></tr>
-          <tr class="hl"><td>Not launched</td><td><b class="old">Exploratory COLO829 chr1 arm</b> &mdash; 14 further passes, declared in <code>jobs_exploratory.txt</code>, never started</td></tr>
-          <tr><td>Provenance</td><td><code>inputs_manifest.tsv</code>, <code>feature_provenance.tsv</code>, <code>random_seeds.yaml</code>, <code>split_manifest.tsv</code>, <code>candidate_universe.tsv</code>, <code>environment.txt</code>, <code>pg_chains.txt</code>, <code>execution_manifest.yaml</code></td></tr>
-          <tr><td>Statistics</td><td><code>statistical_tests.tsv</code> records <code>test: NONE</code> with the reason: 3 replicates are subsamples of one library, so a p-value would have a denominator known to be wrong (FIND-0018/EV-0038)</td></tr>
+    <div style="display:flex;gap:14px;align-items:stretch;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#135200;">Reproducibility &mdash; two implementations written months apart</div>
+        <table class="ruletable" style="font-size:15.5px;">
+          <tr><th>Quantity (HCC1395 TF0 rep1)</th><th style="width:105px;">EXP-S1-022</th><th style="width:105px;">This run</th></tr>
+          <tr><td>consensus positions</td><td>1,153,835</td><td class="new-c">1,153,835</td></tr>
+          <tr><td>confident positions</td><td>353,719</td><td class="new-c">353,719</td></tr>
+          <tr><td>cut / gated / kept</td><td>0.0769 / 39 / 10</td><td class="new-c">0.0769 / 39 / 10</td></tr>
+          <tr class="hl"><td><code>zlo_min</code> B0 at 0.1%</td><td>+0.74</td><td class="new-c">+0.7396</td></tr>
+          <tr class="hl"><td><code>zlo_min</code> B1 at 0.1%</td><td>+2.30</td><td class="new-c">+2.2995</td></tr>
         </table>
       </div>
 
-      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
-        <div style="font-size:13.5px;font-weight:700;color:#a8071a;">What the logs actually say</div>
-        <pre style="margin:0;font-size:11.5px;line-height:1.45;background:#fff1f0;border:1px solid #ffccc7;border-radius:4px;padding:8px 10px;overflow:hidden;">$ grep -oE '\[[EW]::[a-z_0-9]+\]' smoke.err \
-    | sort | uniq -c
-
-   <b>1935 [E::bam_parse_basemod2]</b>
-   3199 [W::hts_idx_load3]
-
-[E::bam_parse_basemod2] 89606cc1-c54f-...:
-  <b>MM/MN data length is incompatible
-  with SEQ length</b>
-
-[W::hts_idx_load3] The index file is older
-  than the data file:
-  .../HCC1395/TF0_25x/TF0_25x.rep2.bam.bai</pre>
-        <div class="info-card red" style="font-size:12.5px;">
-          <div class="card-title">Why this matters</div>
-          The benchmark's whole treatment arm reads MM/ML base-modification tags. 1,935 reads in a single 25&times; pass had their tags rejected outright &mdash; and the protocol has no missingness rule written for <i>this</i> failure mode.
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#135200;">Leakage &mdash; verified by evidence, not declared</div>
+        <div class="info-card green" style="font-size:14.5px;">
+          <div class="card-title">31 paths opened by 42 workers, all captured</div>
+          28 dilution BAMs + 2 candidate frames + <code>mrdz/score.py</code>. <b>No matched-normal BAM, no SEQC2 or orthogonal truth VCF, no panel of normals, no population database.</b> Consensus, confident-position set and cutoff are fitted per sample on that sample alone.
+        </div>
+        <div class="info-card yellow" style="font-size:14.5px;">
+          <div class="card-title">Negative results kept, not dropped</div>
+          0.01% not detected in any arm (<code>z_lo</code> &minus;4.11 to +0.38). The exploratory COLO829 chr1 arm is reported <b>degenerate</b> &mdash; consensus 97,789 vs the primary run's 1,153,835, every blank yields zero kept ALT reads &rarr; <code>no estimate</code>. Exactly the consensus-limited failure review_003 predicted in advance.
         </div>
       </div>
     </div>
 
-    <div class="takeaway warn">Takeaway: the run is healthy &mdash; but <b>the smoke pass has still not been compared against the prior EXP-S1-022 result</b>, which is the one check that the reimplementation matches the frozen one. <code>workflow_state.yaml</code> remains at <code>EXECUTION</code>, <code>execution_iteration: 0</code>; nothing has been aggregated and QC has not been reached.</div>
+    <div class="takeaway">Takeaway: nothing about the execution is in dispute &mdash; and that is what makes the next page's finding a <b>methodology</b> finding rather than a bug.</div>
   </div>
 </div>
 
 <div class="slide-outer">
-  <style>
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:11px;">
+    <div class="slide-label">Registered outcome</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">All four preregistered criteria held: <span style="color:#237804;">H1 SUPPORTED</span></h2>
+    <p class="lead">A mechanical application of the locked v1.0 rules &mdash; no interpretation. <code>zlo_min</code> at the preregistered primary level of <b>0.1%</b>, on both individuals, under both variance constructions.</p>
+
+    <table class="ruletable" style="font-size:16.5px;">
+      <tr><th style="width:105px;">Individual</th><th style="width:60px;">Var.</th><th style="width:95px;">B1 (methyl)</th><th style="width:135px;">B0 (SNV only)</th><th style="width:145px;">C1 (permuted)</th><th style="width:145px;">C2 (CpG density)</th><th>S4 retention ratio, B1</th></tr>
+      <tr class="hl"><td rowspan="2"><b>HCC1395</b></td><td>V1</td><td class="new-c">+2.2995</td><td>+0.7396 <span style="color:#888;">(&Delta;1.56)</span></td><td>&minus;1.8074 <span style="color:#888;">(&Delta;4.11)</span></td><td>&minus;0.0730 <span style="color:#888;">(&Delta;2.37)</span></td><td rowspan="2">blank 0.3635 &rarr; 0.1% 0.6085 = <b>1.6741&times;</b></td></tr>
+      <tr class="hl"><td>V2</td><td class="new-c">+3.5547</td><td>+0.8557 <span style="color:#888;">(&Delta;2.70)</span></td><td>&minus;2.4843 <span style="color:#888;">(&Delta;6.04)</span></td><td>&minus;0.1237 <span style="color:#888;">(&Delta;3.68)</span></td></tr>
+      <tr><td rowspan="2"><b>COLO829</b></td><td>V1</td><td class="new-c">+0.6931</td><td>&minus;0.3667 <span style="color:#888;">(&Delta;1.06)</span></td><td>&minus;1.8113 <span style="color:#888;">(&Delta;2.50)</span></td><td>+0.1676 <span style="color:#888;">(&Delta;0.53)</span></td><td rowspan="2">blank 0.0924 &rarr; 0.1% 0.2692 = <b>2.9127&times;</b></td></tr>
+      <tr><td>V2</td><td class="new-c">+1.4364</td><td>&minus;0.4543 <span style="color:#888;">(&Delta;1.89)</span></td><td>&minus;2.4651 <span style="color:#888;">(&Delta;3.90)</span></td><td>+0.4024 <span style="color:#888;">(&Delta;1.03)</span></td></tr>
+    </table>
+
+    <div style="display:flex;gap:10px;font-size:14px;">
+      <div class="info-card green" style="flex:1;"><div class="card-title">S1 HELD</div>B1 beats B0, C1 and C2 in all 4 individual &times; construction cells</div>
+      <div class="info-card green" style="flex:1;"><div class="card-title">S2 HELD</div>No level detected by B0 was lost under B1</div>
+      <div class="info-card green" style="flex:1;"><div class="card-title">S3 HELD</div>0 of 5 leave-one-out blanks <code>detected</code>, per individual, both constructions</div>
+      <div class="info-card green" style="flex:1;"><div class="card-title">S4 HELD</div>B1's ALT retention is higher at 0.1% than in its blank, on both individuals</div>
+    </div>
+
+    <div class="takeaway">Takeaway: <code>results/registered_outcome.txt</code> reads <b>H1 SUPPORTED</b>, and it is a correct application of the frozen rules. <b>QC did not overturn it &mdash; it is preserved verbatim.</b> What QC found is on the next page.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:12px;">
+    <div class="slide-label">QC verdict</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">REDESIGN_REQUIRED &mdash; S4 is passed by the very confound it was written to exclude</h2>
+    <p class="lead">The criterion added in review_004 to carry the mechanism claim is satisfied <b>identically</b> by <b>C2</b>, a control that scores reads by how many confident CpG positions they carry and uses <b>no methylation pattern at all</b>.</p>
+
+    <div style="flex:1;display:flex;gap:14px;align-items:flex-start;">
+      <div style="flex:1.05;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#a8071a;">QC-01 &mdash; the mechanism criterion cannot tell the two apart</div>
+        <table class="ruletable" style="font-size:19px;">
+          <tr><th>Retention ratio, 0.1% &divide; blank</th><th style="width:96px;">B1 methyl</th><th style="width:96px;">C2 density</th><th style="width:92px;">difference</th></tr>
+          <tr class="hl"><td>HCC1395</td><td><b>1.6741</b></td><td><b>1.6839</b></td><td class="old-c">&minus;0.0098</td></tr>
+          <tr class="hl"><td>COLO829</td><td><b>2.9127</b></td><td><b>2.9041</b></td><td class="old-c">+0.0086</td></tr>
+        </table>
+        <div style="font-size:16px;color:#595959;line-height:1.6;">C2 reproduces B1's differential-retention signature to within <b>0.6%</b> on one individual and <b>0.3%</b> on the other. S4 only asks whether B1's ratio beats <i>its own blank</i>. It does. It never asks whether it beats <b>C2's</b> ratio &mdash; and it does not, on either individual.</div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#a8071a;">QC-02 &mdash; the control legs are decided at 8&ndash;10&times; different count scales</div>
+        <svg viewBox="0 0 560 190" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+          <text x="0" y="16" font-size="12" fill="#8c8c8c">gated total G at 0.1% (HCC1395 / COLO829)</text>
+          <text x="0" y="46" font-size="14" font-weight="700" fill="#262626">B1</text>
+          <rect x="42" y="32" width="392" height="19" rx="3" fill="#ff4d4f"/>
+          <text x="442" y="47" font-size="13.5" font-weight="700" fill="#a8071a">22&ndash;28 / 9&ndash;19</text>
+          <text x="0" y="80" font-size="14" font-weight="700" fill="#262626">C1</text>
+          <rect x="42" y="66" width="42" height="19" rx="3" fill="#bfbfbf"/>
+          <text x="92" y="81" font-size="13.5" fill="#595959">1&ndash;3 / 2&ndash;3</text>
+          <text x="0" y="114" font-size="14" font-weight="700" fill="#262626">C2</text>
+          <rect x="42" y="100" width="42" height="19" rx="3" fill="#bfbfbf"/>
+          <text x="92" y="115" font-size="13.5" fill="#595959">2&ndash;3 / 2&ndash;7</text>
+          <text x="0" y="141" font-size="12" fill="#8c8c8c">nominal cutoffs matched (K_B1 4.91%, k_C2 5.00%) &mdash; realised ALT retention did not</text>
+        </svg>
+        <div style="font-size:16px;color:#595959;line-height:1.6;"><code>z</code> improves with counting statistics independently of selection quality, so the S1 legs compare <b>precision</b>, not selection. <b>B014's confound survived the fix written for it.</b></div>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Takeaway: this is <b>not</b> a claim that H1 is false &mdash; it is that the benchmark <b>as locked cannot establish the mechanism half of its own question</b>. The fix QC names is computable from the same passes: a <b>retention sweep</b> asking whether B1's curve lies above C2's <i>at matched retention</i>.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:12px;">
+    <div class="slide-label">Claim control</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">What may actually be said: one cell of a four-cell table, on single-digit counts</h2>
+    <p class="lead"><code>zlo_min</code> improved for B1 in all four cells. The <b>detection</b> outcome under the frozen replicate rule changed in exactly <b>one</b>.</p>
+
+    <div style="display:flex;gap:14px;align-items:stretch;">
+      <div style="flex:0.85;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#262626;">QC-03 &mdash; levels called <code>detected</code></div>
+        <table class="ruletable" style="font-size:17px;">
+          <tr><th>Arm</th><th style="width:90px;">V1</th><th style="width:120px;">V2</th></tr>
+          <tr><td>HCC1395 B0</td><td>1%</td><td>1%</td></tr>
+          <tr class="hl"><td>HCC1395 <b>B1</b></td><td>1%</td><td class="new-c">1% and 0.1%</td></tr>
+          <tr><td>COLO829 B0</td><td>1%</td><td>1%</td></tr>
+          <tr><td>COLO829 <b>B1</b></td><td>1%</td><td>1%</td></tr>
+        </table>
+        <div style="font-size:14.5px;color:#595959;line-height:1.55;">Any sentence of the form <i>"methylation enables 0.1% detection"</i> is a sentence about <b>one cell</b>: one individual, one of two preregistered variance constructions.</div>
+      </div>
+
+      <div style="flex:1.15;display:flex;flex-direction:column;gap:8px;">
+        <div class="info-card yellow" style="font-size:14.5px;">
+          <div class="card-title">QC-04 &mdash; COLO829's statistic runs on single-digit counts</div>
+          B1 blank totals are <b>2 / 0 / 4 / 3 / 6</b> reads; 0.1% totals are 9 / 19 / 18. The headline S4 ratio of <b>2.9127</b> is computed from roughly <b>three kept reads</b> in the blank. Four significant figures overstate what three reads can support. One blank gives <code>G = 0</code> &rarr; <code>sample_sd = 0</code> &rarr; <code>no estimate</code> &mdash; the case §15 defined a priori, so handled rather than broken.
+        </div>
+        <div class="info-card yellow" style="font-size:14.5px;">
+          <div class="card-title">QC-05 &mdash; S3 holds, but thinly under V2</div>
+          Two COLO829 blanks return <code>UNRELIABLE</code> under V2: rep3 at [&minus;1.64, +3.15], rep5 at [+0.69, +4.31]. Neither is a false detection &mdash; both straddle the call threshold, which is what <code>UNRELIABLE</code> is for &mdash; and both sit in the same single-digit-count regime.
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Takeaway: the redesign is now written with the result known, so QC bound it in advance &mdash; <b>every new criterion must be strictly harder to satisfy</b>, and the new criteria must be labelled <b>POST HOC permanently</b>, with the v1.0 preregistered outcome reported beside them in full.</div>
+  </div>
+</div>
+
+<style>
   .oi .ruletable th, .oi .ruletable td { padding:3px 8px; }
   .oi .ruletable { font-size:12.5px; line-height:1.35; }
   .oi .ruletable code { font-size:11.5px; padding:0 3px; }
   .oi .takeaway { margin-top:6px; padding:7px 12px; font-size:13px; }
 </style>
-<div class="slide oi" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:6px;">
+<div class="slide-outer">
+  <div class="slide oi" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:6px;">
     <div class="slide-label">Open items</div>
     <h2 style="font-size:26px;margin:0 0 2px;">What tomorrow starts with &mdash; and where each item is stuck</h2>
-    <p class="lead">Nine items, as of 16:39 local. The "stuck where" column is the point; four of them wait on one run that is half finished and has not been checked against anything.</p>
+    <p class="lead">Ten items, as of 20:08 local. Four of them are one job: <b>protocol v1.1</b>, which QC has already constrained before a line of it is written.</p>
 
     <table class="ruletable">
-      <tr><th style="width:30px;">#</th><th style="width:265px;">Item</th><th style="width:315px;">Stuck where</th><th>Why it matters</th></tr>
+      <tr><th style="width:30px;">#</th><th style="width:255px;">Item</th><th style="width:310px;">Stuck where</th><th>Why it matters</th></tr>
 
-      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">MUST DO BEFORE THE BENCHMARK CAN CONCLUDE</td></tr>
-      <tr class="hl"><td>1</td><td>Validate the smoke pass against the prior EXP-S1-022 result</td><td><code>SMOKE_HCC1395_TF0_rep1.json</code> now exists and parses, but <b class="old">no comparison has been run</b></td><td>This is the only check that the reimplementation reproduces the frozen implementation. Everything downstream assumes it passed</td></tr>
-      <tr class="hl"><td>2</td><td>28 primary passes complete + <code>aggregate.py</code> run</td><td><b>14 of 28 done</b> (all HCC1395, exit 0, ~580&nbsp;s each); 13 COLO829_PAO workers still running. <code>aggregate.py</code> never invoked</td><td>No metric exists yet. S1&ndash;S4 cannot be evaluated</td></tr>
-      <tr class="hl"><td>3</td><td>Exploratory COLO829 chr1 arm &mdash; 14 passes</td><td>Written into <code>jobs_exploratory.txt</code>, never launched; <code>results/exploratory/</code> empty</td><td>Protocol &sect;19 declares it. Skipping it silently is exactly what <code>prompt.md</code> forbids</td></tr>
-      <tr class="hl"><td>4</td><td>Run <code>qc-statistical-reviewer</code></td><td><code>workflow_state.yaml</code>: <code>current_stage: EXECUTION</code>, <code>execution_iteration: 0</code>, <code>qc_iteration: 0</code>, <code>latest_execution: null</code></td><td>The lifecycle in <code>prompt.md</code> ends at PASS or BLOCKED_UNRECOVERABLE. It has reached neither</td></tr>
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">PROTOCOL v1.1 &mdash; THE WORKFLOW IS SITTING AT THIS GATE</td></tr>
+      <tr class="hl"><td>1</td><td>Draft v1.1 resolving <b>QC-01</b> (S4 passed by C2) and <b>QC-02</b> (incomparable count scales)</td><td><code>workflow_state.yaml</code>: <code>current_stage: DESIGN</code>, <code>last_status: REDESIGN_REQUIRED</code>, <code>design_iteration: 5</code> &rarr; 6. No <code>v1.1</code> file exists</td><td>The whole lifecycle is blocked here. v1.0 and EXEC-001 are preserved unchanged &mdash; v1.1 is a new draft, not a mutation</td></tr>
+      <tr class="hl"><td>2</td><td>Run the <b>retention sweep</b> QC named as the settling comparison</td><td>Not started. Computable from the same 42 passes; needs no new methodological assumption</td><td>Trace each arm's <code>zlo_min</code> against realised ALT retention and ask whether B1's curve is above C2's <i>at matched retention</i>. That is the mechanism test S4 failed to be</td></tr>
+      <tr class="hl"><td>3</td><td>Label every new criterion <b>POST HOC</b>, permanently</td><td>A rule with nothing yet written to enforce it</td><td>They will be authored after C2's ratio was seen. They may qualify or withdraw the v1.0 conclusion; they may never be reported as preregistered, and v1.0's outcome must appear beside them in full</td></tr>
+      <tr><td>4</td><td>Fold deviations <b>D3</b> and <b>D4</b> into v1.1</td><td>Recorded as standing deviations against v1.0</td><td>Both are corrections of internal inconsistencies in the locked protocol, not executor choices &mdash; leaving them as deviations hides that</td></tr>
 
       <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">DECISIONS NOT YET MADE</td></tr>
-      <tr class="hl"><td>5</td><td>How to handle reads whose MM/ML tags fail to parse</td><td><b class="old">1,935 rejected reads per 25&times; pass</b> and no missingness rule in v1.0 covers this case</td><td>Changing the rule after seeing results would break the pre-registration. It has to be decided as a protocol amendment, on the record</td></tr>
-      <tr><td>6</td><td>Whether BM-0001 gets an entry in <code>research/experiments/registry/</code></td><td>The benchmark lives only under <code>research/benchmarks/</code>; no <code>EXP-</code> id was assigned</td><td>The 2026-08-25 note said methylation must be "a separate experiment, separately registered, after EXP-S1-021 closes" &mdash; the registration half is missing</td></tr>
+      <tr class="hl"><td>5</td><td>How to handle reads whose MM/ML tags fail to parse</td><td><b>1,935 rejected reads per 25&times; pass</b>; no missingness rule in v1.0 covers this case</td><td>Must be decided as a recorded amendment in v1.1, not silently &mdash; and under the same strictly-harder rule</td></tr>
+      <tr><td>6</td><td>Whether BM-0001 gets an entry in <code>research/experiments/registry/</code></td><td>Lives only under <code>research/benchmarks/</code>; no <code>EXP-</code> id assigned</td><td>The 2026-08-25 note required methylation to be "a separate experiment, separately registered". The registration half is still missing</td></tr>
+      <tr><td>7</td><td>Write the evidence summary with QC-03's scope stated</td><td>No summary exists &mdash; QC withholds it until QC passes</td><td>"Methylation enables 0.1% detection" is true of <b>one</b> of four individual &times; construction cells. The summary has to say which</td></tr>
 
       <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">KNOWN, UNSCHEDULED</td></tr>
-      <tr class="hl"><td>7</td><td>Nothing is committed</td><td><code>git status</code> in <code>mrd/</code>: <b>193 changed or untracked paths</b>, all of BM-0001 included; last commit is <code>c137d4a</code>, yesterday's daily log</td><td>Protocol lock, reviews and audit trail exist only in the working tree</td></tr>
-      <tr><td>8</td><td>Write the signal-role decision into <code>claim-boundaries.md</code></td><td>Settled in conversation at 16:22 only &mdash; "CN is a positive control, not evidence"; "fragment length is unusable here"</td><td>The most defence-relevant conclusion of the day exists nowhere in the repo</td></tr>
-      <tr><td>9</td><td>Apply the SIMMA citation rule in the thesis draft</td><td>Decided at 14:45; the draft still has no literature section written to it</td><td>Cite it for conformal prediction and hold-out scale (43 individuals vs 6), not as an ecDNA paper</td></tr>
+      <tr class="hl"><td>8</td><td>Nothing is committed</td><td><code>git status</code> in <code>mrd/</code>: <b>193+ changed or untracked paths</b>, the entire benchmark included</td><td>Protocol lock, 5 reviews, EXEC-001 and the QC report exist only in the working tree</td></tr>
+      <tr><td>9</td><td>Write the signal-role decision into <code>claim-boundaries.md</code></td><td>Settled in conversation at 16:22 only &mdash; "CN is a positive control, not evidence"; "fragment length is unusable here"</td><td>The most defence-relevant conclusion of the day exists nowhere in the repo</td></tr>
+      <tr><td>10</td><td>Apply the SIMMA citation rule in the thesis draft</td><td>Decided at 14:45; the draft still has no literature section written to it</td><td>Cite it for conformal prediction and hold-out scale (43 individuals vs 6), not as an ecDNA paper</td></tr>
     </table>
 
-    <div class="takeaway warn">Takeaway: items 1&ndash;4 converge on one box &mdash; <b>a half-finished run whose output nobody has looked at yet</b>. Start there: compare the smoke pass to EXP-S1-022 first, because every S1&ndash;S4 verdict downstream assumes the reimplementation reproduces the frozen one.</div>
+    <div class="takeaway warn">Takeaway: the day ends with <b>a positive registered result that its own QC will not let you use yet</b>. Items 1&ndash;4 are the price of keeping it honest, and item 2 is the one that decides whether the mechanism claim survives.</div>
   </div>
 </div>
 

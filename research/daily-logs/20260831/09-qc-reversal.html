@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:12px;">
+    <div class="slide-label">QC verdict</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">REDESIGN_REQUIRED &mdash; S4 is passed by the very confound it was written to exclude</h2>
+    <p class="lead">The criterion added in review_004 to carry the mechanism claim is satisfied <b>identically</b> by <b>C2</b>, a control that scores reads by how many confident CpG positions they carry and uses <b>no methylation pattern at all</b>.</p>
+
+    <div style="flex:1;display:flex;gap:14px;align-items:flex-start;">
+      <div style="flex:1.05;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#a8071a;">QC-01 &mdash; the mechanism criterion cannot tell the two apart</div>
+        <table class="ruletable" style="font-size:19px;">
+          <tr><th>Retention ratio, 0.1% &divide; blank</th><th style="width:96px;">B1 methyl</th><th style="width:96px;">C2 density</th><th style="width:92px;">difference</th></tr>
+          <tr class="hl"><td>HCC1395</td><td><b>1.6741</b></td><td><b>1.6839</b></td><td class="old-c">&minus;0.0098</td></tr>
+          <tr class="hl"><td>COLO829</td><td><b>2.9127</b></td><td><b>2.9041</b></td><td class="old-c">+0.0086</td></tr>
+        </table>
+        <div style="font-size:16px;color:#595959;line-height:1.6;">C2 reproduces B1's differential-retention signature to within <b>0.6%</b> on one individual and <b>0.3%</b> on the other. S4 only asks whether B1's ratio beats <i>its own blank</i>. It does. It never asks whether it beats <b>C2's</b> ratio &mdash; and it does not, on either individual.</div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#a8071a;">QC-02 &mdash; the control legs are decided at 8&ndash;10&times; different count scales</div>
+        <svg viewBox="0 0 560 190" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+          <text x="0" y="16" font-size="12" fill="#8c8c8c">gated total G at 0.1% (HCC1395 / COLO829)</text>
+          <text x="0" y="46" font-size="14" font-weight="700" fill="#262626">B1</text>
+          <rect x="42" y="32" width="392" height="19" rx="3" fill="#ff4d4f"/>
+          <text x="442" y="47" font-size="13.5" font-weight="700" fill="#a8071a">22&ndash;28 / 9&ndash;19</text>
+          <text x="0" y="80" font-size="14" font-weight="700" fill="#262626">C1</text>
+          <rect x="42" y="66" width="42" height="19" rx="3" fill="#bfbfbf"/>
+          <text x="92" y="81" font-size="13.5" fill="#595959">1&ndash;3 / 2&ndash;3</text>
+          <text x="0" y="114" font-size="14" font-weight="700" fill="#262626">C2</text>
+          <rect x="42" y="100" width="42" height="19" rx="3" fill="#bfbfbf"/>
+          <text x="92" y="115" font-size="13.5" fill="#595959">2&ndash;3 / 2&ndash;7</text>
+          <text x="0" y="141" font-size="12" fill="#8c8c8c">nominal cutoffs matched (K_B1 4.91%, k_C2 5.00%) &mdash; realised ALT retention did not</text>
+        </svg>
+        <div style="font-size:16px;color:#595959;line-height:1.6;"><code>z</code> improves with counting statistics independently of selection quality, so the S1 legs compare <b>precision</b>, not selection. <b>B014's confound survived the fix written for it.</b></div>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Takeaway: this is <b>not</b> a claim that H1 is false &mdash; it is that the benchmark <b>as locked cannot establish the mechanism half of its own question</b>. The fix QC names is computable from the same passes: a <b>retention sweep</b> asking whether B1's curve lies above C2's <i>at matched retention</i>.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>

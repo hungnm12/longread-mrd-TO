@@ -10,38 +10,39 @@
 <body>
 <div class="wrap">
 <!-- SLIDE:START -->
-<div class="slide-outer">
-  <style>
+<style>
   .oi .ruletable th, .oi .ruletable td { padding:3px 8px; }
   .oi .ruletable { font-size:12.5px; line-height:1.35; }
   .oi .ruletable code { font-size:11.5px; padding:0 3px; }
   .oi .takeaway { margin-top:6px; padding:7px 12px; font-size:13px; }
 </style>
-<div class="slide oi" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:6px;">
+<div class="slide-outer">
+  <div class="slide oi" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:6px;">
     <div class="slide-label">Open items</div>
     <h2 style="font-size:26px;margin:0 0 2px;">What tomorrow starts with &mdash; and where each item is stuck</h2>
-    <p class="lead">Nine items, as of 16:39 local. The "stuck where" column is the point; four of them wait on one run that is half finished and has not been checked against anything.</p>
+    <p class="lead">Ten items, as of 20:08 local. Four of them are one job: <b>protocol v1.1</b>, which QC has already constrained before a line of it is written.</p>
 
     <table class="ruletable">
-      <tr><th style="width:30px;">#</th><th style="width:265px;">Item</th><th style="width:315px;">Stuck where</th><th>Why it matters</th></tr>
+      <tr><th style="width:30px;">#</th><th style="width:255px;">Item</th><th style="width:310px;">Stuck where</th><th>Why it matters</th></tr>
 
-      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">MUST DO BEFORE THE BENCHMARK CAN CONCLUDE</td></tr>
-      <tr class="hl"><td>1</td><td>Validate the smoke pass against the prior EXP-S1-022 result</td><td><code>SMOKE_HCC1395_TF0_rep1.json</code> now exists and parses, but <b class="old">no comparison has been run</b></td><td>This is the only check that the reimplementation reproduces the frozen implementation. Everything downstream assumes it passed</td></tr>
-      <tr class="hl"><td>2</td><td>28 primary passes complete + <code>aggregate.py</code> run</td><td><b>14 of 28 done</b> (all HCC1395, exit 0, ~580&nbsp;s each); 13 COLO829_PAO workers still running. <code>aggregate.py</code> never invoked</td><td>No metric exists yet. S1&ndash;S4 cannot be evaluated</td></tr>
-      <tr class="hl"><td>3</td><td>Exploratory COLO829 chr1 arm &mdash; 14 passes</td><td>Written into <code>jobs_exploratory.txt</code>, never launched; <code>results/exploratory/</code> empty</td><td>Protocol &sect;19 declares it. Skipping it silently is exactly what <code>prompt.md</code> forbids</td></tr>
-      <tr class="hl"><td>4</td><td>Run <code>qc-statistical-reviewer</code></td><td><code>workflow_state.yaml</code>: <code>current_stage: EXECUTION</code>, <code>execution_iteration: 0</code>, <code>qc_iteration: 0</code>, <code>latest_execution: null</code></td><td>The lifecycle in <code>prompt.md</code> ends at PASS or BLOCKED_UNRECOVERABLE. It has reached neither</td></tr>
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">PROTOCOL v1.1 &mdash; THE WORKFLOW IS SITTING AT THIS GATE</td></tr>
+      <tr class="hl"><td>1</td><td>Draft v1.1 resolving <b>QC-01</b> (S4 passed by C2) and <b>QC-02</b> (incomparable count scales)</td><td><code>workflow_state.yaml</code>: <code>current_stage: DESIGN</code>, <code>last_status: REDESIGN_REQUIRED</code>, <code>design_iteration: 5</code> &rarr; 6. No <code>v1.1</code> file exists</td><td>The whole lifecycle is blocked here. v1.0 and EXEC-001 are preserved unchanged &mdash; v1.1 is a new draft, not a mutation</td></tr>
+      <tr class="hl"><td>2</td><td>Run the <b>retention sweep</b> QC named as the settling comparison</td><td>Not started. Computable from the same 42 passes; needs no new methodological assumption</td><td>Trace each arm's <code>zlo_min</code> against realised ALT retention and ask whether B1's curve is above C2's <i>at matched retention</i>. That is the mechanism test S4 failed to be</td></tr>
+      <tr class="hl"><td>3</td><td>Label every new criterion <b>POST HOC</b>, permanently</td><td>A rule with nothing yet written to enforce it</td><td>They will be authored after C2's ratio was seen. They may qualify or withdraw the v1.0 conclusion; they may never be reported as preregistered, and v1.0's outcome must appear beside them in full</td></tr>
+      <tr><td>4</td><td>Fold deviations <b>D3</b> and <b>D4</b> into v1.1</td><td>Recorded as standing deviations against v1.0</td><td>Both are corrections of internal inconsistencies in the locked protocol, not executor choices &mdash; leaving them as deviations hides that</td></tr>
 
       <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">DECISIONS NOT YET MADE</td></tr>
-      <tr class="hl"><td>5</td><td>How to handle reads whose MM/ML tags fail to parse</td><td><b class="old">1,935 rejected reads per 25&times; pass</b> and no missingness rule in v1.0 covers this case</td><td>Changing the rule after seeing results would break the pre-registration. It has to be decided as a protocol amendment, on the record</td></tr>
-      <tr><td>6</td><td>Whether BM-0001 gets an entry in <code>research/experiments/registry/</code></td><td>The benchmark lives only under <code>research/benchmarks/</code>; no <code>EXP-</code> id was assigned</td><td>The 2026-08-25 note said methylation must be "a separate experiment, separately registered, after EXP-S1-021 closes" &mdash; the registration half is missing</td></tr>
+      <tr class="hl"><td>5</td><td>How to handle reads whose MM/ML tags fail to parse</td><td><b>1,935 rejected reads per 25&times; pass</b>; no missingness rule in v1.0 covers this case</td><td>Must be decided as a recorded amendment in v1.1, not silently &mdash; and under the same strictly-harder rule</td></tr>
+      <tr><td>6</td><td>Whether BM-0001 gets an entry in <code>research/experiments/registry/</code></td><td>Lives only under <code>research/benchmarks/</code>; no <code>EXP-</code> id assigned</td><td>The 2026-08-25 note required methylation to be "a separate experiment, separately registered". The registration half is still missing</td></tr>
+      <tr><td>7</td><td>Write the evidence summary with QC-03's scope stated</td><td>No summary exists &mdash; QC withholds it until QC passes</td><td>"Methylation enables 0.1% detection" is true of <b>one</b> of four individual &times; construction cells. The summary has to say which</td></tr>
 
       <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">KNOWN, UNSCHEDULED</td></tr>
-      <tr class="hl"><td>7</td><td>Nothing is committed</td><td><code>git status</code> in <code>mrd/</code>: <b>193 changed or untracked paths</b>, all of BM-0001 included; last commit is <code>c137d4a</code>, yesterday's daily log</td><td>Protocol lock, reviews and audit trail exist only in the working tree</td></tr>
-      <tr><td>8</td><td>Write the signal-role decision into <code>claim-boundaries.md</code></td><td>Settled in conversation at 16:22 only &mdash; "CN is a positive control, not evidence"; "fragment length is unusable here"</td><td>The most defence-relevant conclusion of the day exists nowhere in the repo</td></tr>
-      <tr><td>9</td><td>Apply the SIMMA citation rule in the thesis draft</td><td>Decided at 14:45; the draft still has no literature section written to it</td><td>Cite it for conformal prediction and hold-out scale (43 individuals vs 6), not as an ecDNA paper</td></tr>
+      <tr class="hl"><td>8</td><td>Nothing is committed</td><td><code>git status</code> in <code>mrd/</code>: <b>193+ changed or untracked paths</b>, the entire benchmark included</td><td>Protocol lock, 5 reviews, EXEC-001 and the QC report exist only in the working tree</td></tr>
+      <tr><td>9</td><td>Write the signal-role decision into <code>claim-boundaries.md</code></td><td>Settled in conversation at 16:22 only &mdash; "CN is a positive control, not evidence"; "fragment length is unusable here"</td><td>The most defence-relevant conclusion of the day exists nowhere in the repo</td></tr>
+      <tr><td>10</td><td>Apply the SIMMA citation rule in the thesis draft</td><td>Decided at 14:45; the draft still has no literature section written to it</td><td>Cite it for conformal prediction and hold-out scale (43 individuals vs 6), not as an ecDNA paper</td></tr>
     </table>
 
-    <div class="takeaway warn">Takeaway: items 1&ndash;4 converge on one box &mdash; <b>a half-finished run whose output nobody has looked at yet</b>. Start there: compare the smoke pass to EXP-S1-022 first, because every S1&ndash;S4 verdict downstream assumes the reimplementation reproduces the frozen one.</div>
+    <div class="takeaway warn">Takeaway: the day ends with <b>a positive registered result that its own QC will not let you use yet</b>. Items 1&ndash;4 are the price of keeping it honest, and item 2 is the one that decides whether the mechanism claim survives.</div>
   </div>
 </div>
 <!-- SLIDE:END -->

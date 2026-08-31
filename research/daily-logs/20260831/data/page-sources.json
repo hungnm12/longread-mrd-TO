@@ -75,6 +75,33 @@
       ]
     },
     {
+      "page": "08-registered-outcome.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        }
+      ]
+    },
+    {
+      "page": "09-qc-reversal.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        }
+      ]
+    },
+    {
+      "page": "10-claim-scope.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        }
+      ]
+    },
+    {
       "page": "07-open-items.html",
       "sessions": [
         {
