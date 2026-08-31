@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:8px;">
+    <div class="slide-label">Signal inventory</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">Why methylation survives at low tumour fraction: the denominator changed, not the sample</h2>
+    <p class="lead">The same <b>9 ng of cfDNA</b> at <b>TF = 1e-4</b>, counted two ways. Log axis — each gridline is 100&times;.</p>
+
+    <svg viewBox="0 0 1200 258" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+      <defs>
+        <marker id="tick" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#8c8c8c"/>
+        </marker>
+      </defs>
+
+      <text x="8" y="44" font-size="17" font-weight="700" fill="#262626">SNV lens</text>
+      <text x="8" y="64" font-size="12.5" fill="#8c8c8c">count molecules crossing</text>
+      <text x="8" y="80" font-size="12.5" fill="#8c8c8c">ONE position (2,700 copies)</text>
+
+      <rect x="200" y="30" width="351" height="26" rx="3" fill="#d9d9d9"/>
+      <text x="559" y="49" font-size="14.5" fill="#595959">2,700 genome copies in the tube</text>
+
+      <rect x="200" y="64" width="34" height="26" rx="3" fill="#ff4d4f"/>
+      <text x="242" y="83" font-size="16" font-weight="700" fill="#a8071a">0.27 tumour molecules &#10007; most tubes contain none at all</text>
+
+      <line x1="8" y1="108" x2="1155" y2="108" stroke="#f0f0f0" stroke-width="1"/>
+
+      <text x="8" y="140" font-size="17" font-weight="700" fill="#262626">Methylation lens</text>
+      <text x="8" y="160" font-size="12.5" fill="#8c8c8c">count 167 bp fragments across</text>
+      <text x="8" y="176" font-size="12.5" fill="#8c8c8c">~28M CpG sites &#8212; every</text>
+      <text x="8" y="192" font-size="12.5" fill="#8c8c8c">read contributes</text>
+      <text x="8" y="192" font-size="12.5" fill="#8c8c8c">&nbsp;</text>
+
+      <rect x="200" y="126" width="927" height="26" rx="3" fill="#d9d9d9"/>
+      <text x="700" y="145" font-size="14.5" fill="#595959">~50,000,000,000 fragments in the tube</text>
+
+      <rect x="200" y="160" width="610" height="26" rx="3" fill="#52c41a"/>
+      <text x="818" y="179" font-size="16" font-weight="700" fill="#135200">5,000,000 tumour fragments &#10003;</text>
+
+      <line x1="200" y1="212" x2="1155" y2="212" stroke="#8c8c8c" stroke-width="1.5" marker-end="url(#tick)"/>
+      <g font-size="12" fill="#8c8c8c" text-anchor="middle">
+        <line x1="279" y1="208" x2="279" y2="216" stroke="#8c8c8c"/><text x="279" y="232">1</text>
+        <line x1="438" y1="208" x2="438" y2="216" stroke="#8c8c8c"/><text x="438" y="232">100</text>
+        <line x1="596" y1="208" x2="596" y2="216" stroke="#8c8c8c"/><text x="596" y="232">10&#8308;</text>
+        <line x1="754" y1="208" x2="754" y2="216" stroke="#8c8c8c"/><text x="754" y="232">10&#8310;</text>
+        <line x1="913" y1="208" x2="913" y2="216" stroke="#8c8c8c"/><text x="913" y="232">10&#8312;</text>
+        <line x1="1071" y1="208" x2="1071" y2="216" stroke="#8c8c8c"/><text x="1071" y="232">10&#185;&#8304;</text>
+      </g>
+      <text x="1155" y="252" font-size="12" fill="#8c8c8c" text-anchor="end">molecules / fragments, log scale</text>
+    </svg>
+
+    <div style="font-size:13.5px;font-weight:700;color:#a8071a;margin-top:2px;">Three things methylation still does NOT fix &mdash; all three must be said out loud in the thesis</div>
+    <div style="display:flex;gap:12px;">
+      <div class="info-card red" style="flex:1;font-size:12.5px;">
+        <div class="card-title">(a) The sampling limit</div>
+        It extracts more information <i>per</i> tumour molecule; it does not create tumour molecules. If the tube truly contains zero, methylation reads zero. Only drawing more blood helps.
+      </div>
+      <div class="info-card yellow" style="flex:1;font-size:12.5px;">
+        <div class="card-title">(b) Cell-of-origin confounding</div>
+        The mean shift also moves with chemotherapy, marrow suppression and inflammation. Pre-analytical handling matters too &mdash; plasma separated up to seven days after venepuncture.
+      </div>
+      <div class="info-card blue" style="flex:1;font-size:12.5px;">
+        <div class="card-title">(c) Sample-level, not molecule-level</div>
+        It says "this sample looks tumour-shifted". It never says "molecule #4,281 is tumour" &mdash; which is exactly why SIMMA wraps the output in conformal prediction.
+      </div>
+    </div>
+
+    <div class="takeaway">Takeaway: SNV asks for <b>one specific rare event</b> and dies of small <i>n</i>; methylation estimates a <b>mean shift over n &asymp; 10&#8310;</b>, where standard error falls as 1/&radic;n. Same tube, different denominator &mdash; not a better assay.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>

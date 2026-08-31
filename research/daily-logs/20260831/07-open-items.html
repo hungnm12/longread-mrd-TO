@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <style>
+  .oi .ruletable th, .oi .ruletable td { padding:3px 8px; }
+  .oi .ruletable { font-size:12.5px; line-height:1.35; }
+  .oi .ruletable code { font-size:11.5px; padding:0 3px; }
+  .oi .takeaway { margin-top:6px; padding:7px 12px; font-size:13px; }
+</style>
+<div class="slide oi" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:6px;">
+    <div class="slide-label">Open items</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">What tomorrow starts with &mdash; and where each item is stuck</h2>
+    <p class="lead">Nine items, as of 16:39 local. The "stuck where" column is the point; four of them wait on one run that is half finished and has not been checked against anything.</p>
+
+    <table class="ruletable">
+      <tr><th style="width:30px;">#</th><th style="width:265px;">Item</th><th style="width:315px;">Stuck where</th><th>Why it matters</th></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">MUST DO BEFORE THE BENCHMARK CAN CONCLUDE</td></tr>
+      <tr class="hl"><td>1</td><td>Validate the smoke pass against the prior EXP-S1-022 result</td><td><code>SMOKE_HCC1395_TF0_rep1.json</code> now exists and parses, but <b class="old">no comparison has been run</b></td><td>This is the only check that the reimplementation reproduces the frozen implementation. Everything downstream assumes it passed</td></tr>
+      <tr class="hl"><td>2</td><td>28 primary passes complete + <code>aggregate.py</code> run</td><td><b>14 of 28 done</b> (all HCC1395, exit 0, ~580&nbsp;s each); 13 COLO829_PAO workers still running. <code>aggregate.py</code> never invoked</td><td>No metric exists yet. S1&ndash;S4 cannot be evaluated</td></tr>
+      <tr class="hl"><td>3</td><td>Exploratory COLO829 chr1 arm &mdash; 14 passes</td><td>Written into <code>jobs_exploratory.txt</code>, never launched; <code>results/exploratory/</code> empty</td><td>Protocol &sect;19 declares it. Skipping it silently is exactly what <code>prompt.md</code> forbids</td></tr>
+      <tr class="hl"><td>4</td><td>Run <code>qc-statistical-reviewer</code></td><td><code>workflow_state.yaml</code>: <code>current_stage: EXECUTION</code>, <code>execution_iteration: 0</code>, <code>qc_iteration: 0</code>, <code>latest_execution: null</code></td><td>The lifecycle in <code>prompt.md</code> ends at PASS or BLOCKED_UNRECOVERABLE. It has reached neither</td></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">DECISIONS NOT YET MADE</td></tr>
+      <tr class="hl"><td>5</td><td>How to handle reads whose MM/ML tags fail to parse</td><td><b class="old">1,935 rejected reads per 25&times; pass</b> and no missingness rule in v1.0 covers this case</td><td>Changing the rule after seeing results would break the pre-registration. It has to be decided as a protocol amendment, on the record</td></tr>
+      <tr><td>6</td><td>Whether BM-0001 gets an entry in <code>research/experiments/registry/</code></td><td>The benchmark lives only under <code>research/benchmarks/</code>; no <code>EXP-</code> id was assigned</td><td>The 2026-08-25 note said methylation must be "a separate experiment, separately registered, after EXP-S1-021 closes" &mdash; the registration half is missing</td></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">KNOWN, UNSCHEDULED</td></tr>
+      <tr class="hl"><td>7</td><td>Nothing is committed</td><td><code>git status</code> in <code>mrd/</code>: <b>193 changed or untracked paths</b>, all of BM-0001 included; last commit is <code>c137d4a</code>, yesterday's daily log</td><td>Protocol lock, reviews and audit trail exist only in the working tree</td></tr>
+      <tr><td>8</td><td>Write the signal-role decision into <code>claim-boundaries.md</code></td><td>Settled in conversation at 16:22 only &mdash; "CN is a positive control, not evidence"; "fragment length is unusable here"</td><td>The most defence-relevant conclusion of the day exists nowhere in the repo</td></tr>
+      <tr><td>9</td><td>Apply the SIMMA citation rule in the thesis draft</td><td>Decided at 14:45; the draft still has no literature section written to it</td><td>Cite it for conformal prediction and hold-out scale (43 individuals vs 6), not as an ecDNA paper</td></tr>
+    </table>
+
+    <div class="takeaway warn">Takeaway: items 1&ndash;4 converge on one box &mdash; <b>a half-finished run whose output nobody has looked at yet</b>. Start there: compare the smoke pass to EXP-S1-022 first, because every S1&ndash;S4 verdict downstream assumes the reimplementation reproduces the frozen one.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>

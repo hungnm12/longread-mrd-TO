@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <style>
+  .sr .ruletable th, .sr .ruletable td { padding:8px 10px; }
+  .sr .ruletable { line-height:1.4; }
+  .sr .takeaway { margin-top:6px; padding:8px 13px; }
+</style>
+<div class="slide sr" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:7px;">
+    <div class="slide-label">Signal inventory</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">SNV is the baseline, not an addition — and only one of the other three signals is testable here</h2>
+    <p class="lead">The user's proposal was "CN + methylation are the useful signals, and SNV too". The ordering was reversed: the thesis <b>is</b> an SNV counting rule on tumour-only candidates; everything else is an ablation branch asking "does adding this help?". Without that ordering there is no baseline left.</p>
+
+    <table class="ruletable" style="font-size:15px;">
+      <tr><th style="width:150px;">Signal</th><th style="width:290px;">What it answers in SIMMA</th><th>Role on <i>this</i> project's tumour/normal dilution data</th></tr>
+      <tr class="hl"><td><b>SNV</b></td>
+        <td>Not in the tumour-agnostic model at all — split into a separate targeted 76-gene UMI assay (ALK, TP53, MYC, CCND1, ATRX)</td>
+        <td><b class="new">The primary signal. This is the thesis.</b> A group with 792 real patient samples still separated SNV into its own assay rather than mixing it in — which pre-answers "why not just use SIMMA for the SNV problem?"</td></tr>
+      <tr class="hl"><td><b>Methylation</b></td>
+        <td>Detects samples where copy number sees nothing; also classifies tumour type. Strongest at satellite repeats, which only long reads can place</td>
+        <td><b class="new">The only genuinely new, testable addition.</b> MM/ML tags already present on the dilution BAMs, <code>5mCG_5hmCG</code> — computable without re-running the instrument</td></tr>
+      <tr><td><b>Copy number</b></td>
+        <td>The best quantitative signal — reads tumour fraction off 500 kb bin deviations</td>
+        <td><b class="old">Positive control only, not evidence.</b> Cell line spiked into its own matched normal means CN tracks the mixing ratio by construction. If it <i>fails</i> to track, data prep is broken — that is all it can tell us</td></tr>
+      <tr class="drop"><td><b>Fragment length</b></td>
+        <td>An independent third vote; the short-fragment shift is visible even in CN-negative samples</td>
+        <td>Unusable — cell-line DNA is machine-sheared, so length reflects library preparation, not biology. Already recorded in <code>design-space/gaps.md</code></td></tr>
+      <tr class="drop"><td><b>ecDNA</b></td>
+        <td>Visible below 0.1× coverage; perfectly specific; per-patient junction fingerprint for longitudinal tracking</td>
+        <td>Out of scope — no ecDNA to track, and present in only <b>65/792 (8.2%)</b> of SIMMA's own cohort</td></tr>
+    </table>
+
+    <div class="takeaway">Takeaway: the paper's <b>title half (ecDNA) is the thinnest evidence and the least usable here</b>; the untitled half — methylation and conformal prediction over all 792 samples — is what this thesis should cite, as a hold-out-scale comparison (43 individuals vs this project's 6).</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:8px;">
+    <div class="slide-label">Execution state</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">28 BAM passes launched with provenance captured first &mdash; and every log carries an unexplained base-modification error</h2>
+    <p class="lead">Execution began at 16:20 local under locked protocol v1.0. Provenance was written <b>before</b> any result, exactly as the protocol requires. As of <b>16:39</b>, <b>14 of 28 passes have finished, all with exit code 0</b>, at ~580&nbsp;s each; the COLO829_PAO half is still running on 13 workers.</p>
+
+    <div style="display:flex;gap:16px;align-items:stretch;">
+      <div style="flex:1.15;display:flex;flex-direction:column;gap:6px;">
+        <div style="font-size:13.5px;font-weight:700;color:#262626;">What was launched</div>
+        <table class="ruletable" style="font-size:13.5px;">
+          <tr><th style="width:118px;">Item</th><th>Detail</th></tr>
+          <tr><td>Primary passes</td><td><b>28</b> = 2 individuals &times; (5 blanks + 9 dilutions) &mdash; HCC1395 and COLO829_PAO at TF0 / 1e-2 / 1e-3 / 1e-4, 25&times;</td></tr>
+          <tr><td>Parallelism</td><td>1 smoke pass + <b>27</b> via <code>xargs -P 13</code>; 14 workers observed concurrently, as the locked protocol constrains</td></tr>
+          <tr class="hl"><td>Not launched</td><td><b class="old">Exploratory COLO829 chr1 arm</b> &mdash; 14 further passes, declared in <code>jobs_exploratory.txt</code>, never started</td></tr>
+          <tr><td>Provenance</td><td><code>inputs_manifest.tsv</code>, <code>feature_provenance.tsv</code>, <code>random_seeds.yaml</code>, <code>split_manifest.tsv</code>, <code>candidate_universe.tsv</code>, <code>environment.txt</code>, <code>pg_chains.txt</code>, <code>execution_manifest.yaml</code></td></tr>
+          <tr><td>Statistics</td><td><code>statistical_tests.tsv</code> records <code>test: NONE</code> with the reason: 3 replicates are subsamples of one library, so a p-value would have a denominator known to be wrong (FIND-0018/EV-0038)</td></tr>
+        </table>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <div style="font-size:13.5px;font-weight:700;color:#a8071a;">What the logs actually say</div>
+        <pre style="margin:0;font-size:11.5px;line-height:1.45;background:#fff1f0;border:1px solid #ffccc7;border-radius:4px;padding:8px 10px;overflow:hidden;">$ grep -oE '\[[EW]::[a-z_0-9]+\]' smoke.err \
+    | sort | uniq -c
+
+   <b>1935 [E::bam_parse_basemod2]</b>
+   3199 [W::hts_idx_load3]
+
+[E::bam_parse_basemod2] 89606cc1-c54f-...:
+  <b>MM/MN data length is incompatible
+  with SEQ length</b>
+
+[W::hts_idx_load3] The index file is older
+  than the data file:
+  .../HCC1395/TF0_25x/TF0_25x.rep2.bam.bai</pre>
+        <div class="info-card red" style="font-size:12.5px;">
+          <div class="card-title">Why this matters</div>
+          The benchmark's whole treatment arm reads MM/ML base-modification tags. 1,935 reads in a single 25&times; pass had their tags rejected outright &mdash; and the protocol has no missingness rule written for <i>this</i> failure mode.
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Takeaway: the run is healthy &mdash; but <b>the smoke pass has still not been compared against the prior EXP-S1-022 result</b>, which is the one check that the reimplementation matches the frozen one. <code>workflow_state.yaml</code> remains at <code>EXECUTION</code>, <code>execution_iteration: 0</code>; nothing has been aggregated and QC has not been reached.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>
