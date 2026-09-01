@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "report_kind": "daily",
+  "report_date": "2026-09-01",
+  "manifest": "session-manifest.json",
+  "pages": [
+    {
+      "page": "01-today-map.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "3aff324a-6091-446d-99ed-a4e2b268f8d8"
+        },
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        },
+        {
+          "source": "claude",
+          "session_id": "ca5c44a8-e515-435e-8d9d-d1f91b2c82f6"
+        }
+      ]
+    },
+    {
+      "page": "02-deck-by-subtraction.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "3aff324a-6091-446d-99ed-a4e2b268f8d8"
+        }
+      ]
+    },
+    {
+      "page": "03-ecdna-slide.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "3aff324a-6091-446d-99ed-a4e2b268f8d8"
+        }
+      ]
+    },
+    {
+      "page": "04-toolchain.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "ca5c44a8-e515-435e-8d9d-d1f91b2c82f6"
+        },
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        }
+      ]
+    },
+    {
+      "page": "05-lod-survey.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "ca5c44a8-e515-435e-8d9d-d1f91b2c82f6"
+        }
+      ]
+    },
+    {
+      "page": "06-lod-ceiling.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "ca5c44a8-e515-435e-8d9d-d1f91b2c82f6"
+        }
+      ]
+    },
+    {
+      "page": "07-transfer.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "3aff324a-6091-446d-99ed-a4e2b268f8d8"
+        },
+        {
+          "source": "claude",
+          "session_id": "ca5c44a8-e515-435e-8d9d-d1f91b2c82f6"
+        }
+      ]
+    },
+    {
+      "page": "08-open-items.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "3aff324a-6091-446d-99ed-a4e2b268f8d8"
+        },
+        {
+          "source": "claude",
+          "session_id": "ca5c44a8-e515-435e-8d9d-d1f91b2c82f6"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:10px;">
+    <div class="slide-label">Today's map</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">A day of subtraction: the deck got shorter, and the claims got bounded</h2>
+    <p class="lead">Three sessions, 2026-09-01, 14:49&ndash;22:09 local. A deck-building thread and a paper-reading thread ran on the same source and met at the same verdict &mdash; only two of SIMMA's four signals transfer here.</p>
+
+    <table class="ruletable" style="font-size:16px;">
+      <tr><th style="width:180px;">Theme</th><th>What moved</th><th style="width:255px;">Representative evidence</th><th style="width:150px;">State at end of day</th></tr>
+      <tr class="hl">
+        <td><b>Deck construction</b><br><span style="font-size:12px;color:#888;">7 tasks · 14:49&ndash;22:09</span></td>
+        <td>An 11-slide SIMMA weekly report built by <b>cutting</b>: two written feedback rounds removed a slide, a framing device, three closing slides, and most of the numbers. Each slide now does one job.</td>
+        <td>13 &rarr; 14 &rarr; 11 slides · <code>0.5×</code>, <code>R=0.97</code>, <code>792/277</code>, <code>500 trees</code>, <code>76-gene</code> dropped</td>
+        <td><b class="new">Deck built</b> &mdash; one label fix outstanding</td>
+      </tr>
+      <tr class="hl">
+        <td><b>Paper interrogation</b><br><span style="font-size:12px;color:#888;">4 tasks · 15:26&ndash;21:53</span></td>
+        <td>Read SIMMA's Methods directly: what enters the model, what each axis is measured with, and how low each has actually been shown to go.</td>
+        <td>7 RF feature blocks, <b>none of them ecDNA</b> · fragmentomics is a <code>samtools</code>+<code>perl</code> one-liner · only <b>2 of 6</b> axes report an LOD</td>
+        <td><b class="old">Not written down</b> &mdash; none of it reached the repo</td>
+      </tr>
+      <tr class="hl">
+        <td><b>Bounds on this project</b><br><span style="font-size:12px;color:#888;">2 tasks · 16:49&ndash;22:03</span></td>
+        <td>Two premises the user brought were corrected into constraints: which signals can transfer to this dataset at all, and how low a dilution series on them may honestly aim.</td>
+        <td>CN + methylation transfer, already on disk · <b>0.001% = 1×10⁻⁵ is 10× below the LOD</b>, and the paper's own 10⁻⁶ run plateaued</td>
+        <td><b>Decided</b> &mdash; no experiment drafted</td>
+      </tr>
+    </table>
+
+    <div class="takeaway">Takeaway: the deck's closing finding and the day's hardest number say the same thing &mdash; <b>copy number and methylation are what transfers, and ~10⁻³&ndash;10⁻⁴ is where this class of signal stops</b>.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>

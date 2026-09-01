@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:11px;">
+    <div class="slide-label">Paper interrogation</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">Only two of six signal axes carry a limit of detection &mdash; and the paper never ran a single-modality ablation</h2>
+    <p class="lead">A grep of the source for <code>unimodal</code>, <code>single modality</code>, <code>alone</code>, <code>each data type</code> returned nothing. The <b>10⁻⁴</b> figure belongs to the three signals combined, and no one knows which axis contributes what.</p>
+
+    <table class="ruletable" style="font-size:15px;">
+      <tr><th style="width:265px;">Signal axis</th><th style="width:150px;">Reported LOD</th><th>What backs it</th></tr>
+      <tr class="hl"><td><b>Multimodal + conformal</b><br><span style="font-size:12.5px;color:#888;">SCNA + methylation + fragmentomics</span></td><td class="new-c">~1×10⁻⁴<br><span style="font-size:12.5px;">(100 ppm)</span></td><td>~30,000 <i>in silico</i> admixtures, LOPO, PPV 99.97% &mdash; <b>entirely synthetic data</b>. The LOD is located by changepoint detection on interval width</td></tr>
+      <tr class="hl"><td><b>ecDNA</b> <span style="font-size:12.5px;color:#888;">(COPYBARA-focal)</span></td><td class="new-c">~1×10⁻³</td><td>6 ecDNA-positive samples diluted 10⁻⁶ &rarr; 0.9, logistic fit; LOD = the TF at <b>50% detection probability</b>. Tumour-informed, and it moves with the circle's copy number</td></tr>
+      <tr class="drop"><td>SCNA genome-wide (COPYBARA)</td><td>not reported</td><td>Only concordance with Illumina. Inferred to be well above 10⁻⁴</td></tr>
+      <tr class="drop"><td>Fragmentomics alone</td><td>no number</td><td>Qualitative only: "observed even in samples where SCNA detected no ctDNA"</td></tr>
+      <tr class="drop"><td>Methylation alone</td><td>no number</td><td>Qualitative only: separates control / SCNA-negative cancer / SCNA-positive cancer</td></tr>
+      <tr class="drop"><td>SNV panel (76 gene, UMI)</td><td>none stated</td><td>Error rate ~5×10⁻⁴, consensus depth 2,282×, lowest observed VAF 0.0014 &rarr; effectively ~10⁻³</td></tr>
+    </table>
+
+    <div class="takeaway warn">Takeaway: the two numbers that exist use <b>two different definitions</b>, and both are edges, not safe points &mdash; ecDNA's is a <b>coin flip</b> (50% detection), and the multimodal one is <b>the point the model admits it is unsure</b> (the changepoint where intervals start to widen). The missing ablation is exactly where this thesis can contribute.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:11px;">
+    <div class="slide-label">Bounds on this project</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">Two of the four signals transfer &mdash; and both are already on disk</h2>
+    <p class="lead">The deck's closing slide, and the same verdict reached independently in the paper-reading thread. Written in plain language on purpose, per the note: <i>"dùng từ ngữ phổ thông hơn"</i>.</p>
+
+    <table class="ruletable" style="font-size:15px;">
+      <tr><th style="width:190px;">Signal</th><th style="width:150px;">Available here</th><th>Why</th></tr>
+      <tr class="hl"><td><b>Copy number</b></td><td class="new-c">YES &mdash; free</td><td>The tumour line has an abnormal genome, and every dilution is that tumour mixed into its own normal cells, so the copy-number signal grows with the amount of tumour</td></tr>
+      <tr class="hl"><td><b>Methylation</b></td><td class="new-c">YES &mdash; free</td><td>The marks are already stored inside the files we have. Reading them costs nothing and needs no new sequencing &mdash; which holds only because the WGS branch is <b>PCR-free</b>; PCR would have erased them</td></tr>
+      <tr class="drop"><td>Fragmentomics</td><td>NO</td><td>Our DNA came from cells grown in a dish, not from blood. Fragment lengths here reflect how the library was made, not the biology</td></tr>
+      <tr><td>SV / ecDNA</td><td><b style="color:#d48806;">NOT YET</b><br><span style="font-size:12.5px;color:#888;">new work</span></td><td>No ecDNA is known in this cell line and we have never looked. Doable, but new work rather than a re-analysis &mdash; and the real barrier in cfDNA is <b>tumour fraction, not read length</b>, since cfDNA arrives at ~167 bp regardless</td></tr>
+    </table>
+
+    <div class="info-card yellow" style="font-size:14.5px;">
+      <div class="card-title">The design trap named while checking the dilution question</div>
+      Diluting every point into <b>one shared control pool</b> erases inter-individual variance and produces an artificially optimistic LOD. The fix is a <b>paired dilution series</b> &mdash; the same control at every point, versus a different control at every point &mdash; which measures the false-optimism gap directly. Not drafted.
+    </div>
+
+    <div class="takeaway">Takeaway: this is the same conclusion the 2026-08-31 signal inventory reached in private &mdash; today it became <b>a slide that can be presented</b>, with the reason for each verdict written in words a non-specialist can check.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>
