@@ -1,0 +1,41 @@
+# BM-0001-methyl-gate-mrd — environment capture (protocol §23)
+2026-08-31T16:21:27+08:00
+
+Linux bip8 6.8.0-124-generic #124~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue May 26 21:05:19 UTC  x86_64 x86_64 x86_64 GNU/Linux
+
+python: Python 3.10.12
+pysam: 0.24.0
+numpy: 2.2.6
+scipy: 1.15.3
+samtools: samtools 1.13
+htslib (via pysam): /home/hung114/.local/lib/python3.10/site-packages/pysam/libchtslib.cpython-310-x86_64-linux-gnu.so
+
+cores: 112
+               total        used        free      shared  buff/cache   available
+Mem:             503          29           3           0         470         470
+Filesystem                  Size  Used Avail Use% Mounted on
+/dev/mapper/mpathg           27T   25T  1.8T  94% /big8_disk
+140.123.104.107:/bip7_disk   28T   26T  1.6T  95% /bip7_disk
+
+mrd git commit: c137d4a71079df5b9247118ccfc10813ce18dc10
+mrd git status (short):
+ M configs/journal.yaml
+ M research/design-space/detector-components.yaml
+ M research/design-space/gaps.md
+ M research/design-space/gaps.yaml
+ M research/experiments/registry/EXP-G1-002.yaml
+ M research/knowledge/datasets.md
+ M research/knowledge/tools.md
+ M research/research-os.json
+ M research/suggestions/SUG-2026-08-002.yaml
+ M research/suggestions/SUG-2026-08-003.yaml
+ M research/suggestions/SUG-2026-08-004.yaml
+ M research/surveys/long-read-tumor-only-mrd/LITERATURE-CHECK-2026-08-25.md
+ M scripts/publish_daily_journal.py
+ M scripts/render_markdown_html.py
+D  site/src/components/DetectorMap.astro
+ M site/src/content.config.ts
+ M site/src/layouts/BaseLayout.astro
+ M site/src/layouts/NarrativeLayout.astro
+ M site/src/layouts/ResearchOsLayout.astro
+RM site/src/pages/index.astro -> site/src/pages/dashboard/index.astro

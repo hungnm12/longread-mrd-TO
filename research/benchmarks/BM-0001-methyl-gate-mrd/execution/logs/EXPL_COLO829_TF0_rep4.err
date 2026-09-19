@@ -1,0 +1,313 @@
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+  TF0_25x.rep4.bam cand 0/241
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] eb96b0ca-610d-411e-8226-509de5059ff7: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 140c7535-f64b-4360-a83c-4eac7f514a65: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 10285f68-e4dc-4e53-bf50-d0dd4a10994a: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 07f7d373-90b1-41ff-95b9-8dc7ae597a17: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[E::bam_parse_basemod2] 650f2e1a-b433-4cfe-896a-8cd5d1699253: MM tag refers to bases beyond sequence length
+[E::bam_parse_basemod2] 39deee86-0691-411c-bbb1-291c8a8864a9: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 68015e37-5c32-45cf-b8fd-068a48796959: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[E::bam_parse_basemod2] a8c2d7b9-d11e-482e-8c1f-738fb75ec33a: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 784acf8f-8466-4496-b1be-ccee7c30a25e: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[E::bam_parse_basemod2] 84dea587-2454-4934-bb23-4c8ed0cfeefa: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 3ce68c72-7af4-42fa-8106-793a2a0acf51: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 9005c0e6-d397-41bc-9bfd-d54da9e84406: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] be793b24-0799-4919-9ca1-0c6e1627235b: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] b7da0d0c-878a-449a-ac21-ce2ac6f6191f: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 8b3bd841-9c7f-40e2-ad8a-6cdfa5151496: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] a9f0b6f4-c48c-4997-97e5-341b8034d9a4: MM tag refers to bases beyond sequence length
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] c1b5d31f-2451-4e97-93d4-bbdca7367421: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 4ccdb7d3-6704-4ade-85b4-728ee1aeedb3: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 14118af2-7b11-4ad4-b087-1600b1846f08: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 5dffa1e4-720c-4a07-ad75-1bfd4cf0e70d: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 67edd870-9d1b-4863-bea9-a226ca68e152: MM tag refers to bases beyond sequence length
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] a03457e8-21e1-40cd-a3c6-84e3c3a6b58b: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 98375781-9e41-4992-b316-bf8e3637afae: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[E::bam_parse_basemod2] 13e572a3-c984-470e-9621-653a6f5245ff: MM tag refers to bases beyond sequence length
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::hts_idx_load3] The index file is older than the data file: /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam.bai
+[W::bam_next_basemod] MM tag refers to bases beyond sequence length
+DONE /bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep4.bam -> execution/raw_exploratory/EXPL_COLO829_TF0_rep4.json

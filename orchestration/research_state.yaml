@@ -157,6 +157,36 @@ qc_findings:
 critic_findings:
   - "review_001..review_005 — 14 blocking findings raised and resolved across five design
      iterations before the protocol was allowed to lock"
+  - "v1.1 redesign, five-lens adversarial panel (mechanism discrimination / strictness /
+     statistical validity / executability and cost / pre-registration hygiene). Verdict rule:
+     ACCEPT only if zero REVISE, zero REJECT and zero major issues. Three rounds ran; the rule was
+     never met and the design/review loop budget (8 of 8) is exhausted. v1.1 remains a DRAFT."
+  - "review_006 — ROUND 1, design iteration 6: 5 REVISE, 0 REJECT, 34 major. C3 excludes CpG
+     density only and is satisfied by a per-read error-rate filter (B1 keeps 40% of scorable ALT
+     reads in a TF0 blank against a 4.91% global keep rate, an 8.1x enrichment with no tumour
+     present, at a cutoff of exactly 1/13); S5 leg (a) reproduced only clause (i) of v1.0's S4 and
+     §20.6 dropped S4 from the conjunction — the one provable sideways move; the deciding leg had
+     no null while its null sd is ~2 z-units; the percentile grid could not be shown to reach its
+     targets and retention is a step function with heavy atoms; a positive outcome was invented
+     above the preregistered ceiling"
+  - "review_007 — ROUND 2, design iteration 7: 5 REVISE, 0 REJECT, 25 major. The pattern-blind
+     comparator set omitted the property that GENERATES score_b1 (per-read modification-call
+     uncertainty), plus read length, MAPQ and local coverage; C1's draw count raised 200 -> 2000
+     silently re-parameterised preregistered S1, S4 clause (ii) and F8 and would deterministically
+     fire F11; the bootstrap was used as a null so every refutation label was structurally
+     unreachable; null_sd was never defined; and the 28 input BAMs no longer exist, having been
+     converted to CRAM on 2026-09-12 [EV-0052], while the draft asserted the inputs were identical"
+  - "review_008 — ROUND 3, design iteration 8: 5 REVISE, 0 REJECT, 17 major. Major-issue trajectory
+     34 -> 25 -> 17, no REJECT at any round. The surviving lead finding is that the BLANK_TRIPLE
+     determination fires by construction at every evaluable target in AXIS-L x V1 and AXIS-B x V2
+     and its consequence clause has no stated scope, so S6 — the criterion written to answer
+     QC-02 — is either unsatisfiable on all data or carried only by rows the protocol itself calls
+     a re-expression of the QC-01 tie. Also surviving: the permutation legs have no computable
+     refutation rule, so labels L-D and L-F are unreachable; no null in the design isolates
+     methylation PATTERN; null_sd is still not operationally defined and the frozen support script
+     computes it by the forbidden reading; the 11.7x blank-spread inflation is an UNGATED figure
+     from a record FIND-0018 marks superseded by EV-0038; and the propagated WITHDRAWAL_BASIS
+     string attributes a POST HOC withdrawal to 'EXEC-001 plus qc_001.md'"
 
 assumptions:
   - "SEQC2 high-confidence regions are used as truth for evaluation only and never reach a classifier"
@@ -186,8 +216,15 @@ decisions:
     decision: lock protocol v1.0 after five design/review iterations, then REDESIGN on QC
     ref: research/benchmarks/BM-0001-methyl-gate-mrd/workflow_state.yaml
 
-iteration: 6           # design_iteration 5 completed; v1.1 drafting is iteration 6
-status: DESIGN — resuming at the node workflow_state.yaml names (next_agent: benchmark-designer)
+iteration: 8           # design iterations 6, 7 and 8 completed; max_design_iterations reached
+status: >-
+  HUMAN_GATE — v1.1 NOT ACCEPTED within the round budget. Three five-lens panel rounds ran
+  (review_006, review_007, review_008); every round returned 5 REVISE / 0 REJECT and the ACCEPT
+  rule (zero REVISE, zero REJECT, zero major issues) was never met. design_iteration and
+  review_iteration both reach loop_limits at 8 of 8, so the loop can neither auto-lock nor
+  auto-continue. v1.1 remains a DRAFT; protocols/v1.0_locked.md, its checksum, its registered
+  outcome `H1 SUPPORTED` and the whole of EXEC-001 are unchanged, as qc_001.md constraint (d)
+  requires. QC-01 and QC-02 therefore remain OPEN.
 
 # Specification placeholders, resolved from the repository rather than invented.
 max_retries: 5         # orchestration loop_limits.max_execution_iterations
@@ -201,5 +238,13 @@ success_criteria: >-
   needs n > 2 individuals and is not reachable inside this benchmark.
 
 next_action: >-
-  benchmark-designer drafts protocol v1.1 resolving QC-01 and QC-02 and folding deviations D3/D4,
-  under the §"Constraint on the redesign" rules. v1.0 and EXEC-001 are preserved unmutated.
+  HUMAN DECISION REQUIRED (AGENTS.md rules 2 and 10; the orchestrator may not resolve this).
+  Three options, none of which an agent may take unilaterally: (a) extend max_design_iterations /
+  max_review_iterations and return to benchmark-designer with the 17 surviving major issues in
+  reviews/review_008.md; (b) accept v1.1 with those 17 findings recorded as open limitations and
+  proceed to EXEC-002 — noting that the panel found the deciding criterion S6 may be unsatisfiable
+  on any data (review_008, R3-L2-01) and that the draft's own §20.6 clause 0b already closes the
+  positive branch before the run; or (c) stop BM-0001 at the v1.0 registered outcome plus
+  qc_001.md, leaving the mechanism half of H1 recorded as UNDERDETERMINED rather than withdrawn.
+  Under every option v1.0 and EXEC-001 stay preserved unmutated and no v1.1 result may be entered
+  into this file's known_evidence without its POST HOC label.

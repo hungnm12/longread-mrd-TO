@@ -1,0 +1,25 @@
+criterion	leg	individual	variance_construction	level	b1_value	comparator_value	delta	outcome
+S1	B1 > B0	COLO829	V1	TF1e-3	0.6931	-0.3667	1.0598	HELD
+S1	B1 > C1	COLO829	V1	TF1e-3	0.6931	-1.8113	2.5044	HELD
+S1	B1 > C2	COLO829	V1	TF1e-3	0.6931	0.1676	0.5255	HELD
+S2	no level lost B0->B1	COLO829	V1	all	1%:yes;0.1%:no;0.01%:no	1%:yes;0.1%:no;0.01%:no	none lost	HELD
+S3	B1 detects no blank	COLO829	V1	TF0	0 of 5 leave-one-out blanks detected	threshold z>=3	0	HELD
+S4	B1 retention differential (0.1% > blank)	COLO829	V1	TF1e-3	blank=0.092428 level=0.269213 ratio=2.9127	C1 ratio=1.1605 (expected ~1 by construction)	0.176785	HELD
+S1	B1 > B0	COLO829	V2	TF1e-3	1.4364	-0.4543	1.8907	HELD
+S1	B1 > C1	COLO829	V2	TF1e-3	1.4364	-2.4651	3.9015	HELD
+S1	B1 > C2	COLO829	V2	TF1e-3	1.4364	0.4024	1.034	HELD
+S2	no level lost B0->B1	COLO829	V2	all	1%:yes;0.1%:no;0.01%:no	1%:yes;0.1%:no;0.01%:no	none lost	HELD
+S3	B1 detects no blank	COLO829	V2	TF0	0 of 5 leave-one-out blanks detected	threshold z>=3	0	HELD
+S4	B1 retention differential (0.1% > blank)	COLO829	V2	TF1e-3	blank=0.092428 level=0.269213 ratio=2.9127	C1 ratio=1.1605 (expected ~1 by construction)	0.176785	HELD
+S1	B1 > B0	HCC1395	V1	TF1e-3	2.2995	0.7396	1.5599	HELD
+S1	B1 > C1	HCC1395	V1	TF1e-3	2.2995	-1.8074	4.1069	HELD
+S1	B1 > C2	HCC1395	V1	TF1e-3	2.2995	-0.073	2.3725	HELD
+S2	no level lost B0->B1	HCC1395	V1	all	1%:yes;0.1%:no;0.01%:no	1%:yes;0.1%:no;0.01%:no	none lost	HELD
+S3	B1 detects no blank	HCC1395	V1	TF0	0 of 5 leave-one-out blanks detected	threshold z>=3	0	HELD
+S4	B1 retention differential (0.1% > blank)	HCC1395	V1	TF1e-3	blank=0.363463 level=0.608466 ratio=1.6741	C1 ratio=0.8566 (expected ~1 by construction)	0.245003	HELD
+S1	B1 > B0	HCC1395	V2	TF1e-3	3.5547	0.8557	2.699	HELD
+S1	B1 > C1	HCC1395	V2	TF1e-3	3.5547	-2.4843	6.039	HELD
+S1	B1 > C2	HCC1395	V2	TF1e-3	3.5547	-0.1237	3.6784	HELD
+S2	no level lost B0->B1	HCC1395	V2	all	1%:yes;0.1%:yes;0.01%:no	1%:yes;0.1%:no;0.01%:no	none lost	HELD
+S3	B1 detects no blank	HCC1395	V2	TF0	0 of 5 leave-one-out blanks detected	threshold z>=3	0	HELD
+S4	B1 retention differential (0.1% > blank)	HCC1395	V2	TF1e-3	blank=0.363463 level=0.608466 ratio=1.6741	C1 ratio=0.8566 (expected ~1 by construction)	0.245003	HELD

@@ -1,0 +1,1596 @@
+====================================================================================================
+/bip7_disk/pingting114/mixed_bam/HCC1395/TF0_25x/TF0_25x.rep1.bam
+  ID=minimap2 PN=minimap2 VN=2.26-r1175
+    CL=minimap2 -ax map-ont -y -t 20 ../GRCh38_no_alt_analysis_set.fasta HCC1395BL_5khz_simplex_5mCG_5hmCG.fastq
+  ID=samtools PN=samtools VN=1.13
+    CL=samtools view -@ 80 -bS HCC1395BL_5khz_simplex_5mCG_5hmCG_align.sam
+  ID=samtools.1 PN=samtools VN=1.13
+    CL=samtools sort -@ 30 -o HCC1395BL_5khz_simplex_5mCG_5hmCG_align-sort.bam HCC1395BL_5khz_simplex_5mCG_5hmCG_align.bam
+  ID=samtools.2 PN=samtools VN=1.13
+    CL=samtools view -@ 16 -h /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395BL.bam
+  ID=samtools.3 PN=samtools VN=1.13
+    CL=samtools view -@ 16 -b -o /bip8_disk/pingting114/dedup_source_v2/HCC1395BL.normal.dedup.bam -
+  ID=samtools.4 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 101.94768764 -o /bip8_disk/pingting114/temp_mixed_bam_v2/TF0_25x/TF0_25x.rep1.bam /bip8_disk/pingting114/dedup_source_v2/HCC1395BL.normal.dedup.bam
+====================================================================================================
+/bip7_disk/pingting114/mixed_bam/HCC1395/TF1e-3_25x/TF1e-3_25x.rep1.bam
+  ID=minimap2 PN=minimap2 VN=2.26-r1175
+    CL=minimap2 -ax map-ont -y -t 20 ../GRCh38_no_alt_analysis_set.fasta HCC1395_5khz_simplex_5mCG_5hmCG.fastq
+  ID=samtools PN=samtools VN=1.13
+    CL=samtools view -@ 80 -bS HCC1395_5khz_simplex_5mCG_5hmCG_align.sam
+  ID=samtools.1 PN=samtools VN=1.13
+    CL=samtools sort -@ 30 -o HCC1395_5khz_simplex_5mGG_5hmCG_align-sort.bam HCC1395_5khz_simplex_5mGG_5hmCG_align.bam
+  ID=samtools.2 PN=samtools VN=1.13
+    CL=samtools view -@ 16 -h /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395.bam
+  ID=samtools.3 PN=samtools VN=1.13
+    CL=samtools view -@ 16 -b -o /bip8_disk/pingting114/dedup_source_v2/HCC1395.tumor.dedup.bam -
+  ID=samtools.4 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 301.0003082614 -o /bip8_disk/pingting114/temp_mixed_bam_v2/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/dedup_source_v2/HCC1395.tumor.dedup.bam
+  ID=minimap2-6240FEEA PN=minimap2 VN=2.26-r1175
+    CL=minimap2 -ax map-ont -y -t 20 ../GRCh38_no_alt_analysis_set.fasta HCC1395BL_5khz_simplex_5mCG_5hmCG.fastq
+  ID=samtools-3A8A2C3 PN=samtools VN=1.13
+    CL=samtools view -@ 80 -bS HCC1395BL_5khz_simplex_5mCG_5hmCG_align.sam
+  ID=samtools.1-5AC78D1B PN=samtools VN=1.13
+    CL=samtools sort -@ 30 -o HCC1395BL_5khz_simplex_5mCG_5hmCG_align-sort.bam HCC1395BL_5khz_simplex_5mCG_5hmCG_align.bam
+  ID=samtools.2-6A518297 PN=samtools VN=1.13
+    CL=samtools view -@ 16 -h /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395BL.bam
+  ID=samtools.3-67246D95 PN=samtools VN=1.13
+    CL=samtools view -@ 16 -b -o /bip8_disk/pingting114/dedup_source_v2/HCC1395BL.normal.dedup.bam -
+  ID=samtools.4-7E74689D PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.9467399545 -o /bip8_disk/pingting114/temp_mixed_bam_v2/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /bip8_disk/pingting114/dedup_source_v2/HCC1395BL.normal.dedup.bam
+  ID=samtools.5 PN=samtools VN=1.13
+    CL=samtools merge -@ 32 -o /bip8_disk/pingting114/temp_mixed_bam_v2/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/temp_mixed_bam_v2/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/temp_mixed_bam_v2/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.6 PN=samtools VN=1.13
+    CL=samtools merge -@ 32 -o /bip8_disk/pingting114/temp_mixed_bam_v2/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/temp_mixed_bam_v2/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/temp_mixed_bam_v2/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+====================================================================================================
+/bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam
+  ID=minimap2 PN=minimap2 VN=2.26-r1175
+    CL=minimap2 -t 50 -ax map-ont -y ../GRCh38_no_alt_analysis_set.fasta PAO29420.fastq
+  ID=samtools PN=samtools VN=1.13
+    CL=samtools view -@ 50 -bS PAO29420-align.sam
+  ID=samtools.1 PN=samtools VN=1.13
+    CL=samtools sort -@ 50 -o PAO29420-align-osrt.bam PAO29420-align.bam
+  ID=samtools.2 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 301.0007473842 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO29420.bam
+  ID=minimap2-3DEBA2F6 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-E4CD0A8 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-387D48D2 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 15.pass.cram --unoutput 15.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-43394878 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-525D8839 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-40BD4459 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 13.pass.cram --unoutput 13.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-47BA3BFD PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-21550203 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-23E66F73 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 2.pass.cram --unoutput 2.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-9B61420 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-3F6A1A63 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-57E9495 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 3.pass.cram --unoutput 3.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-130F2BBC PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-45982FE6 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-1C8E3CB8 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 10.pass.cram --unoutput 10.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-4D4FA50E PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-26F1516C PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-126CAAF0 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 0.pass.cram --unoutput 0.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-AD8AB2A PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-85B8B2E PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-145ABB19 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 6.pass.cram --unoutput 6.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-3C1FD1B7 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-576AAA1 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-38801924 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 14.pass.cram --unoutput 14.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-52B07B5A PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-212E6580 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-56577952 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 11.pass.cram --unoutput 11.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-30711B5 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-720FE8A6 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-7FBCB799 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 5.pass.cram --unoutput 5.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-10F10271 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-33F09705 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-2FC1455A PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 7.pass.cram --unoutput 7.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-4B31FE31 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-5896DB03 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-5B97C06 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 17.pass.cram --unoutput 17.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-2C85A5D9 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-6B7DDCD5 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-662AF9D1 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 16.pass.cram --unoutput 16.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-41F5027A PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-4C01D6CD PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6953BA83 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 18.pass.cram --unoutput 18.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-18B4BC78 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-48C02FA6 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-77A2258C PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 12.pass.cram --unoutput 12.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-45871F6C PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-5761EB9E PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6F0D8195 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 4.pass.cram --unoutput 4.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-15EF0C97 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-1EEDF44B PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6ABE903F PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 19.pass.cram --unoutput 19.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-68AA6F05 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-7788E63C PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-65611D5D PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 22.pass.cram --unoutput 22.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-69AB8C25 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-1F4CBBF3 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-7D00E75B PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 20.pass.cram --unoutput 20.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-4F418AFC PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-29E90776 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-1A8C4CBE PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 23.pass.cram --unoutput 23.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-66A7C445 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-78EF79DC PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-4B08E567 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 21.pass.cram --unoutput 21.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-6E0EC1FA PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-354E81C0 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-3C833CE0 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 8.pass.cram --unoutput 8.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-366E920F PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-65F4C6D4 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-7EFC1427 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 24.pass.cram --unoutput 24.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-1F728A9A PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-AC49B56 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-4A6D9C1D PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 25.pass.cram --unoutput 25.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-1CE28EAE PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-7942E85E PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-2A25A70C PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 26.pass.cram --unoutput 26.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-28D409F5 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-288C4C4 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-39996D01 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 29.pass.cram --unoutput 29.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-73D7816 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-7B808215 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-45495F91 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 27.pass.cram --unoutput 27.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-5681B533 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-27FFD4C2 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-142EDCB8 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 28.pass.cram --unoutput 28.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-6516899F PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-49498376 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-675E403C PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 30.pass.cram --unoutput 30.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-2C12BA27 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-C017294 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-E6C25BA PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 31.pass.cram --unoutput 31.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-1FC2991A PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-6F1C32E0 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-63770D1D PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 35.pass.cram --unoutput 35.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-B605A97 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-1D23CF12 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-61F2062 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 32.pass.cram --unoutput 32.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-789788E7 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-154D1026 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-586B01CB PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 34.pass.cram --unoutput 34.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-4029E898 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-42A42AC7 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-1954F67D PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 33.pass.cram --unoutput 33.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-59B27AD0 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-42FD55DF PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-475744FA PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 36.pass.cram --unoutput 36.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-37EE7FC5 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-10CD14A1 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-3E5A5B6 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 1.pass.cram --unoutput 1.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-3343186 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-583D87F9 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-A9BC0E4 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 38.pass.cram --unoutput 38.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-65CD9801 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-1B9950BF PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-3D7E3C PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 37.pass.cram --unoutput 37.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-71FFFB9 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-51E6E8FA PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-BBC2DE5 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 40.pass.cram --unoutput 40.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-465E89D7 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-6B153A2B PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-1A503FB5 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 39.pass.cram --unoutput 39.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-4CD80BEB PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-3EA5C4CF PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-3D4811C2 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 41.pass.cram --unoutput 41.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-40573B4D PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-26D93C53 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-5808461F PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 45.pass.cram --unoutput 45.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-6B01D735 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-6AF5E8B0 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-1DD3C234 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 44.pass.cram --unoutput 44.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-103A5597 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-58CF7A3C PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-78958B04 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 43.pass.cram --unoutput 43.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-2FB9E35D PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-827C351 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-28CE6484 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 42.pass.cram --unoutput 42.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-2D9540B5 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-6D2F6994 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-475FFCCB PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 9.pass.cram --unoutput 9.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-A9ED1BC PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-4631AF1D PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6A2075F7 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 47.pass.cram --unoutput 47.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-89019A6 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-7A4256CC PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-26D37ECE PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 46.pass.cram --unoutput 46.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-130EE884 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-3E4EB9FA PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-7BA66A26 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 49.pass.cram --unoutput 49.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-741D127F PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-48F77DB4 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-19A13054 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 48.pass.cram --unoutput 48.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-385DF34 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-78EC8290 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-275FE441 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 51.pass.cram --unoutput 51.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-505F114D PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-50C966F1 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-A8D873B PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 50.pass.cram --unoutput 50.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-50B12D09 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-90E2C8 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-22BE4794 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 55.pass.cram --unoutput 55.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-7B279B59 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-5896170B PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-B844C7 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 57.pass.cram --unoutput 57.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-717B9D66 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-72AF41CE PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-50CAD98E PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 53.pass.cram --unoutput 53.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-573B8DEA PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-1C196B5 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-13E5F793 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 54.pass.cram --unoutput 54.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-4AC42E60 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-32947586 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-59A33CE1 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 52.pass.cram --unoutput 52.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-2BE2FC5E PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-61ED7E3C PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-801055E PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 58.pass.cram --unoutput 58.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-6E827C93 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-1FD7BBF0 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-2B1A3145 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 56.pass.cram --unoutput 56.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-48EFAD01 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-606F3F0E PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-18E541FB PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 60.pass.cram --unoutput 60.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-6C4445AF PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-33D2F0C0 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-2DF5869D PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 59.pass.cram --unoutput 59.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-5584C2AD PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-3BF26E7D PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-916CE49 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 62.pass.cram --unoutput 62.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-2F3A02C PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-79DBE1DD PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-73C21C64 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 61.pass.cram --unoutput 61.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-3990E4 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-54509BF3 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6CF602D1 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 64.pass.cram --unoutput 64.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-19B5F2CF PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-352B6F4A PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6A7C5F4D PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 63.pass.cram --unoutput 63.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-6AE68AAA PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-62F4AFC PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-5EB3ED1D PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 65.pass.cram --unoutput 65.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-48A5C1A7 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-1FEC9F6D PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-59018743 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 67.pass.cram --unoutput 67.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-1519A09 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-13A84693 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-356F8DAE PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 69.pass.cram --unoutput 69.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-68F81877 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-46786875 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-78FA26FC PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 68.pass.cram --unoutput 68.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-57B39EDB PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-62943765 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-47DC75E5 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 71.pass.cram --unoutput 71.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-2C7C7B74 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-6D19CA22 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-AD5747A PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 74.pass.cram --unoutput 74.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-153ABEEF PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-671A79AA PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-12394A00 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 70.pass.cram --unoutput 70.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-19B05F81 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-366ED8D7 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-74C1D6F7 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 66.pass.cram --unoutput 66.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-2FC8C067 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-4788A989 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-5B3C6ACA PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 72.pass.cram --unoutput 72.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-1D8D8217 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-30BD338B PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-65B842E4 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 73.pass.cram --unoutput 73.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-17A4C0B4 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-251D05F5 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-72DFCD4A PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 76.pass.cram --unoutput 76.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-3A03174C PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-3A8C71BE PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-4726079E PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 75.pass.cram --unoutput 75.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-7EFFE736 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-27EF2A21 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-5A7AB467 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 77.pass.cram --unoutput 77.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-1E727158 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-E758D40 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-2B72F4CE PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 78.pass.cram --unoutput 78.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-38FB9A3E PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-12D4FCCC PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-52814102 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 79.pass.cram --unoutput 79.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-7A680949 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-A480D39 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6446EE5E PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 80.pass.cram --unoutput 80.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-31D867A8 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-23CE1AB8 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6FEA08B5 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 81.pass.cram --unoutput 81.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-407CF39D PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-25FA6C7C PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-4D4AAE31 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 82.pass.cram --unoutput 82.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-FC1280B PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-29EE36D6 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-1B61420E PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 83.pass.cram --unoutput 83.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-3A93D59A PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-64B344CB PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-2AA7D9C3 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 84.pass.cram --unoutput 84.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-DE08BFC PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-13B876AF PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-4D167E98 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 86.pass.cram --unoutput 86.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-3782961 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-50315B63 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-49EC022 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 85.pass.cram --unoutput 85.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-81DA6A0 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-5C1FFCDF PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-4F5D07E2 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 88.pass.cram --unoutput 88.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-31B98EDD PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-74E5A8B6 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-186DD1B2 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 89.pass.cram --unoutput 89.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-27184F47 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-5DFFA563 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-62D22C0D PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 87.pass.cram --unoutput 87.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-3F8D56C5 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-43C885D9 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-40BBB754 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 90.pass.cram --unoutput 90.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-5D514593 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-78F38CE PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-447F4142 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 92.pass.cram --unoutput 92.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-54FA6B0F PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-5081B5E7 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-3A5821BC PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 91.pass.cram --unoutput 91.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-7558816 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-84B9372 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-634CCF9 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 93.pass.cram --unoutput 93.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-7FE2FD4C PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-23D63004 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-255E03BD PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 95.pass.cram --unoutput 95.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-5AFCAD3D PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-B31B4BB PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-3A37B498 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 94.pass.cram --unoutput 94.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-34D17F94 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-1309488C PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6C88B396 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 99.pass.cram --unoutput 99.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-7DA070AA PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-1906923 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-4A221097 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 97.pass.cram --unoutput 97.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-FC4A7AD PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-5834C467 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-663AEF5C PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 96.pass.cram --unoutput 96.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-16AFF508 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-6DDF0E26 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-3FDD51F9 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 109.pass.cram --unoutput 109.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-58C79E5B PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-552AE937 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-242D3FAD PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 98.pass.cram --unoutput 98.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-5B2C1AD6 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-249953EB PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-40F7CB85 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 100.pass.cram --unoutput 100.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-3BAECDC9 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-6929E7A2 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6008BA22 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 103.pass.cram --unoutput 103.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-D772859 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-21FB234A PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-1C204C2 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 101.pass.cram --unoutput 101.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-20DF8A27 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-4352F2B5 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-712B79DF PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 102.pass.cram --unoutput 102.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-6598FD7F PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-5DA5F914 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-1AA0EC74 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 104.pass.cram --unoutput 104.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-1B9D56C4 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-2BFB9FD2 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6406D0F6 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 106.pass.cram --unoutput 106.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-1BD11822 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-2CBAE098 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-EDE32D2 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 105.pass.cram --unoutput 105.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-1514D7F1 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-333B2E77 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-4C39804C PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 108.pass.cram --unoutput 108.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=minimap2-4C3869B7 PN=minimap2 VN=2.24-r1122
+    CL=minimap2 -y -t 8 -ax map-ont ref.mmi -
+  ID=samtools-2F044781 PN=samtools VN=1.16.1
+    CL=samtools sort -@ 3
+  ID=samtools.1-6313B172 PN=samtools VN=1.16.1
+    CL=samtools view -e [qs] >= 10 --output 107.pass.cram --unoutput 107.fail.cram -O CRAM --reference GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -
+  ID=samtools.2-45834CB9 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.3 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.4 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.5 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.6 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.7 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.8 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.9 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.10 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.11 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.12 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.13 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.14 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.15 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.16 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.17 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.18 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.19 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.20 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.21 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.22 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.23 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.24 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.25 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.26 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.27 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.28 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.29 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.30 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.31 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.32 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.33 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.34 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.35 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.36 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.37 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.38 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.39 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.40 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.41 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.42 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.43 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.44 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.45 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.46 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.47 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.48 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.49 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.50 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.51 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.52 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.53 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.54 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.55 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.56 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.57 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.58 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.59 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.60 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.61 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.62 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.63 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.64 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.65 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.66 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.67 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.68 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.69 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.70 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.71 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.72 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.73 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.74 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.75 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.76 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.77 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.78 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.79 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.80 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.81 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.82 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.83 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.84 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.85 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.86 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.87 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.88 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.89 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.90 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.91 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.92 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.93 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.94 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.95 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.96 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.97 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.98 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.99 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.100 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.101 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.102 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.103 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.104 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.105 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.106 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.107 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.108 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.109 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.110 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.111 PN=samtools VN=1.16.1
+    CL=/home/OXFORDNANOLABS/atalenti/software/micromamba_env/envs/utils/bin/samtools view -@ 2 -e [f5]=~"PAO33946_" -T /mmfs1/groups/custflow/active/atalenti/somatic-workflow/reference/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -O CRAM -o flowcells/PAO33946/PAO33946.cram##idx##flowcells/PAO33946/PAO33946.cram.crai COLO829BL/SAMPLE.pass.cram
+  ID=samtools.112 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.113 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.114 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.115 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.116 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.117 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.118 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.119 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.120 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.121 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.122 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.123 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.124 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.125 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.126 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.127 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.128 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.129 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.130 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.131 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.132 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.133 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.134 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.135 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.136 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.137 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.138 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.139 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.140 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.141 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.142 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.143 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.144 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.145 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.146 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.147 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.148 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.149 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.150 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.151 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.152 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.153 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.154 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.155 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.156 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.157 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.158 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.159 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.160 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.161 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.162 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.163 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.164 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.165 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.166 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.167 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.168 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.169 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.170 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.171 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.172 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.173 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.174 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.175 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.176 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.177 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.178 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.179 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.180 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.181 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.182 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.183 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.184 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.185 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.186 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.187 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.188 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.189 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.190 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.191 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.192 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.193 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.194 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.195 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.196 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.197 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.198 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.199 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.200 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.201 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.202 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.203 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.204 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.205 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.206 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.207 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.208 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.209 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.210 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.211 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.212 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.213 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.214 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.215 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.216 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.217 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.218 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.219 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.220 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.221 PN=samtools VN=1.13
+    CL=samtools view -b -T /big8_disk/zhenyu112/GRCh38_no_alt_analysis_set.fasta -o PAO33946.bam -@ 24 PAO33946.cram
+  ID=samtools.222 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.223 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.224 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.225 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.226 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.227 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.228 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.229 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.230 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.231 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.232 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.233 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.234 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.235 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.236 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.237 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.238 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.239 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.240 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.241 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.242 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.243 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.244 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.245 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.246 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.247 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.248 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.249 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.250 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.251 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.252 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.253 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.254 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.255 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.256 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.257 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.258 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.259 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.260 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.261 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.262 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.263 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.264 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.265 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.266 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.267 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.268 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.269 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.270 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.271 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.272 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.273 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.274 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.275 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.276 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.277 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.278 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.279 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.280 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.281 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.282 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.283 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.284 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.285 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.286 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.287 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.288 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.289 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.290 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.291 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.292 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.293 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.294 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.295 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.296 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.297 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.298 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.299 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.300 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.301 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.302 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.303 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.304 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.305 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.306 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.307 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.308 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.309 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.310 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.311 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.312 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.313 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.314 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.315 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.316 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.317 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.318 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.319 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.320 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.321 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.322 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.323 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.324 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.325 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.326 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.327 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.328 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.329 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.330 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.331 PN=samtools VN=1.13
+    CL=samtools view -@ 32 -b -s 121.6270399197 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam /big8_disk/data/COLO829/ONT_PAO/PAO33946.bam
+  ID=samtools.332 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.333 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.334 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.335 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.336 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.337 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.338 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.339 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.340 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.341 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.342 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.343 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.344 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.345 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.346 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.347 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.348 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.349 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.350 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.351 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.352 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.353 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.354 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.355 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.356 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.357 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.358 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.359 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.360 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.361 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.362 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.363 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.364 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.365 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.366 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.367 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.368 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.369 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.370 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.371 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.372 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.373 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.374 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.375 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.376 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.377 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.378 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.379 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.380 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.381 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.382 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.383 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.384 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.385 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.386 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.387 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.388 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.389 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.390 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.391 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.392 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.393 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.394 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.395 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.396 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.397 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.398 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.399 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.400 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.401 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.402 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.403 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.404 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.405 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.406 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.407 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.408 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.409 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.410 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.411 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.412 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.413 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.414 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.415 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.416 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.417 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.418 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.419 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.420 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.421 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.422 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.423 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.424 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.425 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.426 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.427 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.428 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.429 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.430 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.431 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.432 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.433 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.434 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.435 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.436 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.437 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.438 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.439 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.440 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.441 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam
+  ID=samtools.442 PN=samtools VN=1.13
+    CL=samtools merge -r -@ 32 -o /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/TF1e-3_25x.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_tumor.rep1.bam /bip8_disk/pingting114/mixed_bam_COLO829_PAO/TF1e-3_25x/tmp_TF1e-3_normal.rep1.bam

@@ -1,0 +1,113 @@
+benchmark_id	individual	level	level_label	replicate	arm	variance_construction	n_candidates	n_gate_pass	depth_mean	alt_total	alt_scorable	alt_unscorable	alt_kept	retention	retention_scorable_only	G	sample_sd	blank_mean	blank_sd	n_blanks	z	z_lo	z_hi	verdict	prediction	truth_label	premise_flag	n_consensus_positions	n_confident_positions	n_scorable_reads	cut
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	1	B0	V1	241	1	22.0	1.0	1.0	0.0	1.0	1.0	1.0	1.0	0.977	0.3333	0.5774	3	0.6824	-0.7857	2.1504	not detected	0	0	-	97789	23342	4733	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	1	B0	V2	241	1	22.0	1.0	1.0	0.0	1.0	1.0	1.0	1.0	0.5774	0.3333	0.5774	3	1.1547	-1.3296	3.639	UNRELIABLE	0	0	-	97789	23342	4733	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	1	B1	V1	241	1	22.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97789	23342	4733	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	1	B1	V2	241	1	22.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97789	23342	4733	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	1	C1	V1	241	1	22.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97789	23342	4733	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	1	C1	V2	241	1	22.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97789	23342	4733	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	1	C2	V1	241	1	22.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97789	23342	4733	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	1	C2	V2	241	1	22.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97789	23342	4733	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	2	B0	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	1.0	0.0	0.0	0.3333	0.5774	3	NA	NA	NA	no estimate	0	0	-	97651	22547	4722	0.094595
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	2	B0	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	1.0	0.0	0.5774	0.3333	0.5774	3	-0.5774	-3.0617	1.907	not detected	0	0	-	97651	22547	4722	0.094595
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	2	B1	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97651	22547	4722	0.094595
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	2	B1	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97651	22547	4722	0.094595
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	2	C1	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97651	22547	4722	0.094595
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	2	C1	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97651	22547	4722	0.094595
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	2	C2	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97651	22547	4722	0.094595
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	2	C2	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97651	22547	4722	0.094595
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	3	B0	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	1.0	0.0	0.0	0.3333	0.5774	3	NA	NA	NA	no estimate	0	0	-	98114	23665	4688	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	3	B0	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	1.0	0.0	0.5774	0.3333	0.5774	3	-0.5774	-3.0617	1.907	not detected	0	0	-	98114	23665	4688	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	3	B1	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98114	23665	4688	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	3	B1	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98114	23665	4688	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	3	C1	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98114	23665	4688	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	3	C1	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98114	23665	4688	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	3	C2	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98114	23665	4688	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	3	C2	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98114	23665	4688	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	4	B0	V1	241	1	20.0	1.0	1.0	0.0	1.0	1.0	1.0	1.0	0.9747	0.3333	0.5774	3	0.684	-0.7876	2.1556	not detected	0	0	-	98988	23776	4799	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	4	B0	V2	241	1	20.0	1.0	1.0	0.0	1.0	1.0	1.0	1.0	0.5774	0.3333	0.5774	3	1.1547	-1.3296	3.639	UNRELIABLE	0	0	-	98988	23776	4799	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	4	B1	V1	241	1	20.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98988	23776	4799	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	4	B1	V2	241	1	20.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98988	23776	4799	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	4	C1	V1	241	1	20.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98988	23776	4799	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	4	C1	V2	241	1	20.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98988	23776	4799	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	4	C2	V1	241	1	20.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98988	23776	4799	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	4	C2	V2	241	1	20.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	98988	23776	4799	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	5	B0	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	1.0	0.0	0.0	0.3333	0.5774	3	NA	NA	NA	no estimate	0	0	-	97258	23161	4731	0.09375
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	5	B0	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	1.0	0.0	0.5774	0.3333	0.5774	3	-0.5774	-3.0617	1.907	not detected	0	0	-	97258	23161	4731	0.09375
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	5	B1	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97258	23161	4731	0.09375
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	5	B1	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97258	23161	4731	0.09375
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	5	C1	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97258	23161	4731	0.09375
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	5	C1	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97258	23161	4731	0.09375
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	5	C2	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97258	23161	4731	0.09375
+BM-0001-methyl-gate-mrd	COLO829	TF0	0%	5	C2	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	0	-	97258	23161	4731	0.09375
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	1	B0	V1	241	22	22.591	23.0	22.0	1.0	23.0	1.045455	1.0	23.0	4.6745	0.3333	0.5774	3	4.849	4.5422	5.1559	detected	1	1	oracle_free_premise_weakest_here	100338	23406	4789	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	1	B0	V2	241	22	22.591	23.0	22.0	1.0	23.0	1.045455	1.0	23.0	0.5774	0.3333	0.5774	3	39.2598	36.7755	41.7442	detected	1	1	oracle_free_premise_weakest_here	100338	23406	4789	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	1	B1	V1	241	22	22.591	23.0	22.0	1.0	7.0	0.318182	0.318182	7.0	2.5802	0.0	0.0	3	2.713	2.713	2.713	not detected	0	1	oracle_free_premise_weakest_here	100338	23406	4789	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	1	B1	V2	241	22	22.591	23.0	22.0	1.0	7.0	0.318182	0.318182	7.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	oracle_free_premise_weakest_here	100338	23406	4789	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	1	C1	V1	241	22	22.591	23.0	22.0	1.0	1.0	0.045455	0.045455	1.0	0.9747	0.0	0.0	3	1.026	1.026	1.026	not detected	0	1	oracle_free_premise_weakest_here	100338	23406	4789	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	1	C1	V2	241	22	22.591	23.0	22.0	1.0	1.0	0.045455	0.045455	1.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	oracle_free_premise_weakest_here	100338	23406	4789	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	1	C2	V1	241	22	22.591	23.0	22.0	1.0	1.0	0.045455	0.045455	1.0	0.9747	0.0	0.0	3	1.026	1.026	1.026	not detected	0	1	oracle_free_premise_weakest_here	100338	23406	4789	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	1	C2	V2	241	22	22.591	23.0	22.0	1.0	1.0	0.045455	0.045455	1.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	oracle_free_premise_weakest_here	100338	23406	4789	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	2	B0	V1	241	34	24.647	39.0	35.0	4.0	39.0	1.114286	1.0	39.0	6.0727	0.3333	0.5774	3	6.3673	6.1311	6.6035	detected	1	1	oracle_free_premise_weakest_here	97549	23072	4715	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	2	B0	V2	241	34	24.647	39.0	35.0	4.0	39.0	1.114286	1.0	39.0	0.5774	0.3333	0.5774	3	66.9726	64.4883	69.457	detected	1	1	oracle_free_premise_weakest_here	97549	23072	4715	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	2	B1	V1	241	34	24.647	39.0	35.0	4.0	10.0	0.285714	0.285714	10.0	3.0915	0.0	0.0	3	3.2346	3.2346	3.2346	detected	1	1	oracle_free_premise_weakest_here	97549	23072	4715	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	2	B1	V2	241	34	24.647	39.0	35.0	4.0	10.0	0.285714	0.285714	10.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	oracle_free_premise_weakest_here	97549	23072	4715	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	2	C1	V1	241	34	24.647	39.0	35.0	4.0	1.0	0.028571	0.028571	1.0	0.9832	0.0	0.0	3	1.0171	1.0171	1.0171	not detected	0	1	oracle_free_premise_weakest_here	97549	23072	4715	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	2	C1	V2	241	34	24.647	39.0	35.0	4.0	1.0	0.028571	0.028571	1.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	oracle_free_premise_weakest_here	97549	23072	4715	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	2	C2	V1	241	34	24.647	39.0	35.0	4.0	3.0	0.085714	0.085714	3.0	1.6773	0.0	0.0	3	1.7886	1.7886	1.7886	not detected	0	1	oracle_free_premise_weakest_here	97549	23072	4715	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	2	C2	V2	241	34	24.647	39.0	35.0	4.0	3.0	0.085714	0.085714	3.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	oracle_free_premise_weakest_here	97549	23072	4715	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	3	B0	V1	241	20	23.5	24.0	23.0	1.0	24.0	1.043478	1.0	24.0	4.7596	0.3333	0.5774	3	4.9724	4.671	5.2737	detected	1	1	oracle_free_premise_weakest_here	98018	22767	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	3	B0	V2	241	20	23.5	24.0	23.0	1.0	24.0	1.043478	1.0	24.0	0.5774	0.3333	0.5774	3	40.9919	38.5075	43.4762	detected	1	1	oracle_free_premise_weakest_here	98018	22767	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	3	B1	V1	241	20	23.5	24.0	23.0	1.0	11.0	0.478261	0.478261	11.0	3.2439	0.0	0.0	3	3.391	3.391	3.391	detected	1	1	oracle_free_premise_weakest_here	98018	22767	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	3	B1	V2	241	20	23.5	24.0	23.0	1.0	11.0	0.478261	0.478261	11.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	oracle_free_premise_weakest_here	98018	22767	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	3	C1	V1	241	20	23.5	24.0	23.0	1.0	1.0	0.043478	0.043478	1.0	0.9759	0.0	0.0	3	1.0247	1.0247	1.0247	not detected	0	1	oracle_free_premise_weakest_here	98018	22767	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	3	C1	V2	241	20	23.5	24.0	23.0	1.0	1.0	0.043478	0.043478	1.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	oracle_free_premise_weakest_here	98018	22767	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	3	C2	V1	241	20	23.5	24.0	23.0	1.0	1.0	0.043478	0.043478	1.0	0.986	0.0	0.0	3	1.0142	1.0142	1.0142	not detected	0	1	oracle_free_premise_weakest_here	98018	22767	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-2	1%	3	C2	V2	241	20	23.5	24.0	23.0	1.0	1.0	0.043478	0.043478	1.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	oracle_free_premise_weakest_here	98018	22767	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	1	B0	V1	241	1	32.0	1.0	1.0	0.0	1.0	1.0	1.0	1.0	0.9843	0.3333	0.5774	3	0.6773	-0.78	2.1346	not detected	0	1	-	97284	23105	4623	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	1	B0	V2	241	1	32.0	1.0	1.0	0.0	1.0	1.0	1.0	1.0	0.5774	0.3333	0.5774	3	1.1547	-1.3296	3.639	UNRELIABLE	0	1	-	97284	23105	4623	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	1	B1	V1	241	1	32.0	1.0	1.0	0.0	1.0	1.0	1.0	1.0	0.9843	0.0	0.0	3	1.016	1.016	1.016	not detected	0	1	-	97284	23105	4623	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	1	B1	V2	241	1	32.0	1.0	1.0	0.0	1.0	1.0	1.0	1.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97284	23105	4623	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	1	C1	V1	241	1	32.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97284	23105	4623	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	1	C1	V2	241	1	32.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97284	23105	4623	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	1	C2	V1	241	1	32.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97284	23105	4623	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	1	C2	V2	241	1	32.0	1.0	1.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97284	23105	4623	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	2	B0	V1	241	2	17.5	2.0	2.0	0.0	2.0	1.0	1.0	2.0	1.3732	0.3333	0.5774	3	1.2137	0.1692	2.2583	not detected	0	1	-	98143	23318	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	2	B0	V2	241	2	17.5	2.0	2.0	0.0	2.0	1.0	1.0	2.0	0.5774	0.3333	0.5774	3	2.8868	0.4024	5.3711	UNRELIABLE	0	1	-	98143	23318	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	2	B1	V1	241	2	17.5	2.0	2.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98143	23318	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	2	B1	V2	241	2	17.5	2.0	2.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98143	23318	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	2	C1	V1	241	2	17.5	2.0	2.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98143	23318	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	2	C1	V2	241	2	17.5	2.0	2.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98143	23318	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	2	C2	V1	241	2	17.5	2.0	2.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98143	23318	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	2	C2	V2	241	2	17.5	2.0	2.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98143	23318	4706	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	3	B0	V1	241	3	22.0	3.0	3.0	0.0	3.0	1.0	1.0	3.0	1.6918	0.3333	0.5774	3	1.5762	0.7284	2.424	not detected	0	1	-	97548	23429	4717	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	3	B0	V2	241	3	22.0	3.0	3.0	0.0	3.0	1.0	1.0	3.0	0.5774	0.3333	0.5774	3	4.6188	2.1345	7.1031	UNRELIABLE	0	1	-	97548	23429	4717	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	3	B1	V1	241	3	22.0	3.0	3.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97548	23429	4717	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	3	B1	V2	241	3	22.0	3.0	3.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97548	23429	4717	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	3	C1	V1	241	3	22.0	3.0	3.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97548	23429	4717	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	3	C1	V2	241	3	22.0	3.0	3.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97548	23429	4717	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	3	C2	V1	241	3	22.0	3.0	3.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97548	23429	4717	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	3	C2	V2	241	3	22.0	3.0	3.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	97548	23429	4717	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	1	B0	V1	241	1	14.0	1.0	0.0	1.0	1.0	NA	1.0	1.0	0.9636	0.3333	0.5774	3	0.6918	-0.7966	2.1803	not detected	0	1	-	98940	24021	4770	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	1	B0	V2	241	1	14.0	1.0	0.0	1.0	1.0	NA	1.0	1.0	0.5774	0.3333	0.5774	3	1.1547	-1.3296	3.639	UNRELIABLE	0	1	-	98940	24021	4770	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	1	B1	V1	241	1	14.0	1.0	0.0	1.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98940	24021	4770	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	1	B1	V2	241	1	14.0	1.0	0.0	1.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98940	24021	4770	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	1	C1	V1	241	1	14.0	1.0	0.0	1.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98940	24021	4770	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	1	C1	V2	241	1	14.0	1.0	0.0	1.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98940	24021	4770	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	1	C2	V1	241	1	14.0	1.0	0.0	1.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98940	24021	4770	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	1	C2	V2	241	1	14.0	1.0	0.0	1.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98940	24021	4770	0.1
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	2	B0	V1	241	2	27.0	2.0	2.0	0.0	2.0	1.0	1.0	2.0	1.3868	0.3333	0.5774	3	1.2018	0.1675	2.236	not detected	0	1	-	98613	23836	4675	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	2	B0	V2	241	2	27.0	2.0	2.0	0.0	2.0	1.0	1.0	2.0	0.5774	0.3333	0.5774	3	2.8868	0.4024	5.3711	UNRELIABLE	0	1	-	98613	23836	4675	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	2	B1	V1	241	2	27.0	2.0	2.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98613	23836	4675	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	2	B1	V2	241	2	27.0	2.0	2.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98613	23836	4675	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	2	C1	V1	241	2	27.0	2.0	2.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98613	23836	4675	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	2	C1	V2	241	2	27.0	2.0	2.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98613	23836	4675	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	2	C2	V1	241	2	27.0	2.0	2.0	0.0	1.0	0.5	0.5	1.0	0.9843	0.0	0.0	3	1.016	1.016	1.016	not detected	0	1	-	98613	23836	4675	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	2	C2	V2	241	2	27.0	2.0	2.0	0.0	1.0	0.5	0.5	1.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	98613	23836	4675	0.090909
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	3	B0	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	1.0	0.0	0.0	0.3333	0.5774	3	NA	NA	NA	no estimate	0	1	-	102035	24701	4778	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	3	B0	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	1.0	0.0	0.5774	0.3333	0.5774	3	-0.5774	-3.0617	1.907	not detected	0	1	-	102035	24701	4778	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	3	B1	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	102035	24701	4778	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	3	B1	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	102035	24701	4778	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	3	C1	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	102035	24701	4778	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	3	C1	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	102035	24701	4778	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	3	C2	V1	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	102035	24701	4778	0.095238
+BM-0001-methyl-gate-mrd	COLO829	TF1e-4	0.01%	3	C2	V2	241	0	0.0	0.0	0.0	0.0	0.0	NA	NA	0.0	0.0	0.0	0.0	3	NA	NA	NA	no estimate	0	1	-	102035	24701	4778	0.095238

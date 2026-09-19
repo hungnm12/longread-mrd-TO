@@ -1,0 +1,78 @@
+id: EV-0053
+created_at: 2026-09-19
+title: A protocol §23 reporting requirement was not discharged by EXEC-001 and not caught by QC — 3.23% of HCC1395's reads lose their methylation calls to unparseable MM/MN tags, against 0% of COLO829's
+type: data_integrity_check
+verification_status: verified
+verified_by: direct count over execution/logs/*.err against execution/raw/*.json, this server
+verified_on: 2026-09-19
+description: >-
+  Found while reviewing whether BM-0001's execution logs were worth committing as provenance.
+  Locked protocol v1.0 §23 names this exact stderr and gives the executor an instruction about it:
+  "Known benign stderr from the source BAMs, not a failure: `bam_parse_basemod2 ... MM/MN data
+  length is incompatible with SEQ length` ... The executor must count the affected reads and
+  report the count rather than suppress it."
+  No such count appears in execution_summary.md, protocol_deviations.md, precheck_validation.md
+  or anywhere under results/. The requirement was not discharged, it was not recorded as a
+  deviation, and qc_001.md reports "Protocol compliance PASS".
+path_or_url: research/benchmarks/BM-0001-methyl-gate-mrd/execution/logs/
+experiment: BM-0001-methyl-gate-mrd, EXEC-001
+individuals: 2
+
+observations:
+  - observation: >-
+      HCC1395: 30,731 reads across 13 logged samples carry MM/MN tags htslib cannot parse, over
+      950,151 reads touched — 3.23%. The rate is strikingly uniform: 3.20% to 3.26% in every one
+      of the 13 samples, 2,341 to 2,386 reads each.
+    command: "grep -c 'MM/MN data length is incompatible' execution/logs/HCC1395_*.err, against n_reads_touched in the matching execution/raw/*.json"
+  - observation: "COLO829: 0 such errors in any of its 14 primary or 14 exploratory logs."
+  - observation: >-
+      The protocol's own characterisation — "a small number of reads" — is not what the data show
+      for HCC1395. It is accurate for COLO829, where the number is zero.
+  - observation: >-
+      HCC1395_TF0_rep1 has no .err file; 87 log files exist for 28 primary plus 14 exploratory
+      passes. That sample is the one run_sample.py was validated against separately, so its count
+      is not available from the logs and the 3.23% figure covers 13 of HCC1395's 14 samples.
+
+mechanism:
+  - "run_sample.py builds per-read methylation calls from rd.modified_bases (ref_calls, line ~30). A read whose MM/MN tags fail to parse yields no modified bases, so it never reaches score_b1 and is absent from the scorable set rather than scored badly."
+  - "Those reads can still be ALT reads at gate-passing candidates, where they are counted in alt_unscorable — the quantity deviation D3 was raised about."
+
+bearing:
+  within_individual: >-
+    Limited. All four arms — B0, B1, C1, C2 — share one scorable set per sample by construction
+    (protocol §10), so reads lost here are lost identically for every arm. This does not by itself
+    create a between-arm difference, and QC-01's B1-versus-C2 comparison is within-individual.
+  between_individual: >-
+    A systematic, uncontrolled difference in the methylation input between the two individuals, in
+    a benchmark whose most-discussed result is a between-individual difference in methylation-based
+    detection (COLO829 3/3 at 0.1%, HCC1395 2/3). Protocol §24 item 2 already forbids comparing
+    magnitudes across individuals, so this does not break a stated criterion — it adds a reason why
+    that prohibition was correct, and one that was not on the list.
+  process: >-
+    The more serious finding is procedural. A §23 requirement went undischarged, was not recorded
+    among the five deviations, and passed a QC review that checked "Unapproved methodological
+    deviation NONE" and "Protocol compliance PASS". The compliance check did not verify that every
+    §23 instruction produced an artifact.
+
+classification:
+  failure_type: IMPLEMENTATION_FAILURE
+  symptom: "a protocol-mandated count was never produced, and its absence was scored as compliance"
+  likely_cause: "the instruction sits in §23 Execution constraints rather than in §22 Expected outputs, so it produced no entry in the artifact manifest and nothing was missing to notice"
+  recoverable: true
+  recommended_next_action: >-
+    Report the count as §23 requires. Move any §23 instruction that mandates a number into §22 so
+    it acquires a manifest entry, and extend the QC compliance check to walk every numbered
+    protocol instruction rather than the artifact list alone. Whether the unparseable reads differ
+    systematically from the parseable ones — in length, depth or error rate — is not established
+    here and would need measuring before the 3.23% is called benign.
+
+limitations:
+  - "Counted from executor stderr, not from a pass over the read data. The count is of error lines emitted; each was checked to correspond to a unique read name in the sampled logs, but this was not verified exhaustively across all 87 logs."
+  - "HCC1395_TF0_rep1 is not covered, so the individual-level rate rests on 13 of 14 samples."
+  - "No property of the affected reads was measured. They are characterised only as reads whose MM/MN tags htslib rejects."
+  - "Whether the same reads fail under the CRAM inputs now in place (EV-0052) was not tested."
+
+what_it_does_not_show:
+  - "That any BM-0001 criterion is invalid. Within an individual the loss is common to all arms."
+  - "That the affected reads are enriched for tumour-derived or normal-derived molecules, in either direction."
+  - "That COLO829's zero rate reflects better data rather than a different basecaller or library convention."

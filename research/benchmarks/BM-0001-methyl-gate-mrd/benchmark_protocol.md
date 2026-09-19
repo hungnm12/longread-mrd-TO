@@ -1,0 +1,937 @@
+# Benchmark Protocol
+
+## 0. Revision log
+
+### Design iteration 5 — resolution of review_004
+
+```text
+Resolution for B014 (aggressiveness confound returning through C1):
+- changed section: §15, §20, §21, §22
+- change made: a fourth preregistered success condition S4 tests the mechanism directly rather
+  than through z alone. B1's ALT retention must be DIFFERENTIAL — higher at 0.1% than in the
+  blank — while C1's is level-independent by construction. The retention ratio
+  r = retention(0.1%) / retention(TF0) is reported for all four arms with C1's 5th/95th
+  percentiles across 200 draws as the noise band. §20 now states that a z-win over C1 alone
+  does not establish the mechanism, and names MECHANISM UNSUPPORTED as a non-success outcome
+  for the case where S1 holds and S4 fails. §15 now carries the argument for why the primary
+  metric can detect the effect at all: a filter with proportional retention leaves z roughly
+  unchanged, so only a differential filter can move it.
+- status: RESOLVED
+
+Non-blocking N012 adopted (§22: explicit column set for ablation_results.tsv).
+Non-blocking N013 adopted (§15: the proportional-versus-differential argument stated).
+```
+
+### Design iteration 4 — resolution of review_003
+
+```text
+Resolution for B012 (arithmetic error in the execution plan):
+- changed section: §19, §23
+- change made: the exploratory COLO829 chr1 re-run is 14 BAM passes (5 blanks + 9 dilutions),
+  not 12; the total is 42, not 40. The runtime asymmetry is stated: exploratory passes cover
+  241 candidates against the primary passes' ~4,000, so wall-clock does not scale linearly
+  with pass count.
+- status: RESOLVED
+
+Resolution for B013 (undefined empty-scorable-set case):
+- changed section: §10 (step 6, and the C1/C2 rules that inherit it)
+- change made: the reference implementation's behaviour is written into the protocol —
+  n_scorable = 0 gives cut = 1.0, k = 0, no ALT read kept, G_arm = 0, sample_sd = 0, which
+  propagates to the already-defined `no estimate` verdict of §15. Adopted, not invented.
+- status: RESOLVED
+
+Non-blocking N010 adopted (§19: consensus and confident-position counts reported for the
+  exploratory arm, with small-consensus named as a candidate explanation).
+Non-blocking N011 adopted (§20: unexpected behaviour at 1% or 0.01% is a finding to report,
+  never a reason to move the primary level).
+```
+
+### Design iteration 3 — resolution of review_002
+
+```text
+Resolution for B009 (S3 construction unspecified):
+- changed section: §20 (S3)
+- change made: S3 is evaluated under BOTH variance constructions; the held-out blank's own
+  plug-in binomial sample_sd is used under V1 and sqrt(mean of the other four) under V2,
+  exactly as for any evaluated sample; S3 FAILS if any of the ten blanks returns `detected`
+  under either construction.
+- status: RESOLVED
+
+Resolution for B010 (integer score, tie-dependent aggressiveness):
+- changed section: §10 (C2), §16, §22
+- change made: C2 is defined by an explicit top-k rule with
+  k = n_scorable - 1 - floor(PCT/100 * (n_scorable - 1)), which depends only on the number of
+  scorable reads and on no outcome. Ties at the boundary are broken by a seeded permutation of
+  the tied block. B1 and C1 keep the frozen `> cut` rule unchanged. Realised retention is
+  recorded for all four arms so the matching is auditable.
+- status: RESOLVED
+
+Resolution for B011 (exploratory arm derivation ambiguous):
+- changed section: §19
+- change made: the exploratory COLO829 chr1 arm is an INDEPENDENT RE-RUN on the 241 chr1
+  candidates, with its own consensus, confident-position set and cutoff built from the reads
+  overlapping those candidates only. This is the honest analogue of HCC1395's chr1-only frame.
+  It costs 12 further BAM passes and is declared here rather than discovered at run time.
+- status: RESOLVED
+
+Non-blocking N006 adopted (§23, §24, §26: @PG chains and duplicate-flag rate captured).
+Non-blocking N007 adopted (§24 item 9: the gated total counts read-observations, not molecules).
+Non-blocking N008 adopted (§16: retention reported for all four arms).
+Non-blocking N009 adopted (§22: the full per-draw zlo_min vector is persisted).
+```
+
+### Design iteration 2 — resolution of review_001
+
+Every blocking issue in `reviews/review_001.md` (including its addendum)
+is addressed below. No unresolved review finding has been deleted.
+
+```text
+Resolution for B001 (degenerate control):
+- changed section: §10, §20, §21
+- change made: the outcome-matched random control is REMOVED. It is replaced by two controls
+  matched on the CUTOFF RULE rather than on B1's answer, so that retention follows from the
+  rule and B1's level-dependent retention becomes testable rather than assumed:
+  C1 permuted-score control, C2 CpG-density control. Neither can equal B1 by construction.
+- status: RESOLVED
+
+Resolution for B002 (gate ordering):
+- changed section: §9, §10
+- change made: the gate 1 <= alt <= 2 is evaluated on the UNFILTERED ALT count in every arm.
+  The set of gate-passing candidates is therefore identical across B0, B1, C1, C2, and only
+  the number of reads counted at those candidates differs. Stated normatively, matching the
+  frozen implementation's `stat(rows, use_kept)`.
+- status: RESOLVED
+
+Resolution for B003 (variance model chosen silently):
+- changed section: §15, §17, §20
+- change made: both variance constructions in the project record are preregistered together —
+  V1 plug-in binomial sample sd (the frozen mrdz/§4c construction) and V2 Poisson
+  sqrt(mean_blank) (the construction written in §1 of the metric decision). S1 must hold under
+  BOTH. `SD-MODEL DEPENDENT` is named as a non-success outcome in §20.
+- status: RESOLVED
+
+Resolution for B004 (undefined behaviour):
+- changed section: §15
+- change made: `sample_sd = 0` and `mean_blank = 0` are defined a priori to yield the frozen
+  implementation's `nan` -> verdict `no estimate`, which counts as a failure to demonstrate.
+- status: RESOLVED
+
+Resolution for B005 (control aggregation undefined):
+- changed section: §10, §15
+- change made: each C1 draw is a complete re-run of the arm across all of an individual's
+  samples, blanks included, under one draw index and seed; the per-draw statistic is a
+  `zlo_min`; the arm's reported statistic is the MEDIAN of 200 per-draw values with the 5th
+  and 95th percentiles. C2 is deterministic and needs no aggregation.
+- status: RESOLVED
+
+Resolution for B006 (S3 decided by noise; unused blanks):
+- changed section: §6, §20, §23
+- change made: all five TF0 replicates are executed for both individuals (24 -> 28 BAM passes).
+  rep1-3 remain the primary blank reference so the construction stays identical to the frozen
+  §4c procedure; S3 is leave-one-out over all five.
+- status: RESOLVED
+
+Resolution for B007 (UNRELIABLE unmapped):
+- changed section: §22
+- change made: only `detected` counts as a positive prediction; `UNRELIABLE`, `not detected`
+  and `no estimate` all count as negative. The three-way verdict is carried in its own column.
+- status: RESOLVED
+
+Resolution for B008 (prose definition of a frozen procedure):
+- changed section: §15, §23
+- change made: `mrdz.score.blank_spread`, `mrdz.score.z_interval` and
+  `mrdz.score.interval_verdict` (call threshold 3.0) are named as the NORMATIVE definition.
+  The executor imports and calls them; reimplementation is forbidden; the module SHA-256 is
+  recorded in the execution manifest.
+- status: RESOLVED
+
+Non-blocking N001 adopted (C1 respecified as a clean permutation null, consensus preserved).
+Non-blocking N002 adopted (C2 CpG-density control added).
+Non-blocking N003 adopted (§19, chr1-restricted COLO829 as EXPLORATORY).
+Non-blocking N004 adopted (§16, the 1% row carries a premise flag).
+Non-blocking N005 adopted (§22, statistical_tests.tsv carries a reason column).
+```
+
+## 1. Benchmark identity
+
+```yaml
+benchmark_id: BM-0001-methyl-gate-mrd
+version: 1.0
+status: LOCKED
+supersedes: 0.5
+locked_at: "2026-08-31T16:55:00+08:00"
+locked_by: orchestrator (AUTO_LOCK)
+lock_justified_by: reviews/review_005.md  # verdict REVIEW_PASS, zero blocking issues
+created_from:
+  - research/decisions/2026-08-25-metric-and-baseline.md
+  - research/findings/FIND-0017.md
+  - research/findings/FIND-0018.md
+  - research/findings/FIND-0019.md
+  - research/findings/FIND-0021.md
+  - research/surveys/long-read-tumor-only-mrd/exp-s1-022/
+  - research/THESIS-PLAN.md
+  - reviews/review_001.md
+  - reviews/review_002.md
+  - reviews/review_003.md
+  - reviews/review_004.md
+created: 2026-08-31
+```
+
+## 2. Research question
+
+```text
+Does adding an oracle-free per-read methylation filter to the frozen SNV-only
+gated detection score improve sample-level detection of tumour-derived DNA
+in ONT tumour/normal dilution samples at 1%, 0.1% and 0.01% tumour fraction,
+relative to the SNV-only score alone,
+and does any improvement replicate on a second individual?
+```
+
+## 3. Hypotheses
+
+### H0
+Adding the per-read methylation filter does not increase the primary metric on both
+individuals; or any increase it produces is matched by a filter of identical aggressiveness
+whose read-to-score correspondence has been destroyed (C1), or by a filter of identical
+aggressiveness that selects on CpG density instead of methylation pattern (C2).
+
+### H1
+Adding the per-read methylation filter increases the primary metric relative to SNV-only on
+both individuals, under both preregistered variance constructions, by more than C1 and more
+than C2.
+
+## 4. Prediction task
+
+**Sample-level cancer detection.** For one sequencing sample, emit a detection verdict for the
+presence of tumour-derived DNA, using only the sample under test, that individual's frozen
+tumour-only candidate set, and that individual's tumour-free blank samples.
+
+Not variant classification, not read classification, not tumour-fraction estimation.
+Read classification was measured separately (FIND-0021) and does not license an MRD claim;
+FIND-0021's own `what_it_does_not_show` says so.
+
+## 5. Unit of analysis
+
+```yaml
+unit_of_analysis: sample
+```
+
+One evaluated observation is one dilution BAM. This matches the question, which asks about
+detecting a *sample*, and it matches the unit frozen in the metric decision, which this
+benchmark does not change. Replicates within a level are three separate BAMs treated as three
+observations, with the pseudo-replication caveat in §17 and §24.
+
+## 6. Dataset specification
+
+All source BAMs are READ-ONLY on other users' volumes. Nothing in this benchmark writes to them.
+
+| individual | level | path pattern | replicates | role |
+|---|---|---|---|---|
+| HCC1395 | TF0 | `/bip7_disk/pingting114/mixed_bam/HCC1395/TF0_25x/TF0_25x.rep{1..5}.bam` | 5 | blank reference (rep1-3 primary) + S3 |
+| HCC1395 | TF1e-2 (1%) | `.../TF1e-2_25x/TF1e-2_25x.rep{1..3}.bam` | 3 | evaluated positive |
+| HCC1395 | TF1e-3 (0.1%) | `.../TF1e-3_25x/TF1e-3_25x.rep{1..3}.bam` | 3 | evaluated positive |
+| HCC1395 | TF1e-4 (0.01%) | `.../TF1e-4_25x/TF1e-4_25x.rep{1..3}.bam` | 3 | evaluated positive |
+| COLO829 | TF0 | `/bip7_disk/pingting114/mixed_bam/COLO829_PAO/TF0_25x/TF0_25x.rep{1..5}.bam` | 5 | blank reference (rep1-3 primary) + S3 |
+| COLO829 | TF1e-2 | `.../TF1e-2_25x/TF1e-2_25x.rep{1..3}.bam` | 3 | evaluated positive |
+| COLO829 | TF1e-3 | `.../TF1e-3_25x/TF1e-3_25x.rep{1..3}.bam` | 3 | evaluated positive |
+| COLO829 | TF1e-4 | `.../TF1e-4_25x/TF1e-4_25x.rep{1..3}.bam` | 3 | evaluated positive |
+
+Total: **28 BAM passes**.
+
+```yaml
+development: none — no parameter of any arm is fitted in this benchmark
+training: none
+validation: none
+test: all 28 samples
+external_test: >-
+  COLO829 is the replication individual. It carries no prior result for this task; the
+  HCC1395 detection arm was measured in EXP-S1-022 step 5 and step 8.
+```
+
+Technology: ONT, native modification calling, 5mC and 5hmC channels present on both
+individuals (verified 2026-08-19 on the BAMs). Nominal coverage 25x. Mixtures are tumour into
+that individual's own matched normal by samtools subsampling; seeds are in the BAM `@PG` chains.
+
+Evidence used: aligned reads, base and mapping quality, `MM`/`ML` modification tags.
+Evidence not used: HP/PS haplotags (absent from every BAM, verified 2026-08-19), CNV (no calls
+exist), matched-normal read content, population panels.
+
+## 7. Ground truth
+
+```yaml
+positive_label: sample constructed at nominal tumour fraction > 0
+negative_label: sample constructed at nominal tumour fraction = 0 (TF0 blank)
+truth_source: dilution construction provenance (level directory + @PG subsample chain)
+truth_matching_rule: >-
+  A BAM's label is the nominal tumour fraction of the directory it was constructed into.
+  No per-candidate and no per-read truth is used anywhere in this benchmark.
+uncertain_cases: >-
+  Realised tumour fraction may differ from nominal (EXP-S1-013). That affects what the level
+  NAMES mean, not the labels: TF0 contains no tumour material by construction and every
+  TF1e-k contains some.
+```
+
+Not treated as truth anywhere: caller PASS status, VAF, model confidence, SEQC2 somatic status.
+SEQC2, the orthogonal benchmark VCFs and both matched normals are EVALUATION-ONLY resources
+and **are not opened by any arm of this benchmark**.
+
+## 8. Candidate universe
+
+Frozen per individual, drawn before this benchmark existed. **Identical across all four arms.**
+
+| individual | source file | n | scope | drawn |
+|---|---|---|---|---|
+| HCC1395 | `research/surveys/long-read-tumor-only-mrd/exp-s1-002/results/counts_TF0.tsv` | 3,925 | chr1 | seed 20260824, before any count |
+| COLO829 | `research/surveys/long-read-tumor-only-mrd/exp-s1-007/results/counts_TF0.tsv` | 4,000 | genome-wide, 23 contigs | seed 20260825, before any count |
+
+Only `chrom`, `pos`, `ref`, `alt` are read. The `depth` and `n_alt` columns are **not** used;
+every count in this benchmark is recomputed from the BAM under test.
+
+The two frames differ because tumour-only candidates are individual-specific. The primary
+comparison is **within individual**, where the frame is identical across arms. No criterion in
+§20 compares magnitudes between individuals.
+
+The executor copies both frames verbatim into `results/candidate_universe.tsv` and records
+their SHA-256 in the execution manifest.
+
+## 9. Baseline
+
+```yaml
+baseline_id: B0
+name: frozen gated detection score (SNV-only)
+inputs: [frozen candidate set, the sample under test, that individual's TF0 blanks]
+excluded: [methylation, phasing, CNV, matched normal, truth labels, population panels]
+prediction_target: sample-level detection verdict
+```
+
+```text
+alt_reads(c,s)  reads at candidate c in sample s carrying the ALT allele,
+                base quality >= 20, mapping quality >= 20  (pysam pileup,
+                stepper='samtools', truncate=True)
+gate            candidate c is gate-passing in sample s iff  1 <= alt_reads(c,s) <= 2
+                AND depth(c,s) > 0
+G(s)            sum over gate-passing candidates of alt_reads(c,s)
+sample_sd(s)    sqrt( sum over gate-passing candidates of depth * p * (1-p) ),  p = a/depth
+```
+
+B0 is the reference comparator because it is the project's frozen metric, already measured on
+both individuals, and differs from every other arm in exactly one respect.
+
+## 10. Treatment arms
+
+All four arms are computed from **one BAM pass per sample**. They share the candidate universe,
+the quality thresholds, the gate, the blank construction, the variance constructions and the
+call rule.
+
+**Gate ordering, normative (resolves B002):** the gate is evaluated on the **unfiltered** ALT
+count `alt_reads(c,s)` in every arm. The gate-passing candidate set is therefore identical
+across B0, B1, C1 and C2. Arms differ only in `a`, the number of ALT reads counted at those
+candidates:
+
+```text
+B0:  a = alt_reads(c,s)                                    (all of them)
+B1:  a = number of ALT reads at c with score_B1  > cut_B1
+C1:  a = number of ALT reads at c with score_C1  > cut_C1
+C2:  a = number of ALT reads at c with score_C2  > cut_C2
+```
+
+`sample_sd` is recomputed per arm from that arm's own `a`, exactly as the frozen
+implementation does.
+
+### B1 — SNV + per-read methylation (the treatment)
+
+Every constant below is carried unchanged from EXP-S1-022 step 5. **None is fitted, tuned or
+selected in this benchmark.**
+
+```text
+ML        = 128/255   modification-probability threshold for calling a CpG methylated
+MIN_COV   = 10        minimum observations at a reference position to enter the consensus
+CONF_BAND = rate < 0.1 or rate > 0.9      a consensus position is "confident"
+MIN_CPG   = 5         minimum confident positions on a read for the read to be scorable
+PCT       = 95        percentile of the sample's own scorable-read score distribution
+```
+
+Per sample, using only that sample:
+
+1. Pile up every candidate. Record depth and the read names carrying ALT.
+2. For every read touched in step 1, record its per-reference-position methylation calls
+   (`read.modified_bases`, mapped to reference coordinates via `get_aligned_pairs(matches_only=True)`).
+3. Build a consensus methylation rate at every reference position observed >= MIN_COV times,
+   **from exactly those reads**, so the positions scored and the positions defining confidence
+   are the same set by construction.
+4. Keep the confident positions.
+5. `score_B1(read) = disagreements with the consensus / confident positions on the read`,
+   defined only if the read carries >= MIN_CPG confident positions; otherwise **unscorable**.
+6. `cut_B1` = the PCT-th percentile of `score_B1` over all scorable reads in this sample,
+   taken as `sorted_scores[int(PCT/100 * (len-1))]`.
+7. An ALT read is kept iff it is scorable and `score_B1 > cut_B1`. **Unscorable ALT reads are
+   dropped.**
+
+**Empty-scorable-set case, fixed a priori (resolves B013).** If a sample has `n_scorable = 0`,
+the reference implementation's behaviour is adopted unchanged: `cut = 1.0`. Because the score
+is bounded in [0, 1] and the rule is a strict `>`, no ALT read is kept, so `G_arm = 0` and
+`sample_sd = 0`, which propagates to the `no estimate` verdict already defined in §15. The same
+case gives `k = 0` in C2's top-k rule (the formula's `-1` is clamped at zero) and keeps nothing.
+This applies identically to B1, C1 and C2. It is the reference implementation's behaviour being
+written down, not a new choice.
+
+No matched normal, reference methylome or tissue atlas is opened. The published read-level
+methods select informative CpGs by comparing two reference tissues; this project may not,
+because its only matched normal is evaluation-only. The substitute — confidence within one
+sample — is weaker in principle and is stated as such, not defended.
+
+### C1 — permuted-score control (resolves B001, adopts N001)
+
+Steps 1-6 exactly as B1, consensus and cutoff **unchanged**. Then, before step 7, the
+`score_B1` values are permuted uniformly at random **across the scorable reads of that sample**.
+`cut_C1 = cut_B1` (the score multiset is unchanged, so the cutoff is unchanged by construction).
+
+This is the sharpest available null. It preserves the consensus, the confident-position set,
+the exact score distribution, the scorable/unscorable partition and the overall retention rate
+among scorable reads. It destroys exactly one thing: which read carries which score. If B1
+does not beat C1, methylation is not identifying the tumour-derived reads; the filter's
+aggressiveness is doing the work.
+
+Because C1's ALT retention is level-independent by construction while B1's was measured at
+26% in blank, 67% at 1% and 37-50% at 0.1% on HCC1395, C1 cannot equal B1 by arithmetic —
+the defect that made v0.1's control degenerate.
+
+### C2 — CpG-density control (resolves B001, adopts N002; retention fixed per B010)
+
+Steps 1-4 exactly as B1. Then `score_C2(read) = number of confident positions on the read`,
+defined for reads with >= MIN_CPG confident positions and unscorable otherwise — **the same
+scorable set as B1**.
+
+`score_C2` is integer-valued with heavy ties, so the frozen `> cut` rule (written for the
+continuous `score_B1`) would give a tie-dependent retention rate and C2 would stop being an
+equally aggressive filter. C2 therefore uses an explicit **top-k** rule whose `k` depends only
+on the number of scorable reads and on no outcome of any arm:
+
+```text
+k = n_scorable - 1 - floor( PCT/100 * (n_scorable - 1) )
+```
+
+which is exactly the number of reads the frozen percentile index leaves strictly above the cut
+position. Keep the `k` highest-scoring reads by `score_C2`; where a tie spans the boundary,
+break it by a seeded random permutation of the tied block (seed `20260831`, hashed with the
+sample id, recorded in `random_seeds.yaml`). An ALT read is kept iff it is scorable and in that
+top-k set.
+
+B1 and C1 keep the frozen `> cut` rule unchanged; their scores are continuous and ties are
+negligible. **Realised retention is recorded for all four arms** (§16, §22) so the matching is
+auditable rather than assumed.
+
+FIND-0021 measured per-read AUC rising with modification-call count (0.586 / 0.621 / 0.675
+across CpG-count buckets). C2 tests whether B1 is in effect selecting CpG-dense reads.
+
+### Stochasticity and aggregation (resolves B005)
+
+- **B0, B2-free, C2** are deterministic. One value each.
+- **C1** is stochastic. One *draw* is a complete re-run of the arm across **all of that
+  individual's samples, blanks included**, under a single draw index `j` and seed
+  `20260831 + j`, hashed with the sample id so each sample's permutation is independent but
+  reproducible. Each draw yields one complete set of per-sample statistics and hence one
+  `zlo_min` per level per variance construction. **200 draws.** The arm's reported statistic
+  is the **median** across draws; the 5th and 95th percentiles are reported beside it. The
+  median is used so a single degenerate draw cannot move the control's summary.
+
+## 11. Features and evidence provenance
+
+| Evidence | Source | Used by | Available at inference? | Leakage risk | Missingness |
+|---|---|---|---|---|---|
+| ALT read count at candidate | pileup of the sample under test | B0 B1 C1 C2 | yes | none | none |
+| Depth at candidate | same pileup | all (sample_sd, V1) | yes | none | none |
+| Per-read CpG methylation calls | `MM`/`ML` of the sample under test | B1, C1, C2 | yes | none — sample-internal | reads with < MIN_CPG confident positions are unscorable; rate reported per arm and level |
+| Consensus methylation rate | derived in step 3 from the sample under test only | B1, C1, C2 | yes | none by construction — no reference tissue, no matched normal, no pooling across samples | positions seen < MIN_COV times excluded |
+| Confident-position set | derived, sample under test only | B1, C1, C2 | yes | none | — |
+| Cutoff (`cut_B1`, `cut_C1`, `cut_C2`) | 95th percentile of that sample's own scores | B1, C1, C2 | yes | none — not selected against any outcome | — |
+| Confident-position count per read | derived, sample under test only | C2 | yes | none | same scorable set as B1 |
+| Candidate coordinates | frozen tables with recorded seeds, predating this benchmark | all arms | yes | none — identical across arms | — |
+| Nominal tumour fraction | directory provenance | **evaluation only** | n/a | would be leakage if scored on; it is not | — |
+
+No feature encodes the truth label. `uses_truth = FALSE` for every feature, and the executor
+must emit `feature_provenance.tsv` asserting this per feature.
+
+## 12. Experimental controls
+
+- **Coverage.** All arms read the same BAM in the same pass and see identical depth. Depth per
+  candidate per sample is recorded, so this is auditable rather than asserted.
+- **Candidate selection.** Frozen; gate applied identically on the unfiltered ALT count; the
+  gate-passing set is identical across arms by construction (§10).
+- **Filter aggressiveness.** C1 and C2 share B1's cutoff rule and scorable set. This is the
+  control v0.1 lacked.
+- **Read-to-score correspondence.** C1 isolates it.
+- **CpG density / read composition.** C2 isolates it.
+- **Missing evidence.** Unscorable ALT reads are dropped by B1, C1 and C2 alike, and the
+  scorable set is identical across those three arms — so missingness cannot differ between
+  treatment and its controls. Its rate is reported per level so a blank-versus-dilution
+  difference is visible.
+- **Dilution.** All three levels evaluated and reported separately, including 0.01%.
+- **Variance model.** Both preregistered constructions reported (§15); FIND-0018 showed the
+  baseline's detection is model-dependent, so a single construction is not enough.
+- **Genomic context.** Frames differ between individuals; no criterion compares them.
+- **Model complexity.** Nothing is fitted in any arm. B1 has no free parameter B0 lacks.
+- **Class imbalance.** At the sample level: 5 negatives and 9 positives per individual, all
+  reported. No aggregate accuracy is used as a metric.
+
+## 13. Data splitting
+
+No train/test split exists because nothing is trained. `split_manifest.tsv` records, per
+sample: individual, level, replicate, arm-independent role (`blank_primary` for TF0 rep1-3,
+`blank_s3_only` for rep4-5, `evaluated` otherwise), and an assertion that the sample
+contributes to no fitted quantity.
+
+The primary blank reference for individual *i* is the mean over that individual's TF0 rep1-3.
+A blank replicate is never its own reference: S3 uses leave-one-out over the five blanks.
+
+## 14. Leakage guards
+
+| path | guard | how verified |
+|---|---|---|
+| truth set used as a feature | SEQC2 / orthogonal VCFs are never opened | executor records the complete list of files opened |
+| matched normal in discovery or inference | `HCC1395BL.bam`, `COLO829BL.bam` never opened | same |
+| labels used in candidate generation | frames drawn before this benchmark, recorded seeds, PASS calls only | frame checksums in the manifest |
+| threshold selection on evaluated data | all five methylation constants, the gate bounds, PCT and the call threshold 3.0 are carried unchanged from prior frozen records | protocol locked and checksummed before execution |
+| preprocessing fitted on the full dataset | consensus, confident set and cutoff are fitted **per sample on that sample alone**; nothing is pooled | one process per sample; no cross-sample state |
+| cross-sample leakage | sample ids never mix; each sample's model is independent | same |
+| blank leakage | blank reference and evaluated sample are always distinct BAMs; S3 is leave-one-out | split manifest |
+| results-driven redesign | protocol locked, SHA-256 recorded, execution references the locked version | workflow_state.yaml |
+
+## 15. Primary metric
+
+```yaml
+primary_metric: zlo_min at 0.1%, reported under BOTH variance constructions
+```
+
+### Normative implementation (resolves B008)
+
+The following functions in `mrd/tools/mrdz/mrdz/score.py` are the **normative definition**.
+The executor must import and call them. Reimplementation is forbidden. The module's SHA-256
+is recorded in `execution_manifest.yaml`.
+
+```text
+blank_spread(blank_totals)      -> (mean, sd, n)          sd is the sample sd, n-1 denominator
+z_interval(sample_total, blank_totals, sample_sd)
+                                -> (z, lo, hi, n_blanks)
+    z    = (sample_total - mean) / sample_sd
+    half = t95[n] * (sd / sqrt(n)) / sample_sd
+    lo, hi = z -/+ half
+interval_verdict(z, lo, hi, call_threshold=3.0)
+                                -> one of: detected | UNRELIABLE | not detected
+                                         | no interval | no estimate
+```
+
+### The two variance constructions (resolves B003)
+
+Both are in the project record and FIND-0018 showed they can disagree about detection.
+Both are preregistered; neither is chosen after the fact.
+
+```text
+V1  sample_sd = plug-in binomial, sqrt( sum depth * p * (1-p) ) over gate-passing candidates
+    — the construction used by mrdz and by the §4c reporting rule.
+
+V2  sample_sd = sqrt( mean_blank )
+    — the Poisson construction written in §1 of research/decisions/2026-08-25-metric-and-baseline.md.
+```
+
+V2 is obtained by calling the same `z_interval` with `sample_sd = sqrt(mean_blank)`. The
+interval machinery, blank set, gate and call threshold are otherwise identical.
+
+### The metric
+
+Per individual, per arm, per variance construction:
+
+```text
+blanks   = that arm's gated totals on TF0 rep1, rep2, rep3        (primary reference)
+for each 0.1% replicate r in {1,2,3}:
+    z(r), lo(r), hi(r), n = z_interval( G_arm(r), blanks, sample_sd_arm(r) )
+zlo_min  = min over r of lo(r)
+```
+
+### Undefined cases, fixed a priori (resolves B004)
+
+```text
+sample_sd = 0        -> z_interval returns nan; verdict "no estimate"
+mean_blank = 0       -> V2's sample_sd is 0; same outcome
+any lo(r) is nan     -> zlo_min is UNDEFINED for that arm/individual/construction,
+                        and counts as a FAILURE TO DEMONSTRATE for S1, never as a pass
+fewer than 2 blanks  -> cannot arise here (5 exist); the frozen "no interval" verdict applies
+```
+
+### Why 0.1% and why the lower bound
+
+**Why this level.** 0.1% is the only level at which the arms can separate, and that was fixed
+by the prior record, not by this benchmark's results: 1% detects in every arm, individual and
+variance model measured to date, and 0.01% is 0/3 everywhere and was shown in
+FIND-0019 / EV-0039 to be **signal-limited rather than background-limited**, so no filtering
+change can reach it. Choosing 0.1% after seeing these results would be goalpost-moving.
+Choosing it from the frozen prior record is not. All three levels are reported regardless.
+
+**Why the lower bound rather than the point estimate.** §4c of the metric decision measured
+that at 0.1% the blank replicates alone move the point z across the call threshold in every
+HCC1395 replicate. A criterion on the point estimate would be a criterion on noise.
+
+**Why this metric can detect the effect at all (adopts N013).** A filter whose ALT retention is
+the *same* in the blank and in the evaluated sample shrinks numerator and denominator together
+and leaves z roughly where it was: at HCC1395's measured numbers a uniform 30% filter gives
+`(0.3*59 - 0.3*39) / sqrt(0.3 * ...) ~ 2.5` against the frozen `(59 - 39)/7.39 = 2.71`. Only a
+filter whose retention is **differential** — higher where tumour is present than in the blank —
+can raise z. Differential retention is therefore the mechanism this benchmark is testing, it is
+directly measurable arm by arm, and S4 in §20 makes it decision-relevant rather than
+descriptive. The choice of metric is an argument, not a convention.
+
+## 16. Secondary metrics
+
+Preregistered. Reported for every arm, individual, level and replicate:
+
+- gated total `G`
+- point z and interval `[lo, hi]`, under V1 and V2
+- three-way verdict per replicate
+- level detection under the frozen replicate rule (a level detects only if all 3 replicates
+  return `detected`)
+- ALT-read retention rate (kept / scorable ALT) and unscorable-ALT fraction, **for all four
+  arms** — the credibility of `B1 > C1` and `B1 > C2` rests on the reader seeing how aggressive
+  each filter actually was (adopts N008)
+- number of gate-passing candidates, and mean depth
+- for C1 only: the 5th, 50th and 95th percentiles across the 200 draws
+
+Every 1% row carries a premise flag (adopts N004): at 1% the sample is ~99% normal, so the
+oracle-free consensus premise is weaker there than at 0.1% and 0.01%. The flag is a column,
+not a footnote.
+
+## 17. Statistical analysis
+
+```yaml
+comparison:
+  - B1 - B0   in zlo_min at 0.1%, within individual, under V1 and V2
+  - B1 - C1   same
+  - B1 - C2   same
+null_hypothesis: each difference is <= 0
+statistical_test: NONE — see justification
+confidence_interval: Student-t 95% on the blank mean, propagated onto z (mrdz.z_interval)
+multiple_testing_correction: not applicable — no p-value is computed
+effect_size: the paired difference in zlo_min, in z units, reported per individual with the
+             three per-replicate paired differences that produced it
+decision_rule: the consistency rule in §20
+```
+
+**Justification for running no significance test.** The three replicates at a level are
+subsamples of one library, not independent samples. FIND-0018 and its correction EV-0038
+measured the consequence directly: the pseudo-blank spread understates the between-library
+spread by more than an order of magnitude, in the permissive direction. A t-test on n=3
+pseudo-replicates would produce a p-value whose denominator is known to be wrong. The benchmark
+therefore decides on a preregistered consistency rule over paired differences, plus interval
+reporting, and reports effect sizes. **No p-value is computed, so none can be selected after
+the fact.** `results/statistical_tests.tsv` records this reason in a `reason` column rather
+than being empty (adopts N005).
+
+Every arm is computed on the same BAM in the same pass, so every comparison is paired at the
+sample level and the pseudo-replication affects all arms identically.
+
+## 18. Ablation plan
+
+```text
+B0            SNV evidence only
+B1 - B0       what adding the methylation filter does
+B1 - C1       what the read-to-score correspondence adds over an equally aggressive filter
+B1 - C2       what the methylation pattern adds over CpG density
+```
+
+Phasing and CNV arms are **unavailable, not omitted**: HP/PS tags are absent from every BAM
+(verified 2026-08-19) and no CNV calls exist for either individual.
+
+## 19. Low-signal / dilution analysis
+
+Every metric in §15-16 is computed **separately at TF0, 1%, 0.1% and 0.01%**. Pooling across
+levels is forbidden.
+
+0.01% is expected to fail in every arm. It is retained and reported because a protocol that
+reports only the levels where the treatment can win is not a benchmark. If B1 produces a
+detection at 0.01%, that is first a suspicion of a defect, not a success — the level was shown
+to be signal-limited, and no filtering change should reach it.
+
+**EXPLORATORY — NOT PRIMARY BENCHMARK** (adopts N003; derivation fixed per B011): the same
+four arms on COLO829's **241 chr1 candidates**, run as an **independent re-run**, not as a
+subset of the genome-wide pass. Its consensus, confident-position set and cutoff are built from
+the reads overlapping those 241 candidates only — the honest analogue of HCC1395's chr1-only
+frame, in which the consensus is likewise built from a chr1 read set. It costs **14 further BAM
+passes** — COLO829's 5 blanks and 9 dilutions — and is declared here rather than decided at run
+time. It is reported separately and **decides nothing in §20**.
+
+The arm's consensus is built from reads overlapping 241 candidates rather than 4,000, roughly a
+sixteen-fold smaller read set and therefore far fewer positions reaching `MIN_COV = 10`. It may
+be consensus-limited rather than signal-limited, which is not what the primary benchmark
+measures. Its consensus size and confident-position count are therefore reported beside its
+result, and a small consensus is named in advance as a candidate explanation for whatever it
+shows (adopts N010).
+
+## 20. Success criteria
+
+Preregistered. Fixed before any number in this benchmark exists.
+
+```text
+S1 (PRIMARY)
+    at 0.1%, on BOTH individuals, under BOTH variance constructions V1 and V2:
+        zlo_min(B1) > zlo_min(B0)
+    AND zlo_min(B1) > zlo_min(C1)      [C1 = median over 200 draws]
+    AND zlo_min(B1) > zlo_min(C2)
+
+S2 (NO REGRESSION)
+    No level detected by B0 under the frozen replicate rule becomes undetected under B1,
+    on either individual, under either construction.
+
+S4 (DIFFERENTIAL RETENTION — the mechanism)
+    For B1, on BOTH individuals:
+        ALT retention at 0.1%  >  ALT retention at TF0 (blank)
+    and this must NOT hold for C1 beyond its own sampling noise — C1's retention is
+    level-independent by construction, so a C1 ratio distinguishable from 1 would indicate an
+    implementation fault rather than a control.
+    Report the retention ratio  r = retention(0.1%) / retention(TF0)  for ALL FOUR arms, with
+    C1's 5th and 95th percentiles across its 200 draws as the noise band.
+
+S3 (NO FALSE DETECTION)
+    Leave-one-out over all five TF0 replicates per individual: each blank is scored against
+    the mean and spread of the other four, using that held-out blank's OWN sample_sd exactly
+    as for any evaluated sample — the plug-in binomial under V1, sqrt(mean of the other four)
+    under V2. Evaluated under BOTH constructions.
+    S3 FAILS if ANY of the ten blanks returns `detected` under EITHER construction.
+
+H1 is supported only if S1, S2, S3 and S4 all hold.
+
+`zlo_min(B1) > zlo_min(C1)` alone does NOT establish the mechanism. C1 retains ALT reads at
+about 5% in every sample while B1's measured retention on HCC1395 was 26% in the blank, 67% at
+1% and 37-50% at 0.1%; a z-win driven by counting statistics rather than by selection would
+satisfy S1's C1 leg without the mechanism being real. S4 is the leg that carries the mechanism
+claim, and it is necessary.
+```
+
+**The primary level does not move (adopts N011).** 0.1% was chosen from the frozen prior record
+(§15) before any number in this benchmark existed. If 1% or 0.01% behaves unexpectedly here,
+that is a **finding to report**, not a reason to re-select the primary level. A pre-registration
+that can be revised by its own results is not one.
+
+Named outcomes, which may not be relabelled:
+
+```text
+S1 holds but S4 fails                         -> MECHANISM UNSUPPORTED. Not a success. The
+                                                 z-win is attributable to filter aggressiveness
+                                                 rather than to methylation selecting the
+                                                 tumour-derived reads.
+S1 holds under V1 but not V2 (or vice versa)  -> SD-MODEL DEPENDENT. Not a success.
+S1 holds on HCC1395 only                      -> NOT REPLICATED. Not a success. This is the
+                                                 outcome FIND-0021's COLO829 replication
+                                                 failure makes a live possibility.
+S1 fails against C1                           -> REFUTED: the gain is filter aggressiveness,
+                                                 not methylation identifying reads.
+S1 fails against C2                           -> REFUTED: the gain is CpG density, not
+                                                 methylation pattern.
+S2 fails                                      -> B1 inadmissible regardless of S1.
+S3 fails                                      -> B1 inadmissible regardless of S1.
+zlo_min UNDEFINED anywhere it is needed       -> FAILURE TO DEMONSTRATE, never a pass.
+```
+
+## 21. Failure criteria
+
+```text
+F1  zlo_min(B1) <= zlo_min(B0) on either individual, under either construction
+        -> H1 not supported. Recorded as measured.
+F2  C1 >= B1 on either individual   -> H1 refuted by the permutation control.
+F3  C2 >= B1 on either individual   -> H1 refuted by the density control.
+F4  S1 holds on one individual only -> NOT REPLICATED.
+F5  B1 detects a blank (S3 fails)   -> B1 inadmissible.
+F6  V1 and V2 disagree              -> SD-MODEL DEPENDENT.
+F7  S4 fails while S1 holds         -> MECHANISM UNSUPPORTED. The gain is aggressiveness.
+F8  C1's retention ratio differs from 1 beyond its own 5-95 band
+        -> implementation fault in the permutation control; execution is returned, not
+           interpreted.
+```
+
+Any of F1-F8 is a valid benchmark outcome and must be preserved verbatim. None may be
+re-described as partial success. A benchmark in which every outcome reads as success is not
+a benchmark; §21 exists so that this one cannot become that.
+
+## 22. Expected outputs
+
+```text
+research/benchmarks/BM-0001-methyl-gate-mrd/
+├── execution/
+│   ├── execution_manifest.yaml      inputs, checksums, environment, seeds, mrdz SHA-256
+│   ├── environment.txt
+│   ├── random_seeds.yaml
+│   ├── split_manifest.tsv
+│   ├── candidate_universe.tsv
+│   ├── feature_provenance.tsv
+│   ├── files_opened.txt             every path opened, for the leakage guard in §14
+│   ├── missingness_report.tsv
+│   ├── execution_log.md
+│   ├── execution_summary.md
+│   └── protocol_deviations.md
+└── results/
+    ├── per_sample_metrics.tsv
+    ├── aggregate_metrics.tsv
+    ├── dilution_metrics.tsv
+    ├── ablation_results.tsv
+    ├── confidence_intervals.tsv
+    ├── statistical_tests.tsv        one row, method NONE, with a `reason` column
+    ├── error_analysis.tsv
+    ├── blank_selfcheck.tsv          S3, leave-one-out over five blanks, both constructions
+    ├── c1_draws.tsv                 the full 200-draw zlo_min vector (adopts N009)
+    ├── exploratory/colo829_chr1.tsv NOT_PREREGISTERED-equivalent: EXPLORATORY, decides nothing
+    └── artifact_manifest.tsv
+```
+
+`per_sample_metrics.tsv` columns:
+
+```text
+benchmark_id, individual, level, replicate, arm, variance_construction,
+n_candidates, n_gate_pass, depth_mean, alt_total, alt_scorable, alt_unscorable, alt_kept,
+retention, G, sample_sd, blank_mean, blank_sd, n_blanks,
+z, z_lo, z_hi, verdict, prediction, truth_label, premise_flag
+```
+
+**Verdict-to-prediction mapping, fixed a priori (resolves B007):** `prediction = 1` iff
+`verdict == "detected"`. `UNRELIABLE`, `not detected`, `no interval` and `no estimate` all
+give `prediction = 0`. The three-way verdict is retained in its own column so nothing is lost.
+This makes the confusion table in `error_analysis.tsv` conservative for **every arm equally**.
+
+`ablation_results.tsv` columns (adopts N012 — it is the artifact holding the primary comparison
+and QC reads it first):
+
+```text
+benchmark_id, individual, level, arm, variance_construction,
+zlo_min, zlo_min_p05, zlo_min_p95,
+delta_vs_B0, delta_vs_C1, delta_vs_C2,
+retention_blank, retention_level, retention_ratio,
+levels_detected_replicate_rule, criterion, criterion_outcome
+```
+
+`retention_ratio` is `retention_level / retention_blank`, the S4 quantity. `criterion` names
+the registered condition the row bears on (`S1`, `S2`, `S3`, `S4`, or `-`) and
+`criterion_outcome` is one of `HELD`, `FAILED`, `NOT_APPLICABLE`, `UNDEFINED`.
+
+`error_analysis.tsv` uses `TP / TN / FP / FN` computed from `prediction` against `truth_label`
+at the sample level, per arm, per variance construction.
+
+## 23. Execution constraints
+
+- **42 BAM passes**: 28 for the primary benchmark (one pass per sample yields B0, B1, C1 with
+  all 200 draws, and C2 — the controls are computed from the same in-memory per-read scores,
+  so there is no extra I/O), plus **14** for the exploratory COLO829 chr1 re-run of §19.
+- Wall-clock does not scale linearly with pass count: the 14 exploratory passes cover 241
+  candidates against the primary passes' ~4,000, so they are roughly an order of magnitude
+  cheaper. Budget from the 28 primary passes.
+- Prior equivalent runs: ~12 minutes per BAM on this host. Parallelise at most 14 concurrently.
+- Host: 112 cores, 503 GB RAM, no GPU. `/big8_disk` has ~1.8 TB free; outputs are small TSVs.
+- Source BAMs are read-only and on another user's volume; nothing may be written there.
+- Environment: Python 3.10, `pysam` 0.24.0, `numpy` 2.2.6, `scipy` 1.15.3.
+- `mrdz` is imported from `/big8_disk/hung114/ONT_MRD/mrd/tools/mrdz` and its `score.py`
+  SHA-256 recorded. `mrdz` is used for the interval machinery only; the gate and the counting
+  are implemented in the benchmark script, matching the frozen `stat()` semantics in §9-§10.
+- The executor captures each BAM's `@PG` chain and the observed duplicate-flag rate into the
+  manifest (adopts N006). The provenance claim that the mixtures are built from *deduplicated*
+  material is a line in a YAML file, and EV-0038 measured 2.000x duplicated primary reads in one
+  HCC1395 library — duplication moves sites across the gate's 1-to-2 ceiling, which is the exact
+  quantity scored here. Any duplication affects B0 and B1 identically within an individual and
+  cannot explain a between-arm difference, so this is recorded, not gating.
+- Known benign stderr from the source BAMs, not a failure: `bam_parse_basemod2 ... MM/MN data
+  length is incompatible with SEQ length` on a small number of reads, and
+  `hts_idx_load3 ... index file is older than the data file`. Both appeared in the prior runs.
+  The executor must count the affected reads and report the count rather than suppress it.
+
+## 24. Known limitations
+
+1. Two individuals, both cell lines, no plasma. Nothing here speaks to cfDNA or fragmentomics.
+2. HCC1395's frame is chr1 only; COLO829's is genome-wide. Magnitudes are not comparable
+   across individuals and no criterion compares them.
+3. Replicates are subsamples of one library. The blank interval is built on pseudo-replicates
+   whose spread understates between-library spread by more than 10x (EV-0038). The interval is
+   therefore optimistic — **equally, for every arm**.
+4. HCC1395 is in the ClairS-TO `ssrs` training set and COLO829 is not; a between-individual
+   difference may track training membership rather than biology.
+5. FIND-0021's read-classification result already failed to replicate at full magnitude on
+   COLO829 (AUC 0.91 vs 0.72), and both of its registered replication thresholds failed.
+   NOT REPLICATED is a live and expected outcome here, not a remote one.
+6. The oracle-free consensus requires the sample to be overwhelmingly normal. This is a stated
+   regime limit, not a measured one, and it is weakest at 1% (§16 premise flag).
+7. No limit of blank and no limit of detection is claimed.
+8. The comparison is a decision rule applied on top of one caller's candidate set. It does not
+   evaluate the caller.
+9. A read spanning two candidates contributes to both, in every arm. The gated total is
+   therefore a count of **read-observations, not of molecules**. This is inherited from the
+   frozen metric and is stated so the statistic is not read as a molecule count (adopts N007).
+10. The mixtures' `deduplicated` provenance is asserted upstream, not verified here; §23
+   requires the executor to record what it observes.
+
+## 25. Unresolved decisions
+
+```text
+U1:
+Question: At 1% tumour fraction, does the tumour contaminate the consensus built from the
+          sample itself?
+Why it matters: If yes, B1's premise weakens at the highest level.
+Required evidence: The tumour contributes ~1 read in 100 at 1%; MIN_COV=10 means a position's
+          rate moves by at most ~0.1 from tumour reads, inside the 0.1/0.9 confident band's
+          margin. This is an argument from construction, not a measurement.
+Must resolve before execution: NO — 1% is not the primary level, and §16 flags every 1% row.
+
+U2:
+Question: Does the unscorable-ALT fraction differ between blank and 0.1%?
+Why it matters: If it does, missingness itself carries label information.
+Required evidence: Measured and reported by this benchmark (§16, missingness_report.tsv).
+          The scorable set is identical across B1, C1 and C2 by construction, so missingness
+          cannot explain a B1-over-control difference regardless of the answer.
+Must resolve before execution: NO — it is an output, and the control that neutralises it is
+          already in the design.
+
+U3:
+Question: Is COLO829's 241-candidate chr1 subset large enough to say anything?
+Why it matters: It bears on how the exploratory arm in §19 may be read.
+Required evidence: The arm is labelled EXPLORATORY and decides nothing in §20.
+Must resolve before execution: NO.
+```
+
+No unresolved decision is marked `Must resolve before execution: YES`.
+
+## 26. Executor checklist
+
+```text
+- [ ] 28 primary BAM passes + 12 exploratory passes planned; all BAMs exist, indexed, readable
+- [ ] @PG chains and duplicate-flag rates captured per BAM
+- [ ] Truth source verified (level directories recorded; @PG chains captured)
+- [ ] Candidate universes copied verbatim and checksummed
+- [ ] mrdz score.py SHA-256 recorded; interval functions imported, not reimplemented
+- [ ] Split manifest generated
+- [ ] Leakage checks passed: files_opened.txt contains no matched normal, no SEQC2, no PoN
+- [ ] Gate evaluated on the UNFILTERED ALT count in every arm
+- [ ] Gate-passing candidate set verified identical across B0/B1/C1/C2 per sample
+- [ ] Baseline, treatment and both control configurations frozen
+- [ ] Both variance constructions V1 and V2 computed
+- [ ] Primary metric frozen; undefined cases handled per §15
+- [ ] Success criteria frozen, S1 through S4
+- [ ] Retention ratio computed per arm per individual for S4
+- [ ] All levels executed, including 0.01%
+- [ ] All five TF0 replicates executed; S3 leave-one-out run
+- [ ] 200 C1 draws run; full per-draw vector persisted; median and 5th/95th percentiles recorded
+- [ ] C2 top-k retention verified against k = n_scorable - 1 - floor(PCT/100*(n_scorable-1))
+- [ ] Realised retention recorded for all four arms
+- [ ] S3 run under both constructions over all ten leave-one-out blanks
+- [ ] Seeds recorded
+- [ ] Deviations recorded
+```
+
+---
+
+```text
+HANDOFF_STATUS: LOCKED
+
+Next role:
+Benchmark Executor
+
+This protocol is LOCKED at v1.0. It is byte-identical to protocols/v0.5_draft.md except for
+the identity block in §1 and this handoff block. It must not be modified in place. If
+methodology must change, a new draft version is created and re-reviewed; v1.0 is preserved.
+
+Locked by AUTO_LOCK on the strength of reviews/review_005.md (REVIEW_PASS, zero blocking
+issues), after five design iterations and five adversarial reviews resolving B001-B014 and
+adopting N001-N013.
+```

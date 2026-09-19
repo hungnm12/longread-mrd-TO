@@ -1,0 +1,219 @@
+benchmark_id: BM-0001-methyl-gate-mrd
+workflow_version: 1
+
+current_stage: HUMAN_GATE
+
+protocol_version: "1.0"
+locked_protocol_version: "1.0"
+
+design_iteration: 8   # v1.1 drafted at iterations 6, 7 and 8; max_design_iterations reached
+review_iteration: 8   # five-lens panel rounds 1, 2 and 3; max_review_iterations reached
+execution_iteration: 1
+qc_iteration: 1
+
+last_status: NOT_ACCEPTED_ROUND_BUDGET_EXHAUSTED
+# Panel verdict rule: ACCEPT only if zero REVISE, zero REJECT and zero major issues.
+# Round 1 (review_006): 5 REVISE, 0 REJECT, 34 major.
+# Round 2 (review_007): 5 REVISE, 0 REJECT, 25 major.
+# Round 3 (review_008): 5 REVISE, 0 REJECT, 17 major.
+# v1.1 remains a DRAFT. v1.0_locked.md, its checksum, its registered outcome and the whole of
+# EXEC-001 are unchanged, as qc_001.md constraint (d) requires.
+
+blocking_issues:
+  # QC-01 and QC-02 are addressed in the v1.1 draft but the draft is not accepted, so the QC
+  # routing remains open. The 17 surviving panel major issues from round 3 follow.
+  - "QC-01 (open): S4 is satisfied identically by the CpG-density control C2 (retention ratio 1.6741 vs 1.6839 on HCC1395, 2.9127 vs 2.9041 on COLO829); v1.1's replacement criteria are drafted but not accepted"
+  - "QC-02 (open): S1's control legs are decided at 8-10x different count scales (B1 G=22-28 vs C1 1-3 and C2 2-3 at 0.1%); v1.1's retention sweep is drafted but not accepted"
+  - "GR3-MAJ-01 (lens 1): S6 leg (iv) / F12 / L-E decide the refutation direction by a maximum over seven comparator variants firing in any of 32 cells, with no correction for either selection and no measured size outside leg (i) on AXIS-L; an uninformative or MAPQ_DEGENERATE member may fire a propagating WITHDRAWN-ON-EVIDENCE label"
+  - "GR3-MAJ-02 (lens 1): REFUTATION-ELIGIBLE has no computable definition for the permutation legs (ii) and (iii), so labels L-D and L-F are structurally unreachable — SV-01 surviving for the C3 and C1 legs"
+  - "GR3-MAJ-03 (lens 1): no null in the design isolates methylation PATTERN; §10.1 asserts C3 is that null and §10.2 contradicts it 40 lines later; the reference-side consensus permutation (C5) is computable in the same pass and is not installed"
+  - "R3-L2-01 (lens 2): the BLANK_TRIPLE determination fires by construction at every evaluable target in AXIS-L x V1 and AXIS-B x V2, and its consequence clause has no stated scope, so S6 is either unsatisfiable on all data or carried only by rows the protocol itself calls a re-expression of the QC-01 tie; the deciding figure §15.5.9 point 7 cites is absent from the frozen support script"
+  - "R3-L2-02 (lens 2): §15.5.6 clause (g) routes an UNINFORMATIVE / MAPQ_DEGENERATE / NM-uncomputable comparator's targets to EXCLUDED_UNDERPOWERED, mechanically foreclosing the F12 firing that §21 F12, §16.7 (c) and §20.4 leg (iv) all promise; §15.5.6 and §15.5.11 also disagree on which clauses exclude"
+  - "R3-L2-03 (lens 2): enlarging P from two to five comparators is declared strictly harder in the support direction only; the refutation side became a maximum over seven comparator instances with no family-wise control across members and no simulated size"
+  - "SV3-01 (lens 3): null_sd — the denominator of both verdict-bearing statistics — is named normatively but never operationally defined, and the frozen s6_operating_characteristics.py computes it by the reading §15.5.8 (a) forbids, so RESULT 3/4/5 and §20.8 clause 7's frozen choice describe a rule other than the installed one"
+  - "SV3-02 (lens 3): the 11.7-fold blank-spread inflation carrying the pseudo-replication analysis is an UNGATED figure from EV-0036, applied to a statistic gated at every ladder point, and FIND-0018 marks it superseded by EV-0038; the gated ratios are 2.65 (uncorrected) and below 1 (EV-0038-corrected). F14 (a), §15.5.9's 'the design is INERT' conclusion and §24 item 18 all turn on it"
+  - "SV3-03 (lens 3): S5's refutation direction emits L-B1, outranks L-H and propagates as WITHDRAWN-ON-EVIDENCE, with no multiplicity control over its ~28 interval comparisons, no simulated size or power for §16.2's dominance rule, and no blank-spread sensitivity; its intervals resample five ~90%-overlapping TF0 replicates as independent samples"
+  - "SV3-04 (lens 3): the family-wise size figure §15.5.9 RESULT 4 consequence (3) mandates beside L-E and F12 is measured for a one-comparator rule that the protocol runs over five"
+  - "L4-MAJ-01 (lens 4): results_v1_1/retention_sweep.tsv is keyed per individual on ladder_index, which §15.5.4 names as a FORBIDDEN transfer and which cannot address an individual's 14 samples at their differing n_scorable (58,879 / 58,990 / 76,594 / 76,583)"
+  - "L4-MAJ-02 (lens 4): the sweep artifact's row count, file size and aggregation cost are never stated, and §15.5.2's 'the whole ladder' contradicts §23.1's 'a stated stride' with the stride left to the executor — which sets the resolution of V-b, V-c, V-d and F10"
+  - "L4-MAJ-03 (lens 4): the §26 executor checklist reinstates verbatim the per-worker leakage expectation §14 deleted as unsatisfiable under CRAM inputs, so the check fails on all 28 workers and QC-07's guarantee would be reported as re-earned when nothing was checked"
+  - "PH8-01 (lens 5): the normative WITHDRAWAL_BASIS string propagated to research_state.yaml, workflow_state.yaml, FIND-0021 and research-os.json attributes a POST HOC withdrawal to 'EXEC-001 plus qc_001.md', and cites qc_001.md for the opposite of what it says ('QC does not overturn it'; 'This is not a claim that H1 is false')"
+  - "PH8-02 (lens 5): §21's POST HOC F9 and F12 emit v1.0's PREREGISTERED label string 'MECHANISM UNSUPPORTED' with no §20.7 RULE 5 register suffix, in the same section that carries v1.0's F7 emitting the identical string"
+  - "PH8-03 (lens 5): the '§16.4 cell sentence' that §20.7's propagation block and §26 require verbatim does not exist — §16.4 says 'one of four cells' and never names HCC1395 under V2, so QC-03's restriction is satisfiable without restricting anything"
+  - "PH8-04 (lens 5): five binding claim-control obligations (§16.7 a, §16.7 b, §20.0, §20.7 RULE 1, §22.5) are discharged into 'the evidence summary', an artifact §22.2 never lists, §26 never checks and §22.4 never names"
+non_blocking_issues:
+  - "Round-3 minor findings are recorded per lens in reviews/review_008.md and are not blocking."
+
+last_agent: grill-me
+next_agent: human   # AGENTS.md rules 2 and 10: the loop budget is exhausted and neither
+                    # auto-lock nor auto-continue is available to the orchestrator
+
+protocol_lock:
+  version: "1.0"
+  checksum: "sha256:9c615da4af068a5330bb512942810c9f2229aa2348554cddcfc130021e200b8c"
+  locked_at: "2026-08-31T16:55:00+08:00"
+  review_artifact: reviews/review_005.md
+
+lock_gate_evaluation:
+  review_verdict: REVIEW_PASS
+  blocking_issues_at_lock: 0
+  research_question_explicit: PASS
+  unit_of_analysis_explicit: PASS
+  truth_source_explicit: PASS
+  truth_matching_rule_explicit: PASS
+  candidate_universe_frozen: PASS
+  dataset_roles_frozen: PASS
+  baseline_frozen: PASS
+  treatment_arms_frozen: PASS
+  primary_metric_frozen: PASS
+  secondary_metrics_frozen: PASS
+  statistical_plan_frozen: PASS
+  success_criteria_frozen: PASS
+  failure_criteria_frozen: PASS
+  leakage_guards_frozen: PASS
+  missingness_strategy_frozen: PASS
+  split_strategy_frozen: PASS
+  low_signal_analysis_frozen: PASS
+  expected_outputs_frozen: PASS
+  no_unresolved_execution_blocking_item: PASS
+
+artifacts:
+  protocol: protocols/v1.0_locked.md
+  protocol_draft: protocols/v1.1_draft.md   # DRAFT, not accepted, not locked
+  latest_review: reviews/review_008.md
+  latest_execution: execution/execution_manifest.yaml
+  latest_qc: qc/qc_001.md
+
+loop_limits:
+  max_design_iterations: 8
+  max_review_iterations: 8
+  max_execution_iterations: 5
+  max_qc_iterations: 5
+
+history:
+  - timestamp: "2026-08-31T16:05:00+08:00"
+    from: null
+    to: DESIGN
+    agent: orchestrator
+    reason: "prompt.md invoked the autonomous benchmark lifecycle; benchmark target inferred from repository state (THESIS-PLAN.md next-experiment, FIND-0021 'what this does NOT show', EXP-S1-022 step 5 run on one individual only)"
+    artifact: null
+  - timestamp: "2026-08-31T16:20:00+08:00"
+    from: DESIGN
+    to: REVIEW
+    agent: benchmark-designer
+    reason: "v0.1 draft complete, HANDOFF_STATUS READY_FOR_REVIEW"
+    artifact: protocols/v0.1_draft.md
+  - timestamp: "2026-08-31T16:28:00+08:00"
+    from: REVIEW
+    to: DESIGN
+    agent: grill-me
+    reason: "REVISION_REQUIRED — 8 blocking (B001 degenerate control: the retention-matched random control was arithmetically identical to the treatment; B002-B008). Reviewer addendum records and corrects the reviewer's own misreading of the z denominator."
+    artifact: reviews/review_001.md
+  - timestamp: "2026-08-31T16:35:00+08:00"
+    from: DESIGN
+    to: REVIEW
+    agent: benchmark-designer
+    reason: "v0.2 — B001-B008 resolved; control replaced by two cutoff-rule-matched controls; both variance constructions preregistered"
+    artifact: protocols/v0.2_draft.md
+  - timestamp: "2026-08-31T16:39:00+08:00"
+    from: REVIEW
+    to: DESIGN
+    agent: grill-me
+    reason: "REVISION_REQUIRED — 3 blocking (B009 S3 construction unspecified; B010 integer score ties break C2's aggressiveness matching; B011 exploratory arm derivation ambiguous)"
+    artifact: reviews/review_002.md
+  - timestamp: "2026-08-31T16:43:00+08:00"
+    from: DESIGN
+    to: REVIEW
+    agent: benchmark-designer
+    reason: "v0.3 — B009-B011 resolved; C2 given an outcome-independent top-k rule"
+    artifact: protocols/v0.3_draft.md
+  - timestamp: "2026-08-31T16:46:00+08:00"
+    from: REVIEW
+    to: DESIGN
+    agent: grill-me
+    reason: "REVISION_REQUIRED — 2 blocking (B012 pass-count arithmetic error; B013 undefined empty-scorable-set case)"
+    artifact: reviews/review_003.md
+  - timestamp: "2026-08-31T16:49:00+08:00"
+    from: DESIGN
+    to: REVIEW
+    agent: benchmark-designer
+    reason: "v0.4 — B012, B013 resolved"
+    artifact: protocols/v0.4_draft.md
+  - timestamp: "2026-08-31T16:51:00+08:00"
+    from: REVIEW
+    to: DESIGN
+    agent: grill-me
+    reason: "REVISION_REQUIRED — 1 blocking (B014: the aggressiveness confound returns through C1, which retains ~5% of ALT reads against B1's measured 26-67%, so a z-win over C1 can be counting statistics rather than selection)"
+    artifact: reviews/review_004.md
+  - timestamp: "2026-08-31T16:53:00+08:00"
+    from: DESIGN
+    to: REVIEW
+    agent: benchmark-designer
+    reason: "v0.5 — B014 resolved by preregistering S4, a differential-retention condition that tests the mechanism directly, with MECHANISM UNSUPPORTED named as a non-success outcome"
+    artifact: protocols/v0.5_draft.md
+  - timestamp: "2026-08-31T16:54:00+08:00"
+    from: REVIEW
+    to: LOCK
+    agent: grill-me
+    reason: "REVIEW_PASS — zero blocking issues; all 14 blocking findings resolved, all 13 non-blocking adopted, none deleted"
+    artifact: reviews/review_005.md
+  - timestamp: "2026-08-31T16:55:00+08:00"
+    from: LOCK
+    to: EXECUTION
+    agent: orchestrator
+    reason: "AUTO_LOCK — every lock gate condition passed; protocol frozen at v1.0 with checksum recorded"
+    artifact: protocols/v1.0_locked.md
+  - timestamp: "2026-08-31T16:24:05+08:00"
+    from: EXECUTION
+    to: EXECUTION
+    agent: benchmark-executor
+    reason: "EXEC-001 started — 28 primary BAM passes launched at 14-way concurrency (protocol §23 limit); prechecks passed: all 28 BAMs present and indexed, all GRCh38_no_alt_analysis_set, candidate frames checksummed, mrdz score.py checksummed, @PG chains confirm the deduplicated source and record per-replicate subsample seeds"
+    artifact: execution/execution_manifest.yaml
+  - timestamp: "2026-08-31T17:02:00+08:00"
+    from: EXECUTION
+    to: QC
+    agent: benchmark-executor
+    reason: "EXEC-001 complete — 28 primary + 14 exploratory passes, 0 failures, 27/27 artifacts, implementation validated against EXP-S1-022 step 5 exactly and against its step 8 D4 intervals to four figures; registered outcome H1 SUPPORTED under S1-S4"
+    artifact: execution/execution_summary.md
+  - timestamp: "2026-08-31T17:10:00+08:00"
+    from: QC
+    to: DESIGN
+    agent: qc-statistical-reviewer
+    reason: "REDESIGN_REQUIRED — execution clean and leakage-free, but QC-01 finds S4 satisfied identically by the CpG-density control and QC-02 finds S1's control legs decided at incomparable count scales. v1.0 and EXEC-001 preserved unchanged; new draft version required. Redesign constrained to strictly harder criteria, labelled POST HOC."
+    artifact: qc/qc_001.md
+  - timestamp: "2026-09-19T21:38:00+08:00"
+    from: DESIGN
+    to: REVIEW
+    agent: benchmark-designer
+    reason: "v1.1 draft, design iteration 6, HANDOFF_STATUS READY_FOR_REVIEW — resolves QC-01 and QC-02 by adding control arm C3 (CpG-density-stratified permutation of score_B1), replacing S4 as the mechanism-bearing criterion with S5, adding the retention sweep as deciding criterion S6, adding S7, F9-F11 and reporting rules §16.4-§16.6; requires EXEC-002 and an extended raw schema because the sweep is not computable from EXEC-001's saved outputs. All new material labelled POST HOC; v1.0 and EXEC-001 preserved unmutated."
+    artifact: protocols/v1.1_draft.md
+  - timestamp: "2026-09-19T21:44:00+08:00"
+    from: REVIEW
+    to: DESIGN
+    agent: grill-me
+    reason: "PANEL ROUND 1 — NOT ACCEPTED. Five lenses (mechanism discrimination, strictness, statistical validity, executability/cost, pre-registration hygiene); verdict rule ACCEPT only if zero REVISE, zero REJECT and zero major issues. Result 5 REVISE, 0 REJECT, 34 major. Leading findings: C3 excludes CpG density only and is satisfied by a per-read error-rate filter (§10.1's exclusivity sentence false); S5 leg (a) reproduces only clause (i) of v1.0's S4 and §20.6 drops S4 from the conjunction, the one provable sideways move; leg (i) has no null while its null sd is ~2 z-units; the percentile grid may not reach the targets and retention is a step function with heavy atoms; and §20.7 invents a positive outcome above the preregistered ceiling."
+    artifact: reviews/review_006.md
+  - timestamp: "2026-09-19T21:52:00+08:00"
+    from: DESIGN
+    to: REVIEW
+    agent: benchmark-designer
+    reason: "v1.1 draft, design iteration 7, HANDOFF_STATUS READY_FOR_REVIEW — all 34 round-1 major issues addressed: C4a/C4b pattern-blind arms and S6 leg (iv); a 200-seed tie-break band for C2; the count ladder replacing the percentile grid with interpolation forbidden; per-replicate integer count matching; §15.5.11's numeric region rule; a paired candidate bootstrap; §15.5.9's advance operating characteristics; §1.1 as the canonical post hoc register; §22.5's fenced outcome layout; S4 restored verbatim to §20.6's conjunction. S6's verdict rule moved from the all-target intersection to a pooled statistic, declared in §20.9 as easier in the support direction, with S6-STRICT retained and reported."
+    artifact: protocols/v1.1_draft.md
+  - timestamp: "2026-09-19T21:56:00+08:00"
+    from: REVIEW
+    to: DESIGN
+    agent: grill-me
+    reason: "PANEL ROUND 2 — NOT ACCEPTED. Same five lenses and same verdict rule. Result 5 REVISE, 0 REJECT, 25 major. Leading findings: the pattern-blind comparator set omits the property that GENERATES score_b1 (per-read modification-call uncertainty), plus read length, MAPQ and local coverage; C1's draw count raised 200 to 2000 silently re-parameterises preregistered S1, S4 clause (ii) and F8 and deterministically fires F11; the bootstrap is used as a null so every refutation label is structurally unreachable; null_sd is never defined; and the 28 input BAMs no longer exist, having been converted to CRAM on 2026-09-12 per EV-0052, while §2-9 asserts the inputs are identical."
+    artifact: reviews/review_007.md
+  - timestamp: "2026-09-19T22:02:00+08:00"
+    from: DESIGN
+    to: REVIEW
+    agent: benchmark-designer
+    reason: "v1.1 draft, design iteration 8, HANDOFF_STATUS READY_FOR_REVIEW — all 25 round-2 major issues addressed: P extended to {C4a, C4b, C4c, C4d, C4e} with C4c's invariance proof; C3 stratified on exact integer score_C2 with a VALIDITY trigger; the GLOBAL KEEP FRACTION threshold transfer with the three alternatives named forbidden; the C1 200/2000 draw split pinning every preregistered input; f = 1 as the only factor at which a leg may HOLD; the centred family-wise refutation rule; §6.1 naming the 28 CRAM inputs, the decode reference and its md5; §20.6 clause 0b closing the positive branch as a finding of the design; and s6_operating_characteristics.py rewritten and re-run, measuring the pooled rule's size at 0.269-0.343 under correlated blanks rather than 0.05."
+    artifact: protocols/v1.1_draft.md
+  - timestamp: "2026-09-19T22:08:00+08:00"
+    from: REVIEW
+    to: HUMAN_GATE
+    agent: grill-me
+    reason: "PANEL ROUND 3 — NOT ACCEPTED, ROUND BUDGET EXHAUSTED. Same five lenses and same verdict rule. Result 5 REVISE, 0 REJECT, 17 major; trajectory 34 -> 25 -> 17 across the three rounds with no REJECT at any round. design_iteration and review_iteration both reach loop_limits (8 of 8), so the loop can neither auto-lock nor auto-continue. Leading finding: the BLANK_TRIPLE determination fires by construction at every evaluable target in AXIS-L x V1 and AXIS-B x V2 and its consequence clause has no stated scope, so S6 — the criterion written to answer QC-02 — is either unsatisfiable on all data or carried only by rows the protocol itself calls a re-expression of the QC-01 tie. v1.1 remains a DRAFT; v1.0_locked.md, its checksum, its registered outcome and the whole of EXEC-001 are unchanged. Per AGENTS.md rules 2 and 10 the decision to extend the budget, accept v1.1 with the 17 findings open, or stop BM-0001 at the v1.0 result plus qc_001.md is a human gate."
+    artifact: reviews/review_008.md

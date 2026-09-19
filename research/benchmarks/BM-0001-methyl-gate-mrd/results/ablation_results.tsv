@@ -1,0 +1,17 @@
+benchmark_id	individual	level	level_label	arm	variance_construction	zlo_min	zlo_min_p05	zlo_min_p95	delta_vs_B0	delta_vs_C1	delta_vs_C2	retention_blank	retention_level	retention_ratio	retention_ratio_p05	retention_ratio_p95	levels_detected_replicate_rule	criterion	criterion_outcome
+BM-0001-methyl-gate-mrd	HCC1395	TF1e-3	0.1%	B0	V1	0.7396	NA	NA	0.0	2.547	0.8126	1.0	1.0	1.0	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	HCC1395	TF1e-3	0.1%	B1	V1	2.2995	NA	NA	1.56	4.1069	2.3725	0.363463	0.608466	1.6741	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	HCC1395	TF1e-3	0.1%	C1	V1	-1.8074	-6.0491	0.7621	-2.547	0.0	-1.7344	0.045706	0.039153	0.8566	0.0	1.9556	none	-	-
+BM-0001-methyl-gate-mrd	HCC1395	TF1e-3	0.1%	C2	V1	-0.073	NA	NA	-0.8126	1.7344	0.0	0.037706	0.063492	1.6839	NA	NA	none	-	-
+BM-0001-methyl-gate-mrd	HCC1395	TF1e-3	0.1%	B0	V2	0.8557	NA	NA	0.0	3.34	0.9794	1.0	1.0	1.0	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	HCC1395	TF1e-3	0.1%	B1	V2	3.5547	NA	NA	2.6989	6.039	3.6784	0.363463	0.608466	1.6741	NA	NA	1%;0.1%	-	-
+BM-0001-methyl-gate-mrd	HCC1395	TF1e-3	0.1%	C1	V2	-2.4843	-5.303	-0.1237	-3.34	0.0	-2.3606	0.045706	0.039153	0.8566	0.0	1.9556	1%	-	-
+BM-0001-methyl-gate-mrd	HCC1395	TF1e-3	0.1%	C2	V2	-0.1237	NA	NA	-0.9794	2.3606	0.0	0.037706	0.063492	1.6839	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	B0	V1	-0.3667	NA	NA	0.0	1.4446	-0.5343	1.0	1.0	1.0	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	B1	V1	0.6931	NA	NA	1.0598	2.5044	0.5255	0.092428	0.269213	2.9127	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	C1	V1	-1.8113	-6.0431	0.7339	-1.4446	0.0	-1.9789	0.040607	0.047127	1.1605	0.3245	2.3464	1%	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	C2	V1	0.1676	NA	NA	0.5343	1.9789	0.0	0.021429	0.06223	2.9041	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	B0	V2	-0.4543	NA	NA	0.0	2.0108	-0.8567	1.0	1.0	1.0	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	B1	V2	1.4364	NA	NA	1.8907	3.9015	1.034	0.092428	0.269213	2.9127	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	C1	V2	-2.4651	-4.6335	0.6991	-2.0108	0.0	-2.8675	0.040607	0.047127	1.1605	0.3245	2.3464	1%	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	C2	V2	0.4024	NA	NA	0.8568	2.8675	0.0	0.021429	0.06223	2.9041	NA	NA	1%	-	-

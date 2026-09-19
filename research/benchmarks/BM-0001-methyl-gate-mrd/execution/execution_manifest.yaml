@@ -1,0 +1,87 @@
+benchmark_id: BM-0001-methyl-gate-mrd
+protocol_version: "1.0"
+protocol_checksum: "sha256:9c615da4af068a5330bb512942810c9f2229aa2348554cddcfc130021e200b8c"
+execution_id: EXEC-001
+date: "2026-08-31"
+executor: benchmark-executor (autonomous orchestration, prompt.md)
+git_commit: c137d4a
+working_directory: /big8_disk/hung114/ONT_MRD/mrd/research/benchmarks/BM-0001-methyl-gate-mrd
+
+environment:
+  operating_system: "Linux 6.8.0-124-generic"
+  python: "3.10"
+  pysam: "0.24.0"
+  numpy: "2.2.6"
+  scipy: "1.15.3"
+  java: not used
+  conda_environment: none (system python3)
+  containers: none
+  cores: 112
+  ram_gb: 503
+  gpu: none
+  detail: execution/environment.txt
+
+normative_implementation:
+  module: /big8_disk/hung114/ONT_MRD/mrd/tools/mrdz/mrdz/score.py
+  sha256: "628100ffff36206598020c14f71510c0a6b1142fd0fa912f4dfcf8ab52cdd677"
+  functions_used: [blank_spread, z_interval, interval_verdict]
+  reimplemented: false
+  protocol_reference: "v1.0 §15 — the executor imports and calls these; reimplementation is forbidden"
+
+inputs:
+  detail: execution/inputs_manifest.tsv
+  n_bams_primary: 28
+  n_bams_exploratory: 14 (the same 14 COLO829 BAMs, re-run with a chr1 candidate filter)
+  reference_build_all_inputs: GRCh38_no_alt_analysis_set
+  index_present_all_inputs: true
+  candidate_frames:
+    HCC1395:
+      path: research/surveys/long-read-tumor-only-mrd/exp-s1-002/results/counts_TF0.tsv
+      sha256: "7b548c03232a9ce0b2ba8717720c2f95c879d8d5224a2d5420b23113a977728e"
+      n: 3925
+      scope: chr1
+    COLO829:
+      path: research/surveys/long-read-tumor-only-mrd/exp-s1-007/results/counts_TF0.tsv
+      sha256: "c7dc0bdace670bd2a93d8da728442d25796629ac37730021c216d5ed252050fd"
+      n: 4000
+      scope: genome-wide, 23 contigs
+  provenance_check:
+    detail: execution/pg_chains.txt
+    observed: >-
+      Every BAM's @PG chain ends in `samtools view -b -s <seed>.<fraction>` applied to a source
+      under /bip8_disk/pingting114/dedup_source_v2/, i.e. the deduplicated source the
+      experimental-space record claims. The dedup step is visible in the chain rather than only
+      asserted. Subsample seeds are recorded per replicate. This discharges review_002 N006.
+
+random_seeds:
+  detail: execution/random_seeds.yaml
+  base_seed: 20260831
+  c1_draws: 200
+  determinism: DETERMINISTIC
+
+baseline:
+  id: B0
+  definition: "protocol v1.0 §9 — frozen gated detection score, gate on the unfiltered ALT count"
+
+treatments:
+  - id: B1
+    definition: "protocol v1.0 §10 — ML=128, MIN_COV=10, CONF_BAND 0.1/0.9, MIN_CPG=5, PCT=95"
+  - id: C1
+    definition: "protocol v1.0 §10 — permuted-score control, 200 draws, median reported"
+  - id: C2
+    definition: "protocol v1.0 §10 — CpG-density control, top-k with k = n_scorable-1-floor(0.95*(n_scorable-1))"
+
+metrics:
+  primary: "zlo_min at 0.1% (TF1e-3), under both variance constructions V1 and V2"
+  secondary: "protocol v1.0 §16"
+  statistical_test: NONE (protocol v1.0 §17)
+
+concurrency:
+  max_concurrent_workers: 14
+  protocol_limit: 14
+  observed_max: 14
+
+output_paths:
+  raw_per_sample: execution/raw/
+  raw_exploratory: execution/raw_exploratory/
+  results: results/
