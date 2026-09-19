@@ -1,0 +1,205 @@
+# Shared research state — Autonomous Research Orchestration Specification §4.
+#
+# Instantiated 2026-09-19 from artifacts already on disk. This file does NOT introduce new
+# scientific content: every field below is transcribed from research/, and where the pasted
+# specification carried a placeholder the value is taken from the repository rather than invented.
+# The authoritative per-benchmark state remains
+# research/benchmarks/BM-0001-methyl-gate-mrd/workflow_state.yaml; this file is the project-level
+# view the specification asks for and must be kept consistent with it.
+
+research_goal: >-
+  Can long-read ONT provide additional evidence that helps distinguish tumour-derived signal from
+  biological and technical background, in a TUMOUR-ONLY setting (no matched normal)?
+  [research/research-os.json]
+
+current_question: >-
+  Does per-read native methylation select tumour-derived reads at a tumour-only SNV candidate set,
+  or does the apparent gain come from filter aggressiveness / CpG density / counting statistics?
+  [BM-0001, reopened by qc/qc_001.md]
+
+current_hypothesis: >-
+  H1 (BM-0001 §3): adding a per-read methylation score to the frozen SNV count gate raises
+  zlo_min at 0.1% above the SNV-only baseline B0 and above both controls, on both individuals,
+  under both variance constructions.
+  STATUS: mechanically SUPPORTED under locked protocol v1.0; the mechanism half is UNDERDETERMINED
+  because QC-01 showed the criterion carrying it (S4) is satisfied identically by the
+  methylation-blind CpG-density control C2.
+
+hypothesis_history:
+  - id: G1-linkage
+    statement: Long-range same-molecule ALT-ALT linkage is tumour-specific evidence
+    outcome: PARTIALLY FALSIFIED then RESCUED — pre-registered specificity criterion failed
+      (65.1% somatic vs 78.6% non-somatic, EXP-G1-001); EXP-G1-002 showed the excess was private
+      germline in cis; EXP-G1-003 survived the registered low-TF falsification
+    refs: [EXP-G1-001, EXP-G1-002, EXP-G1-003, FIND-0001, FIND-0002, FIND-0003]
+  - id: S1-hapVAF
+    statement: Haplotype-specific allele fraction separates germline from somatic better than VAF
+    outcome: FALSIFIED — dAUC -0.0346, 95% CI [-0.0676, +0.0015] against registered H0 of >+0.02.
+      Worse than a haplotype-swap null. Direction abandoned under its own failure criterion
+    refs: [EXP-S1-001, FIND-0004, EV-0019]
+  - id: S1-gate
+    statement: Gating the OBSERVATION (1<=alt<=2 reads) removes germline background without
+      identifying it
+    outcome: SUPPORTED and STABLE — 99.67% background removal, 97.4% somatic retention at 1%
+    refs: [EXP-S1-004, EXP-S1-005, EXP-S1-020]
+  - id: S1-stack
+    statement: Gate + panel-of-normals + variance model jointly improve tumour-only accuracy
+    outcome: FALSIFIED by the project's own ablation grid — the gate is the only factor that
+      changes a detection call; everything else moves margins
+    refs: [EXP-S1-020, FIND-0020, THESIS-PLAN.md §1]
+  - id: S1-mechanism-coverage
+    statement: The gate works because it scales with coverage / needs a minimum coverage
+    outcome: FALSIFIED TWICE IN ONE DAY (EXP-S1-020d, EXP-S1-020f). Recorded as a warning against
+      mechanism claims, not as a finding
+    refs: [THESIS-PLAN.md §3]
+  - id: BM-0001-H1
+    statement: Per-read native methylation selects tumour-derived reads on top of the SNV gate
+    outcome: ACTIVE — see current_hypothesis
+    refs: [BM-0001, FIND-0021, EXP-S1-022]
+
+known_evidence:
+  - "FACT: the gate removes 99.67% of tumour-free background (11,669 -> 39 ALT reads on HCC1395
+     chr1) while retaining 221/227 somatic ALT reads at 1% [EXP-S1-004]"
+  - "FACT: 1% is detected in every arm, individual, variance model and reporting mode
+     [THESIS-PLAN.md §3]"
+  - "FACT: 0.01% is detected NOWHERE — 0/3 in every configuration on both individuals
+     [EXP-S1-002, EXP-S1-004, FIND-0015]"
+  - "FACT: a per-CpG methylation consensus built from a >99.9%-normal sample classifies individual
+     long reads as tumour- or normal-derived at AUC 0.9067 on chr1; the gain is attributable to
+     POSITION SELECTION (0.6417 -> 0.9067), not to position-specific scoring [FIND-0021, EXP-S1-022]"
+  - "FACT: leakage verified by file-open capture across 42 workers — 31 paths, no matched normal,
+     no SEQC2, no PoN, no population database [qc_001.md QC-07]"
+  - "FACT: two independent implementations written months apart agree to four figures on the
+     primary metric (zlo_min +0.7396 vs +0.74; +2.2995 vs +2.30) [qc_001.md QC-08]"
+  - "FACT: three independent HCC1395BL libraries exist on this server; between-library blank sd is
+     11.7x larger than the five pseudo-blanks' [FIND-0018, EXP-S1-016]"
+
+contradictory_evidence:
+  - "AGAINST the mechanism claim: C2, which uses NO methylation pattern, reproduces B1's
+     differential-retention signature to within 0.6% (HCC1395 1.6741 vs 1.6839) and 0.3%
+     (COLO829 2.9127 vs 2.9041) [qc_001.md QC-01]"
+  - "AGAINST a clean S1 win: B1 counts 8-10x as many reads as either control at 0.1%, so the z
+     comparison is decided at different points on a precision curve rather than at matched
+     aggressiveness [qc_001.md QC-02]"
+  - "AGAINST 'methylation enables 0.1% detection': the DETECTION outcome changes in 1 of 4
+     individual x construction cells [qc_001.md QC-03]"
+  - "AGAINST four-figure precision: COLO829's S4 ratio of 2.9127 is computed from roughly three
+     kept blank reads [qc_001.md QC-04]"
+  - "AGAINST the count gate as best practice: a VAF ceiling tightened to 0.05, selected on one
+     individual by a rule fixed in advance, beats it on DETECTION on the other [EXP-S1-020c,
+     FIND-0020]"
+
+open_questions:
+  - "Does B1's zlo_min exceed C2's AT MATCHED REALISED ALT RETENTION? (QC-02; the deciding test)"
+  - "Does B1's differential retention exceed C2's, not merely its own blank? (QC-01)"
+  - "Does any of this replicate beyond n=2 individuals? Four more cell lines exist but need
+     candidates re-derived with the ClairS-TO `ss` model [THESIS-PLAN.md §5]"
+  - "Are the project's BAMs genuinely PCR-free? The 'methylation is free' claim rests on it and
+     the command was written 2026-09-01 and never run [daily-logs/20260901 item 3]"
+  - "A1: what is the somatic/germline/artifact composition of the 48,819 PASS candidates?
+     [open-questions.md, SUG-2026-08-001]"
+
+current_plan: research/benchmarks/BM-0001-methyl-gate-mrd/protocols/v1.0_locked.md  (superseded in part)
+current_experiment: BM-0001-methyl-gate-mrd, EXEC-001 complete, awaiting v1.1 redesign
+
+experiments_completed:
+  [EXP-G1-001, EXP-G1-002, EXP-G1-003, EXP-G1-004, EXP-G1-005,
+   EXP-S1-002, EXP-S1-003, EXP-S1-004, EXP-S1-005, EXP-S1-012, EXP-S1-013, EXP-S1-014,
+   EXP-S1-016, EXP-S1-019, EXP-S1-020, EXP-S1-022, BM-0001/EXEC-001]
+experiments_failed:
+  - id: EXP-S1-001
+    type: HYPOTHESIS_FAILURE
+    note: registered failure criterion fired; direction abandoned as specified. Retained, not deleted.
+
+datasets:
+  HCC1395: 3,925 chr1 PASS candidates; 14 dilution BAMs (5 x TF0, 3 each at 1e-2/1e-3/1e-4, 25x)
+  COLO829: 4,000 genome-wide PASS candidates; 14 dilution BAMs, same design
+  held_out_individuals_available: [H1437, H2009, HCC1937, HCC1954]
+  held_out_blocker: "candidates called with a ClairS-TO model whose training makes them ineligible;
+    re-derivation with the `ss` model required before use"
+  known_defect: "the five TF0 replicates share ~90% of their reads — one effective blank.
+    Between-library sd is 11.7x the pseudo-blank sd [EV-0014, EV-0017, FIND-0018]"
+
+artifacts:
+  protocol_locked: research/benchmarks/BM-0001-methyl-gate-mrd/protocols/v1.0_locked.md
+  execution: research/benchmarks/BM-0001-methyl-gate-mrd/execution/
+  results: research/benchmarks/BM-0001-methyl-gate-mrd/results/
+  qc: research/benchmarks/BM-0001-methyl-gate-mrd/qc/qc_001.md
+  thesis_plan: research/THESIS-PLAN.md
+
+results:
+  registered_outcome_v1_0: "S1 HELD, S2 HELD, S3 HELD, S4 HELD -> H1 SUPPORTED (preserved verbatim;
+    QC does not overturn it)"
+  qc_qualification: "the mechanism half is not established by this benchmark as locked"
+
+qc_findings:
+  - id: QC-01
+    severity: BLOCKING
+    finding: S4 is satisfied identically by the confound it was written to exclude
+    routing: benchmark-designer
+  - id: QC-02
+    severity: BLOCKING
+    finding: S1's control legs are evaluated at incomparable count scales (8-10x)
+    routing: benchmark-designer
+  - id: QC-03
+    severity: RECORDED
+    finding: the detection outcome changes in 1 of 4 cells; claim must be scoped to that cell
+  - id: QC-04
+    severity: RECORDED
+    finding: COLO829's B1 statistic runs on single-digit counts
+  - id: QC-05
+    severity: RECORDED
+    finding: S3 holds but two COLO829 blanks are UNRELIABLE under V2
+  - id: QC-06
+    severity: NONE_BLOCKING
+    finding: five executor deviations, all `Methodology changed: NO`; D3 and D4 to be folded into v1.1
+
+critic_findings:
+  - "review_001..review_005 — 14 blocking findings raised and resolved across five design
+     iterations before the protocol was allowed to lock"
+
+assumptions:
+  - "SEQC2 high-confidence regions are used as truth for evaluation only and never reach a classifier"
+  - "The dilution mixtures realise their nominal tumour fraction only approximately: measured
+     0.93x / 0.85x / 0.39x of nominal on HCC1395 [FIND-0016]"
+  - "PCR-free library preparation — ASSUMED, never verified on these BAMs"
+
+limitations:
+  - "Cell-line dilution, not plasma. Fragmentomics is not obtainable from this material."
+  - "n = 2 individuals. Two individuals cannot choose between two decision rules."
+  - "One caller's candidate set throughout: this measures a decision rule on top of a caller,
+     not a caller."
+  - "No limit of detection is claimed. The blank design supports one effective replicate."
+
+decisions:
+  - date: 2026-08-19
+    decision: park the SNV + phase + methylation direction
+    ref: research/decisions/2026-08-19-park-direction.md
+  - date: 2026-08-25
+    decision: freeze the metric and the baseline
+    ref: research/decisions/2026-08-25-metric-and-baseline.md
+  - date: 2026-08-25
+    decision: standing autonomy granted for research EXECUTION (not for changing direction,
+      hypothesis or accepting conclusions — those remain human gates per PROJECT.md)
+    ref: research/experiments/registry/EXP-S1-001.yaml (notes)
+  - date: 2026-08-31
+    decision: lock protocol v1.0 after five design/review iterations, then REDESIGN on QC
+    ref: research/benchmarks/BM-0001-methyl-gate-mrd/workflow_state.yaml
+
+iteration: 6           # design_iteration 5 completed; v1.1 drafting is iteration 6
+status: DESIGN — resuming at the node workflow_state.yaml names (next_agent: benchmark-designer)
+
+# Specification placeholders, resolved from the repository rather than invented.
+max_retries: 5         # orchestration loop_limits.max_execution_iterations
+max_iterations: 8      # orchestration loop_limits.max_design_iterations
+
+success_criteria: >-
+  BM-0001 concludes when the mechanism question is answered in either direction under criteria
+  that are strictly harder than v1.0's and permanently labelled POST HOC: either methylation
+  pattern outperforms the CpG-density control at matched realised ALT retention, or it does not
+  and H1's mechanism half is withdrawn. Project-level success is the THESIS-PLAN claim, which
+  needs n > 2 individuals and is not reachable inside this benchmark.
+
+next_action: >-
+  benchmark-designer drafts protocol v1.1 resolving QC-01 and QC-02 and folding deviations D3/D4,
+  under the §"Constraint on the redesign" rules. v1.0 and EXEC-001 are preserved unmutated.

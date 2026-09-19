@@ -1,0 +1,84 @@
+id: EV-0052
+created_at: 2026-09-19
+title: The 28 dilution BAMs BM-0001 ran on no longer exist as BAM — they were converted to CRAM on 2026-09-12, losslessly and with methylation tags intact, and the executor cannot open them as written
+type: data_integrity_check
+verification_status: verified
+verified_by: direct inspection on this server — directory listing, conversion metadata, reference md5, samtools decode, pysam decode
+verified_on: 2026-09-19
+description: >-
+  Routine input-availability check before re-executing BM-0001 under a v1.1 protocol. Every input
+  BAM named in the locked v1.0 protocol and in execution/inputs_manifest.tsv is absent from its
+  recorded path. All 28 have been replaced by CRAM with accompanying .crai. This was found before
+  compute was spent, not after a failed run.
+path_or_url: /bip7_disk/pingting114/mixed_bam/{HCC1395,COLO829_PAO}/TF{0,1e-2,1e-3,1e-4}_25x/
+experiment: BM-0001-methyl-gate-mrd
+individuals: 2
+
+observations:
+  - observation: "0 BAM and 28 CRAM across both individuals and all four levels — HCC1395 and COLO829_PAO, TF0 (5 replicates each) and TF1e-2 / TF1e-3 / TF1e-4 (3 each). Every CRAM has a .crai."
+    command: "ls /bip7_disk/pingting114/mixed_bam/<ind>/<level>/*.bam | wc -l  vs  *.cram | wc -l"
+  - observation: >-
+      The conversion is recorded as verified lossless. Each <file>.cram.meta.json carries
+      verified: [quickcheck, read_count, md5_full_sam, header, mm_tags, rg_preserved], created
+      2026-09-12, samtools 1.17-25-geb3be52, encode
+      `samtools view -C -T <ref> --output-fmt-option store_md=1 --output-fmt-option store_nm=1`.
+      md5_sam_body is recorded per file. mm_tags is in the verified list, which is the one that
+      matters for a methylation benchmark.
+  - observation: >-
+      The encode reference is byte-identical to the one BM-0001 used. meta.json records
+      reference_md5 a6da8681616c05eb542f1d91606a7b2f for
+      /big8_disk/pingting114/MRD_detection/data/reference/GRCh38_no_alt_analysis_set.fasta;
+      md5sum of the benchmark's own /big8_disk/ref/GRCh38_no_alt_analysis_set.fasta returns the
+      same digest. CRAM reference-based decoding is therefore sound.
+    command: "md5sum /big8_disk/ref/GRCh38_no_alt_analysis_set.fasta"
+  - observation: >-
+      Decoding works and modification tags survive. samtools 1.13 decodes
+      HCC1395/TF0_25x/TF0_25x.rep1.cram over chr1:1,000,000-1,010,000 and the first three reads
+      (36,759 / 38,321 / 26,534 bp) each carry MM:Z: and ML:B:. pysam 0.24.0 opened the same file
+      with mode 'rc' and reference_filename and read MM and ML off the first fetched read.
+  - observation: >-
+      The executor as written cannot open them. run_sample.py line 40 is
+      `pysam.AlignmentFile(bam_path, 'rb')` — BAM mode, no reference_filename. CRAM requires
+      mode 'rc' and the reference. This is an input-format change, not a methodology change.
+  - observation: >-
+      Each meta.json records source_bam_deleted: false, yet no BAM is present at the recorded
+      path and /bip8_disk/pingting114/temp_mixed_bam_v2/ is empty. The conversion script did not
+      delete them; what did is not recorded here and is not established by this check.
+
+incidental_finding:
+  observation: >-
+      The CRAM headers declare @RG entries the source BAMs did not — meta.json records
+      orphan_rg_reheadered: true — and the read-group IDs name the basecaller model:
+      dna_r10.4.1_e8.2_400bps_sup@v4.3.0.
+  bearing: >-
+      This is the first local record of the basecaller model for the dilution series. Open
+      question C1 in research/knowledge/open-questions.md has stood since 2026-08-19 on the
+      basis that no @RG and no basecaller @PG existed in the header.
+  scope_limit: >-
+      It applies to the dilution series only. The pure tumour BAM
+      /big8_disk/data/HCC1395/ONT_5khz_simplex_5mCG_5hmCG/HCC1395.bam still carries no @RG and
+      no basecaller @PG — its header records only minimap2 2.26 and samtools 1.13. C1 is
+      therefore answered for the mixtures and still open for the pure sample.
+
+classification:
+  failure_type: RESOURCE_FAILURE
+  symptom: "every input path in the locked protocol's inputs_manifest.tsv resolves to a missing file"
+  likely_cause: "planned storage conversion to CRAM by another user (yulin112/pingting114) on 2026-09-12, after EXEC-001 completed on 2026-08-31"
+  recoverable: true
+  recommended_next_action: >-
+      v1.1 must specify CRAM inputs, the decode reference and its md5, and record the
+      pysam open-mode change as a deviation with `Methodology changed: NO`. The strongest
+      available soundness check is that the re-run must reproduce EXEC-001's existing numbers
+      exactly on the quantities the two executions share.
+
+limitations:
+  - "The conversion's lossless verification is read from the converter's own metadata, not independently recomputed. md5_sam_body per file is recorded and could be recomputed, at the cost of decoding 2.3 TB."
+  - >-
+      All 28 CRAMs were opened with pysam and decoded over chr1:1,000,000-1,020,000; 30 reads were
+      sampled from each and every sampled read carried MM. That establishes decodability and tag
+      presence, not whole-file fidelity — the per-file md5_sam_body remains unrecomputed.
+  - "Whether the source BAMs exist anywhere else on this server was not established."
+
+what_it_does_not_show:
+  - "That the re-run will reproduce EXEC-001. That is the check to run, not a result of this one."
+  - "Anything about the scientific content of BM-0001, in any direction."
