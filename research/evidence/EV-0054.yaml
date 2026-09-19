@@ -1,0 +1,85 @@
+id: EV-0054
+created_at: 2026-09-19
+title: BM-0001's per-read methylation score is one-sided by construction — the 5mC and 5hmC channels are double-counted, no consensus position can exceed beta 0.5, so CONF_HI=0.9 is unreachable and read hypomethylation is structurally invisible
+type: implementation_defect
+verification_status: verified
+verified_by: direct reproduction of the frozen scoring path on the source data, this server
+verified_on: 2026-09-19
+description: >-
+  Found by an adversarial panel reviewing the DIAG-0001 pre-registration, then verified
+  independently against the data rather than accepted from the panel. All three review lenses
+  converged on it separately. It is a property of the implemented statistic, not of any result,
+  and it holds whatever DIAG-0001's own predictions return.
+experiment: BM-0001-methyl-gate-mrd (EXEC-001), inherited from EXP-S1-022
+individuals: 1 (verified on HCC1395; the code path is individual-independent)
+
+the_mechanism:
+  - step: "run_sample.py ref_calls() iterates `for v in mb.values()`, where mb = read.modified_bases."
+  - step: >-
+      VERIFIED: mb carries TWO channels per cytosine — ('C',strand,'h') and ('C',strand,'m'),
+      5hmC and 5mC. On three sampled reads the channels held 1606/1606, 1590/1590 and 1048/1048
+      calls over IDENTICAL query positions. The flatten therefore emits every CpG TWICE.
+  - step: >-
+      VERIFIED: the two channels are alternatives at the same base, so their probabilities cannot
+      both clear ML=128. Positions where both channels exceeded the threshold: 0 of all sampled.
+  - step: >-
+      CONSEQUENCE, VERIFIED: a fully methylated CpG contributes me=1 from the 'm' channel and
+      me=0 from the 'h' channel, so its consensus beta is 0.5, not 1.0. Reproducing the frozen
+      consensus over chr1:1,000,000-1,200,000 (845 reads, 17,684 positions at n>=10):
+      MAX beta = 0.500000 exactly; positions above 0.5 = 0; every coverage count n[r] is even.
+
+measured_consequences:
+  - id: C1
+    consequence: "CONF_HI = 0.9 is unreachable dead code. Positions with beta > 0.9: 0 of 17,684."
+  - id: C2
+    consequence: >-
+      `conf` therefore contains ONLY the unmethylated-confident class (5,165 of 17,684 positions
+      below CONF_LO = 0.1). The methylated-confident class is empty by construction, on every
+      sample, in every arm.
+  - id: C3
+    consequence: >-
+      In `d += (me != (1 if b >= 0.5 else 0))`, every b in conf is below 0.1, so the bracket is
+      ALWAYS 0 and d reduces to a count of the read's high-probability modification calls at CpGs
+      the sample calls unmethylated. score_b1 is a ONE-SIDED false-methylation-call rate, not the
+      symmetric "departure from the sample consensus" the protocol describes.
+  - id: C4
+    consequence: >-
+      Read HYPOmethylation — the canonical ctDNA methylation signal — cannot contribute, because
+      there are no methylated-confident positions at which a read could be hypomethylated.
+  - id: C5
+    consequence: >-
+      t counts channel entries, so t = 2 x (confident CpGs covered). MIN_CPG = 5 therefore means
+      3 CpGs, not 5.
+  - id: C6
+    consequence: >-
+      VERIFIED: the recorded cut on HCC1395 TF0 rep1, 0.07692307692307693, is exactly 1/13. With
+      t = 2k, a read is kept iff d > 2k/13, so any read spanning 6 or fewer confident CpGs is kept
+      on a SINGLE modification call. score_b1 is bounded above by 0.5.
+
+what_this_does_and_does_not_mean:
+  does_not:
+    - "It does NOT show H1 is false. The score may still discriminate; this says what it is, not how well it works."
+    - "It does NOT make the score meaningless. Hypermethylation at normally-unmethylated CpGs is a genuine cancer signature, and that is the half the implementation retains."
+    - "It does NOT overturn EXEC-001's registered outcome, which remains a correct mechanical application of the locked criteria."
+  does:
+    - "The implemented statistic is not the documented statistic. Protocol §10 B1 describes a CONF_BAND with two sides; only one side can ever be populated."
+    - "Every claim in this project about per-read methylation DIVERGENCE is a claim about one-sided hypermethylation calls, and should be restated that way."
+    - "The v1.1 redesign — 4,933 lines across three rounds — is arguing about controls for a statistic that is not what its own protocol says it is. That argument should not resume before this is settled."
+
+propagation:
+  - "EXP-S1-022 and FIND-0021 are the origin of this code path. FIND-0021 reports 'the 20,353 positions (33.5%) where the consensus is confident — rate below 0.1 or above 0.9'. If the same double-count applies there, all 20,353 are the below-0.1 class and none the above-0.9 class. NOT YET VERIFIED on that experiment's own inputs."
+  - "The 0.2649 AUC gain FIND-0021 attributes to confident-position selection is therefore a gain from selecting UNMETHYLATED-confident positions only. Its magnitude is not in question here; its description is."
+  - "QC-01's finding stands independently and is unaffected: C2 reproduces B1's retention signature whatever B1's score means."
+
+limitations:
+  - "The consensus reproduction covers chr1:1,000,000-1,200,000 with 845 reads, not the full 3,925-candidate frame. The full-frame reproduction is running as DIAG-0001 and will report n_consensus_positions, n_confident_positions and the beta distribution over the whole set."
+  - "Verified on HCC1395 only. COLO829 uses the same code path and the same two-channel data convention, but was not run here."
+  - "Whether the double-count is a defect or an intended pooling of 5mC and 5hmC into one 'modified' class is not established. If intended, it is undocumented in every protocol version from v0.1 to v1.1, and the CONF_HI limb is dead either way."
+  - "No claim is made here about which handling is correct. That is a design decision reserved to the researcher."
+
+recommended_next_action: >-
+  Settle what the score is meant to be before any further protocol round. The three candidate
+  readings — pool the channels as p_5mC + p_5hmC, use the 5mC channel alone, or keep the present
+  behaviour and document it as a one-sided hypermethylation rate — give different statistics, and
+  the choice is a scientific decision, not an implementation detail. Whichever is chosen, the
+  CONF_HI limb must either become reachable or be removed from the protocol text.
