@@ -1,0 +1,13 @@
+{
+ "sample": "HCC1395_TF0_rep1",
+ "cram": "/bip7_disk/pingting114/mixed_bam/HCC1395/TF0_25x/TF0_25x.rep1.cram",
+ "n_candidates": 3925,
+ "n_reads_touched": 73124,
+ "n_consensus_positions": 1153835,
+ "n_confident_positions": 353719,
+ "n_scorable_reads": 58990,
+ "K_B1": 2895,
+ "cut": 0.07692307692307693,
+ "n_gated_alt_scorable": 24,
+ "reads_table": "/big8_disk/hung114/ONT_MRD/mrd/research/diagnostics/DIAG-0001-score-error-proxy/results/reads_HCC1395_TF0_rep1.tsv"
+}

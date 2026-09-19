@@ -1,0 +1,93 @@
+id: EV-0055
+created_at: 2026-09-19
+title: In a tumour-free blank an error-only filter reproduces BM-0001's gated-ALT retention exactly (37.5% vs 37.5%) but keeps only 5 of the same 9 reads; at 0.1% it does not, and the score's strongest correlate is CpG count rather than error rate
+type: analysis_result
+verification_status: verified
+verified_by: DIAG-0001, registered and sha256-hashed before execution; reproduction check passed exactly on five recorded EXEC-001 values
+verified_on: 2026-09-19
+description: >-
+  DIAG-0001 asked whether score_b1 is substantially a per-read error-rate proxy. Two full-frame
+  passes over the 3,925-candidate chr1 frame, HCC1395 TF0 rep1 (blank) and TF1e-3 rep1, reading
+  CRAM through the frozen EXEC-001 scoring constants.
+path_or_url: research/diagnostics/DIAG-0001-score-error-proxy/RESULT.md
+generated_by: research/diagnostics/DIAG-0001-score-error-proxy/scripts/diag_pass.py
+experiment: DIAG-0001 (diagnostic; not a benchmark arm and not a registered protocol experiment)
+individuals: 1
+
+reproduction_check:
+  status: PASS
+  detail: >-
+    n_consensus_positions 1,153,835 · n_confident_positions 353,719 · n_scorable_reads 58,990 ·
+    K_B1 2,895 · cut 0.07692307692307693 — all five exact against EXEC-001.
+  bearing: >-
+    An independent reimplementation reading CRAM reproduces EXEC-001's BAM results bit-for-bit
+    through the full scoring path. This closes the question EV-0052 left open about whether a
+    CRAM-based re-run would reproduce.
+
+claims:
+  - claim: "The blank confound is real at the operating point"
+    observation: >-
+      In HCC1395 TF0 rep1 — no tumour present — a filter keeping the top 5% of reads by NM/aligned
+      length, which knows nothing about methylation, retains 9 of 24 gated-ALT scorable reads
+      (37.5%), identical to B1's 9 of 24 (37.5%), against a global keep rate of 4.91% — a 7.6-fold
+      enrichment reached by error rate alone.
+    prediction: P3
+    outcome: "registered threshold (>=20% of B1) cleared, at 100% of B1"
+  - claim: "Equal retention is not the same reads"
+    observation: >-
+      B1's 9 kept blank reads and the error filter's 9 share only 5. Jaccard 0.385. At 0.1% B1
+      keeps 20, the error filter 7, sharing 4, Jaccard 0.174.
+    note: "Not specified by P3; run because the pre-registration review panel identified the gap before results were read"
+  - claim: "B1 exceeds the error-only filter where tumour is present"
+    observation: "at 0.1%, B1 retains 47.6% of gated-ALT reads against the error filter's 16.7%"
+    prediction: P4
+    outcome: >-
+      the contrast P4 registered is observed — rho is level-independent (+0.1133 blank, +0.1137 at
+      0.1%) as a pure error proxy would be, but retention is not: error-only falls 37.5% to 16.7%
+      while B1 rises 37.5% to 47.6%
+  - claim: "Correlation with error rate is weak and sits in the registered indeterminate band"
+    observation: "Spearman rho(score_b1, nm_rate) = +0.1133 (blank) and +0.1137 (0.1%), against a registered ERROR-DOMINATED threshold of 0.30 and a NOT-ERROR-DOMINATED threshold of 0.10"
+    prediction: P1
+    outcome: PARTIAL
+  - claim: "Among kept blank reads the error difference is nonetheless large"
+    observation: "median nm_rate 0.0821 for B1-kept gated-ALT reads against 0.0153 for unkept, a 5.35-fold difference, Mann-Whitney p=0.009 on 9 against 15 reads. At 0.1% the ratio is 1.96, p=0.076"
+    prediction: P2
+    outcome: held in the blank, weaker and not significant at 0.1%
+  - claim: "The score's strongest measured correlate is CpG count, not error rate"
+    observation: >-
+      rho(score_b1, n_conf) = +0.266 against rho(score_b1, nm_rate) = +0.113, rho(mean_ml) = +0.106,
+      rho(n_modcalls) = +0.190, rho(mapq) = -0.002. n_conf IS score_c2, the CpG-density control.
+    bearing: "QC-01 arriving by a second and independent route — the score is more coupled to CpG density than to error"
+
+registered_outcome: >-
+  MIXED. ERROR-DOMINATED required P1 >= 0.30 and P3 >= 20%; P1 is 0.113. NOT ERROR-DOMINATED
+  required P1 <= 0.10 and P3 < 20%; P1 is 0.113. Neither fired, so the registration's own rule is
+  "reported as measured, no verdict".
+
+registration_defect_disclosed:
+  finding: >-
+    A three-lens panel reviewing the frozen pre-registration, before any result was read, judged
+    two of its four named outcomes unsupportable: NM is edit distance to the reference and is blind
+    to modification-call error, which — per EV-0054 — is exactly the channel d counts. A null on
+    nm_rate is therefore compatible with score_b1 being an almost pure modification-error proxy.
+  handling: >-
+    The registration was NOT edited. It stands with the defect named, and its numbers are reported
+    as descriptive measurements of a basecall-error channel rather than as the verdicts it defined.
+  also: >-
+    The registration quotes B1's blank ALT retention as 40.0%, an occurrence count (25). This
+    diagnostic uses a read set (24 unique; one read is ALT at two gate-passing candidates), giving
+    37.5%. The set figure is used throughout and the discrepancy is recorded rather than corrected
+    in the frozen file.
+
+limitations:
+  - "Gated-ALT populations are 24 reads (blank) and 42 (0.1%); the kept subsets are 9 and 20. Every percentage is a small-count statistic and none should be read beyond two figures."
+  - "One individual, one replicate per level, chr1 only. COLO829 was not run."
+  - "NM conflates sequencing error with true divergence from the reference, including real germline and somatic variation, so it is an imperfect error proxy in both directions."
+  - "mean_ml averages over all modification calls on the read, both channels and all positions, so it is a blunt instrument for the event that drives d."
+  - "No modification-call-specific error proxy was measured. The panel identified this as the gap that matters most and it remains open."
+
+what_it_does_not_show:
+  - "Anything about H1. This measures a property of the score, never a detection outcome."
+  - "That the blank confound explains the 0.1% result — it does not; B1 clearly exceeds the error-only filter there."
+  - "That error is not involved — P2 in the blank is a 5.35-fold median difference at p=0.009."
+  - "That the kept reads are or are not tumour-derived. No truth label was opened at any point."
