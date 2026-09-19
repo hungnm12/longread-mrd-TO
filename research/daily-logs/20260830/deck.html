@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Report</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<style>
+/* Progress-report slides - shared styles (used by both single pages and the built deck) */
+:root { --br:#1677ff; --old:#d4380d; --new:#389e0d; --warn:#d48806; }
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, "Segoe UI", "Noto Sans TC", Roboto, sans-serif;
+  margin: 0; padding: 40px 32px; background: #f5f6f8; color: #1f2329; line-height: 1.65;
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1 { font-size: 26px; margin: 0 0 4px; }
+.sub { color: #6b7280; margin-bottom: 32px; }
+
+/* ---- Shared semantic styles (work in both .slide and legacy .block) ---- */
+.lead { color: #444; margin: 0 0 14px; font-size: 15px; }
+.lead b.old { color: var(--old); }
+.lead b.new { color: var(--new); }
+.mermaid { display: flex; justify-content: center; margin: 8px 0; }
+.takeaway {
+  margin-top: 14px; padding: 10px 14px; border-radius: 6px; font-size: 13.5px;
+  background: #f6ffed; border-left: 4px solid var(--new); color: #135200;
+}
+.takeaway b { color: #237804; }
+.takeaway.warn { background:#fffbe6; border-left-color:var(--warn); color:#613400; }
+.takeaway.warn b { color:#ad6800; }
+.ruletable { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 4px; }
+.ruletable th, .ruletable td { border: 1px solid #e5e7eb; padding: 7px 10px; text-align: left; vertical-align: top; }
+.ruletable th { background: #fafafa; }
+.ruletable tr.drop td { background: #fff1f0; color: #820014; text-decoration: line-through; text-decoration-color:#d4380d80; }
+.ruletable tr.drop td:first-child { text-decoration: none; }
+.ruletable tr.hl td { background: #fffbe6; }
+.keep { color: var(--new); font-weight: 600; }
+.drop-badge { color:#fff; background:var(--old); font-size:11px; font-weight:700; padding:1px 8px; border-radius:99px; }
+.smrn-badge { color:#fff; background:var(--new); font-size:11px; font-weight:700; padding:1px 8px; border-radius:99px; }
+.old-c { color: var(--old); font-weight: 600; }
+.new-c { color: var(--new); font-weight: 600; }
+code { background: #f0f1f3; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+.num { display: none; }
+
+/* Dashed section divider (splits one slide into upper/lower sections) */
+.divider { border: none; border-top: 1px dashed #d1d5db; margin: 4px 0; }
+
+/* Small layout helpers */
+.row  { display:flex; align-items:center; gap:8px; }        /* horizontal row, vertically centred */
+.cols { display:flex; align-items:flex-start; gap:20px; }   /* two columns, top-aligned */
+.col  { flex:1; min-width:0; }                              /* equal-width column */
+
+/* ---- Fixed 16:9 slide container (PPTX default 1280x720) ---- */
+.slide-outer {
+  width: 100%;
+  max-width: 1040px;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto 32px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.12);
+  background: #fff;
+  container-type: inline-size;
+}
+.slide {
+  position: absolute;
+  width: 1280px;
+  height: 720px;
+  top: 0; left: 0;
+  /* CSS-driven scaling first (container query, no JS needed); scaleSlide() later overrides the
+     same value with an inline style as a fallback where container queries are unsupported.
+     The two do not conflict. */
+  transform: scale(calc(100cqw / 1280px));
+  transform-origin: top left;
+  background: #fff;
+  padding: 52px 60px 40px;
+  font-size: 15px;
+}
+/* Standard padding class: use this by default. Most slides (title + body, medium density) take
+   it, and pages should avoid hard-coding their own inline padding - slightly different inline px
+   values per page are the usual reason titles "look misaligned from page to page" in one deck.
+   A page whose layout genuinely needs it (e.g. the full-width mermaid of layout 3, or a cover)
+   may override the padding inline, but consistency is the rule and the reason should be noted
+   on that page. */
+.slide.pad-std { padding: 28px 44px 18px; }
+/* The .slide scaling must be removed while mermaid renders. mermaid inserts labels into the DOM
+   and sizes its node boxes from getBoundingClientRect; with transform: scale(k) on .slide the
+   measurement comes back k times smaller, so node boxes are off by k (the deck default is
+   1040/1280 = 0.8125) and the text ends up 23% larger than its box and gets clipped - the
+   classic "broken layout". visibility:hidden during measurement stops the user seeing an
+   unscaled 1280px flash. */
+body.mermaid-measuring .slide { transform: none !important; visibility: hidden; }
+
+.slide h2 { font-size: 22px; margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+/* Top-left section label (pages in one section share identical text) */
+.slide-label {
+  position: absolute;
+  top: 14px; left: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---- Legacy .block support (backwards compatibility; not used by new pages) ---- */
+.block {
+  background: #fff; border-radius: 14px; padding: 24px 28px; margin-bottom: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.block h2 { font-size: 20px; margin: 0 0 6px; display: flex; align-items: center; gap: 12px; }
+
+/* ---- Contents cover (agenda, optional) ---- */
+.cover { text-align: center; padding: 64px 28px; }
+.cover .kicker { color: var(--br); font-weight: 700; letter-spacing: 2px; font-size: 14px; }
+.cover h2 { display: block; font-size: 34px; margin: 14px 0 10px; line-height: 1.3; }
+.cover .desc { color: #6b7280; font-size: 16px; }
+.cover .meta { margin-top: 28px; color: #8a8f98; font-size: 14px; }
+.cover .agenda { display: inline-flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; justify-content: center; }
+.cover .agenda span {
+  background: #eef2ff; color: #3344aa; border-radius: 99px; padding: 8px 18px; font-size: 14px; font-weight: 600;
+}
+
+/* ---- Presentation mode (slide mode) ---- */
+body.slides { padding: 0; background: #111; overflow: hidden; }
+body.slides .wrap > h1,
+body.slides .wrap > .sub { display: none; }
+
+/* Legacy .block behaviour in slide mode */
+body.slides .block { display: none; }
+body.slides .block.active { display: block; animation: fade .25s ease; }
+
+/* Current .slide-outer in slide mode: centred full screen */
+body.slides .slide-outer {
+  display: none;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: #111;
+}
+body.slides .slide-outer.active {
+  display: block;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  max-width: none;
+  aspect-ratio: unset;
+  z-index: 10;
+  overflow: hidden;
+}
+/* transform/position of a slide is set by JS */
+body.slides .slide-outer.active .slide {
+  box-shadow: 0 4px 32px rgba(0,0,0,.4);
+}
+
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---- Nav bar ---- */
+.nav {
+  position: fixed; left: 0; right: 0; bottom: 0; display: none;
+  align-items: center; justify-content: center; gap: 18px;
+  padding: 12px; background: rgba(0,0,0,.55); backdrop-filter: blur(6px);
+  z-index: 50; transition: transform .2s ease;
+}
+body.slides .nav { display: flex; }
+body.slides .nav.nav-collapsed { transform: translateY(100%); }
+
+/* ---- Nav-bar collapse button ---- */
+.nav-toggle {
+  display: none;
+  position: fixed; bottom: 8px; right: 12px; z-index: 60;
+  border: none; background: rgba(255,255,255,.18); color: #fff;
+  font-size: 13px; width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; backdrop-filter: blur(4px); transition: background .2s;
+  align-items: center; justify-content: center; line-height: 1;
+}
+body.slides .nav-toggle { display: flex; }
+.nav-toggle:hover { background: rgba(255,255,255,.35); }
+.nav button {
+  border: none; background: var(--br); color: #fff; font-size: 15px; font-weight: 600;
+  padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: opacity .2s;
+}
+.nav button:disabled { opacity: .35; cursor: default; }
+.nav .dots { display: flex; gap: 9px; }
+.nav .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.3); cursor: pointer; transition: all .2s; }
+.nav .dot.on { background: #fff; transform: scale(1.3); }
+.nav .count { font-size: 13px; color: rgba(255,255,255,.7); min-width: 42px; text-align: center; }
+.modetoggle {
+  position: fixed; top: 16px; right: 16px; z-index: 60;
+  border: 1px solid #d0d5dd; background: #fff; color: #344054; font-size: 13px; font-weight: 600;
+  padding: 6px 14px; border-radius: 8px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+.modetoggle:hover { border-color: var(--br); color: var(--br); }
+
+/* ════════════════════════════════════════════════════
+   Layout components
+   The classes below can be used directly inside any .slide, with no inline style
+   ════════════════════════════════════════════════════ */
+
+/* ---- Info card (left colour band) ---- */
+/* Usage: <div class="info-card red"><div class="card-title">Title</div>body</div> */
+.info-card {
+  border-left: 4px solid; padding: 10px 12px; border-radius: 0 4px 4px 0;
+  font-size: 13px; line-height: 1.6;
+}
+.info-card .card-title { font-weight: 700; margin-bottom: 4px; }
+.info-card.red   { background:#fff1f0; border-color:#ff4d4f; color:#5c1a1a; }
+.info-card.red   .card-title { color:#820014; }
+.info-card.green { background:#f6ffed; border-color:#52c41a; color:#1a4d1a; }
+.info-card.green .card-title { color:#135200; }
+.info-card.blue  { background:#e6f4ff; border-color:#1677ff; color:#0b3d91; }
+.info-card.blue  .card-title { color:#003a8c; }
+.info-card.yellow{ background:#fffbe6; border-color:#faad14; color:#613400; }
+.info-card.yellow .card-title { color:#ad6800; }
+
+/* ---- Vertical dashed divider (between two columns) ---- */
+/* Usage: <div class="vdivider"></div> inside a .cols or display:flex container */
+.vdivider {
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, #d1d5db 0, #d1d5db 6px, transparent 6px, transparent 12px);
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* ---- Pipeline diagram (.ap-* family) ---- */
+/* For Write Path / Read Path two-lane flows */
+/* Lane container */
+.ap-lane {
+  border-radius: 14px; padding: 14px 18px 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ap-lane-lbl {
+  font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.ap-lane-lbl::after {
+  content: ''; flex: 1; height: 1px; border-radius: 1px;
+  background: currentColor; opacity: .25;
+}
+/* Node (white card; the top border sets its colour) */
+.ap-node {
+  background: #fff; border-radius: 10px; flex: 1; min-width: 0;
+  padding: 12px 13px 11px; display: flex; flex-direction: column;
+  gap: 7px; box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+.ap-badge {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0;
+}
+.ap-title {
+  font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; gap: 7px; margin-bottom: 1px;
+}
+.ap-sub  { font-size: 9.5px; color: #6b7280; line-height: 1.5; }
+.ap-chip {
+  display: inline-block; font-size: 9px; font-weight: 600;
+  padding: 2px 8px; border-radius: 10px; margin-top: 2px;
+}
+/* Reads bar (illustrative) */
+.ap-rb   { height: 5px; border-radius: 3px; margin: 2px 0; }
+/* Code badge */
+.ap-code {
+  font-size: 9px; font-weight: 700;
+  padding: 2.5px 7px; border-radius: 5px;
+}
+/* Arrow connector */
+.ap-arr {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  width: 46px; flex-shrink: 0; gap: 3px;
+}
+.ap-arr-bar {
+  position: relative; width: 100%; height: 3.5px; border-radius: 2px;
+}
+.ap-arr-head {
+  position: absolute; right: -10px; top: -6px;
+  border-top: 7px solid transparent; border-bottom: 7px solid transparent;
+  /* border-left colour matches the .ap-arr-bar background; set inline */
+}
+.ap-arr-lbl { font-size: 8.5px; color: #9ca3af; text-align: center; line-height: 1.3; }
+
+/* ---- Before/After labels ---- */
+/* Usage: <div class="before-label">Before</div> / <div class="after-label">After</div> */
+.before-label {
+  font-size: 12px; font-weight: 700; color: #820014;
+  white-space: nowrap; min-width: 56px;
+}
+.after-label {
+  font-size: 12px; font-weight: 700; color: #135200;
+  white-space: nowrap; min-width: 56px;
+}
+
+</style>
+</head>
+<body>
+<button class="modetoggle" id="copyImgBtn" style="right:490px;" title="Copy the current page as an image (shortcut: c); on a non-secure connection it downloads a PNG instead">⧉ Copy page</button>
+<button class="modetoggle" id="exportPortableBtn" style="right:330px;">⇓ Export portable HTML</button>
+<button class="modetoggle" id="exportBtn" style="right:170px;">↓ Export PPTX</button>
+<button class="modetoggle" id="modeBtn">▶ Presentation mode</button>
+<div class="wrap">
+  <h1>Progress Report</h1>
+  <div class="sub">20260830</div>
+
+<div class="slide-outer">
+  <div class="slide pad-std">
+    <div class="slide-label">Today's map</div>
+    <h2>One paper read, three of my own claims overturned, and the material inventoried</h2>
+    <p class="lead">A first serious pass over the SIMMA preprint (Sauer et al. 2026, medRxiv, <b class="old">not peer reviewed</b>) was turned into a thesis position: what the paper claims, where it stops, and which sentences in my own note would not survive a reviewer. Then the disk was surveyed so the remaining gap can actually be tested.</p>
+
+    <table class="ruletable" style="font-size:15px">
+      <tr><th style="width:23%">Theme</th><th style="width:47%">What moved</th><th style="width:30%">State at end of day</th></tr>
+      <tr>
+        <td><b>A · What SIMMA claims</b></td>
+        <td>Seven problems ordered into a dependency chain; <b>P5 is the hinge</b> — if low-input single-molecule cfDNA fails, nothing else in the paper exists</td>
+        <td class="new-c">Clarified — P5(b) is where the thesis sits</td>
+      </tr>
+      <tr>
+        <td><b>B · What SIMMA does</b></td>
+        <td>One library prep split in two; four signals from a single WGS run; COPYBARA / SAVANA+hifiasm / RF+conformal</td>
+        <td class="new-c">Mechanism mapped, 2 caveats fixed</td>
+      </tr>
+      <tr class="hl">
+        <td><b>C · Claims that must survive the defence</b></td>
+        <td>"short-read cannot dig into plasma biology" and "ecDNA is a free 24th chromosome" — both <b class="old">overturned</b> and replaced</td>
+        <td class="old-c">Replacement claims fixed; counter-arguments still unwritten</td>
+      </tr>
+      <tr>
+        <td><b>D · Note correction loop on <code>30.md</code></b></td>
+        <td>4 issues named against the paper's own wording, copy-over rewrite supplied</td>
+        <td>2 fixed, 1 partly, <span class="old-c">1 unfixed</span></td>
+      </tr>
+      <tr>
+        <td><b>E · Material and operating point</b></td>
+        <td>Disk holds <b>two</b> 14-BAM dilution series (~2.1 TB), not the one the docs record; signal comparison gated behind arithmetic at 25x, TF=1e-4</td>
+        <td class="old-c">Inventory done; Question 1 unanswered</td>
+      </tr>
+    </table>
+
+    <div class="cols" style="gap:14px;margin-top:12px">
+      <div class="col"><div class="info-card blue"><div class="card-title">Where the day was spent</div><div style="font-size:13px;line-height:1.6">3 working sessions, 21 turns, 15:03&ndash;20:39 Taipei, all in <code>/big8_disk/hung114/ONT_MRD</code>. Two ran in parallel on the same paper; the third opened the experimental thread.</div></div></div>
+      <div class="col"><div class="info-card green"><div class="card-title">What is now settled</div><div style="font-size:13px;line-height:1.6">SIMMA integrates modalities at <b>sample level</b>; the thesis targets <b>molecule level</b>. ecDNA is context, not implementation. The ONT premise is material cost, not depth of insight.</div></div></div>
+      <div class="col"><div class="info-card yellow"><div class="card-title">What decides tomorrow</div><div style="font-size:13px;line-height:1.6">Three questions were put to me and left unanswered: the TF=1e-4 arithmetic, the <code>30.md</code> overwrite, and the COLO829_PAO registry. Everything else queues behind them.</div></div></div>
+    </div>
+
+    <div class="takeaway">Takeaway: the day's real product is not paper notes but <b>a shorter list of things I am allowed to claim</b> — and one arithmetic question that decides whether the multimodal comparison is worth any compute at all.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide pad-std">
+    <div class="slide-label">SIMMA problem structure</div>
+    <h2>The seven problems are not equal — P5 carries the paper</h2>
+    <p class="lead">P1–P2 are the opening of every liquid-biopsy paper and explain nothing about this one. P3–P4 are SIMMA's own. <b class="new">P5 is the hinge</b>: single-molecule sequencing solves P3+P4 in principle but was unrealised, and P6–P7 only open once P5 is solved.</p>
+
+    <div class="mermaid" style="width:100%;">
+%%{init: {"themeVariables": {"fontSize":"15px"}}}%%
+flowchart LR
+    subgraph G["Generic to the field"]
+      P1["P1 - tissue not always<br/>obtainable, not serial,<br/>misses intra/inter-site<br/>heterogeneity"]
+      P2["P2 - informed = ppm but<br/>needs tissue; agnostic<br/>scales but lower sensitivity<br/>+ loses specificity"]
+    end
+    subgraph S["SIMMA's own"]
+      P3["P3 - multimodal needs<br/>N assays = N aliquots;<br/>paediatric plasma is<br/>a few ng. Physical."]
+      P4["P4 - short reads blind to<br/>repetitive regions, long<br/>fragments, complex SVs<br/>=> ecDNA undetectable"]
+    end
+    P5["P5 - THE HINGE<br/>single-molecule solves both<br/>in principle, but lacks:<br/>(a) low-input protocol<br/>(b) multimodal integration"]
+    subgraph O["Only open after P5"]
+      P6["P6 - AI reports global<br/>metrics, cannot say if<br/>THIS sample is trustworthy"]
+      P7["P7 - paediatric relapse /<br/>metastasis; brain tumours<br/>shed almost nothing"]
+    end
+    P3 --> P5
+    P4 --> P5
+    P5 --> P6
+    P5 --> P7
+    P1 -.-> P3
+    P2 -.-> P4
+    classDef gen fill:#f5f5f5,stroke:#bfbfbf,color:#595959;
+    classDef own fill:#e6f4ff,stroke:#1677ff,color:#003a8c;
+    classDef hinge fill:#fffbe6,stroke:#faad14,color:#613400,stroke-width:3px;
+    classDef post fill:#f6ffed,stroke:#52c41a,color:#135200;
+    class P1,P2 gen;
+    class P3,P4 own;
+    class P5 hinge;
+    class P6,P7 post;
+    </div>
+
+    <div class="cols" style="gap:14px;margin-top:6px">
+      <div class="col"><div class="info-card yellow"><div class="card-title">Why P5 is the hinge, in the project's own words</div><div style="font-size:13px;line-height:1.6">"P5 is the hinge &mdash; if low-input single-molecule cfDNA does not work, nothing else in the paper exists." Everything downstream (per-sample confidence, paediatric relapse, CSF for brain tumours) is conditional on it.</div></div></div>
+      <div class="col"><div class="info-card red"><div class="card-title">What P1&ndash;P2 are not</div><div style="font-size:13px;line-height:1.6">They open every liquid-biopsy paper, so quoting them explains nothing about SIMMA. A note that stops at P1&ndash;P4 answers "what are the problems" but never "what did this paper contribute".</div></div></div>
+    </div>
+
+    <div class="takeaway">Takeaway: SIMMA fills <b>P5(b)</b> with Random Forest + conformal prediction over concatenated covariate blocks — that is integration at <b>sample level</b>. The gap left is integration at <b>molecule level</b>, which is exactly where this thesis sits.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide pad-std">
+    <div class="slide-label">SIMMA method</div>
+    <h2>One library prep, split in two — four signals out of a single WGS run</h2>
+    <p class="lead">Precision matters here: "multimodal from one sample" is <b class="old">one prep then split into two aliquots</b>, not a single aliquot, and the targeted branch still uses PCR. Everything below is the paper's own assertion.</p>
+
+    <div class="cols" style="gap:16px">
+      <div class="col">
+        <div class="info-card blue" style="margin-bottom:8px">
+          <div class="card-title">Wet lab — one end-repair + A-tailing, then split</div>
+          <div style="font-size:13.5px;line-height:1.65">
+            <b>WGS branch:</b> native barcode &rarr; pool 16&ndash;32 samples &rarr; adapter &rarr; nanopore. <b>No PCR</b>, so the original molecule and its base modifications survive.<br>
+            <b>Targeted branch (optional):</b> PCR + 76-cancer-gene capture panel with UMIs.
+          </div>
+        </div>
+        <table class="ruletable" style="font-size:13.5px">
+          <tr><th>Measured</th><th>Value</th></tr>
+          <tr><td>Minimum input</td><td><b>5 ng</b> total cfDNA</td></tr>
+          <tr><td>Yield vs commercial protocol</td><td>~<b>2x</b></td></tr>
+          <tr class="hl"><td>Yield vs DNA loaded</td><td><b>R = 0.97</b> (predictable, even with unbalanced multiplex)</td></tr>
+          <tr><td>Targeted consensus depth</td><td><b>2,282x</b> effective</td></tr>
+          <tr><td>Targeted error rate</td><td>~<b>5e-4</b></td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <table class="ruletable" style="font-size:13.5px">
+          <tr><th style="width:30%">Signal</th><th>How it is extracted</th><th style="width:26%">Tool</th></tr>
+          <tr><td><b>Copy number &rarr; TF</b></td><td>read depth in 500 kb bins</td><td><code>COPYBARA</code> (works at 0.5x mean cov.)</td></tr>
+          <tr><td><b>Methylation 5mC + 5hmC</b></td><td>from the electrical signal of the molecule itself, <b>no bisulfite</b>; aligned to T2T-CHM13 to reach repeats</td><td>&mdash;</td></tr>
+          <tr><td><b>Fragment length, end motif</b></td><td>read length directly</td><td>&mdash;</td></tr>
+          <tr class="hl"><td><b>SV / ecDNA</b></td><td>breakpoints from long reads, then de novo assembly of the circle</td><td><code>SAVANA</code> + <code>hifiasm</code>, <code>COPYBARA-focal</code></td></tr>
+          <tr><td colspan="3" style="background:#fafafa"><b>Integration:</b> 7 concatenated feature blocks (copy number, methylation at several scales, fragment length, end motif) &rarr; Random Forest &rarr; TF <b>with a per-sample confidence interval</b> (conformal prediction)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Two things not to write wrong: <b>conformal prediction does not make the assay more sensitive</b> — it only changes how the result is reported, and a wide interval means "do not trust this sample". And the tumour-agnostic path contains <b>no SNV feature at all</b>: all 7 blocks are copy number, methylation or fragment length.</div>
+  </div>
+</div>
+
+<style>
+  .mc-board { position:relative; height:352px; }
+  .mc-board svg { display:block; }
+  .mc svg text { font-family: inherit; }
+  .mc .lbl { font-size:11px; fill:#374151; }
+  .mc .lane { font-size:12.5px; font-weight:700; letter-spacing:.4px; }
+  .mc .bartxt { font-size:11px; font-weight:600; }
+  .mc .edge { fill:none; stroke-linecap:round; stroke-width:2.5; }
+  .mc .edge.red { stroke:#d4380d; }
+  .mc .edge.green { stroke:#389e0d; }
+  .mc .edge.dashed { stroke:#bfbfbf; stroke-dasharray:7 6; stroke-width:2; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std">
+    <div class="slide-label">Thesis premise</div>
+    <h2>The bottleneck is not how deep short-read looks — it is what looking costs in material</h2>
+    <p class="lead">The framing "short-read cannot dig into plasma biology, therefore ONT" was <b class="old">rejected</b>: nearly everything known about cfDNA biology was found with short reads, and short reads beat ONT on per-base accuracy. Scale below: <b>1 ng = 80 px</b>.</p>
+
+    <div class="cols mc" style="gap:18px;align-items:stretch">
+      <div style="flex:0 0 720px">
+        <div class="mc-board">
+        <svg viewBox="0 0 720 352" preserveAspectRatio="xMidYMid meet" width="720" height="352">
+          <defs>
+            <marker id="ar-red" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="9.5" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 Z" fill="#d4380d"/></marker>
+            <marker id="ar-green" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="9.5" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 Z" fill="#389e0d"/></marker>
+          </defs>
+
+          <text class="lane" x="0" y="14" fill="#a8071a">SHORT-READ &mdash; one assay per modality</text>
+
+          <rect x="150" y="22" width="400" height="28" rx="4" fill="#f5f5f5" stroke="#8c8c8c"/>
+          <text class="bartxt" x="350" y="41" text-anchor="middle" fill="#262626">5 ng cfDNA &mdash; a few mL of paediatric plasma</text>
+
+          <path class="edge red" d="M215 52 L215 68" marker-end="url(#ar-red)"/>
+          <path class="edge red" d="M350 52 L350 68" marker-end="url(#ar-red)"/>
+          <path class="edge red" d="M485 52 L485 68" marker-end="url(#ar-red)"/>
+
+          <rect x="150" y="72" width="130" height="26" rx="4" fill="#fff1f0" stroke="#ff4d4f"/>
+          <rect x="285" y="72" width="130" height="26" rx="4" fill="#fff1f0" stroke="#ff4d4f"/>
+          <rect x="420" y="72" width="130" height="26" rx="4" fill="#fff1f0" stroke="#ff4d4f"/>
+          <text class="bartxt" x="215" y="89" text-anchor="middle" fill="#820014">SNV &middot; 1.67 ng</text>
+          <text class="bartxt" x="350" y="89" text-anchor="middle" fill="#820014">Methylation &middot; 1.67 ng</text>
+          <text class="bartxt" x="485" y="89" text-anchor="middle" fill="#820014">Fragmentomics &middot; 1.67 ng</text>
+
+          <path class="edge red" d="M350 100 L350 128" marker-end="url(#ar-red)"/>
+          <text class="lbl" x="358" y="118" fill="#a8071a">bisulfite conversion</text>
+
+          <rect x="285" y="132" width="27" height="26" rx="3" fill="#ffccc7" stroke="#ff4d4f"/>
+          <rect x="285" y="132" width="7" height="26" rx="2" fill="#a8071a"/>
+          <text class="lbl" x="322" y="144" fill="#a8071a" font-weight="700">0.08 &ndash; 0.33 ng survives</text>
+          <text class="lbl" x="322" y="157" fill="#595959">bisulfite destroys 80&ndash;95% of the material</text>
+          <text class="lbl" x="322" y="170" fill="#595959">and turns C&rarr;T, erasing C&rarr;T mutations too</text>
+
+          <path class="edge dashed" d="M150 196 L550 196"/>
+          <text class="lbl" x="350" y="190" text-anchor="middle" fill="#8c8c8c">&#10007; three tubes = three different molecules &mdash; no way to ask whether the SAME fragment carries two signals</text>
+
+          <text class="lane" x="0" y="228" fill="#135200">ONT &mdash; one aliquot, all modalities</text>
+
+          <rect x="150" y="236" width="400" height="28" rx="4" fill="#f6ffed" stroke="#52c41a"/>
+          <text class="bartxt" x="350" y="255" text-anchor="middle" fill="#135200">5 ng cfDNA &mdash; not split, not copied, not converted</text>
+
+          <path class="edge green" d="M197 296 L197 270" marker-end="url(#ar-green)"/>
+          <path class="edge green" d="M301 296 L301 270" marker-end="url(#ar-green)"/>
+          <path class="edge green" d="M405 296 L405 270" marker-end="url(#ar-green)"/>
+          <path class="edge green" d="M509 296 L509 270" marker-end="url(#ar-green)"/>
+
+          <rect x="150" y="298" width="94" height="24" rx="4" fill="#f6ffed" stroke="#52c41a"/>
+          <rect x="254" y="298" width="94" height="24" rx="4" fill="#f6ffed" stroke="#52c41a"/>
+          <rect x="358" y="298" width="94" height="24" rx="4" fill="#f6ffed" stroke="#52c41a"/>
+          <rect x="462" y="298" width="94" height="24" rx="4" fill="#f6ffed" stroke="#52c41a"/>
+          <text class="bartxt" x="197" y="314" text-anchor="middle" fill="#135200">SNV</text>
+          <text class="bartxt" x="301" y="314" text-anchor="middle" fill="#135200">methylation</text>
+          <text class="bartxt" x="405" y="314" text-anchor="middle" fill="#135200">fragment length</text>
+          <text class="bartxt" x="509" y="314" text-anchor="middle" fill="#135200">end motif</text>
+          <text class="lbl" x="353" y="342" text-anchor="middle" fill="#135200" font-weight="700">&#8593; all four signals come off the SAME molecule &mdash; the linkage short-read cannot make</text>
+        </svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="info-card red" style="margin-bottom:10px">
+          <div class="card-title">The claim that dies in 30 seconds</div>
+          <div style="font-size:13.5px;line-height:1.65">"Short-read cannot dig into the biology of plasma, so we need ONT."<br>
+          Short reads found the <b>167 bp</b> nucleosome periodicity, tumour-fragment shortening, end motifs and tissue-of-origin &mdash; and cfDNA is only 167 bp, so paired-end reads cover the whole molecule. <b>ONT's read-length advantage is nearly useless here.</b></div>
+        </div>
+        <div class="info-card green">
+          <div class="card-title">The claim that holds</div>
+          <div style="font-size:13.5px;line-height:1.65">"With a few nanograms, short-read forces a choice &mdash; either mutation or methylation, never both on the same molecule. ONT does not force that choice."<br>
+          A single fragment carrying a mutation <i>and</i> a tumour methylation pattern <i>and</i> anomalous length has a near-zero chance of being noise. That linkage is what is lost when the tube is split.</div>
+        </div>
+        <div class="info-card yellow" style="margin-top:10px">
+          <div class="card-title">Short-read's own record &mdash; do not write it off</div>
+          <div style="font-size:13px;line-height:1.65">It found the 167 bp nucleosome periodicity, that tumour cfDNA runs 10&ndash;20 bp shorter, tumour-vs-normal end motifs, tissue-of-origin from methylation &mdash; and it counts mutations at 1-in-10,000 <b>more accurately than ONT does</b>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Must be named in the thesis, or a reviewer will name it for me: <b>EM-seq</b> (enzymatic, far gentler than bisulfite) and <b>Duet / TAPS</b> (retain mutation and methylation together). The argument survives, but only if it moves to: even those give no end-motif and native fragment length at single-molecule resolution.</div>
+  </div>
+</div>
+
+<style>
+.d5 .ruletable th, .d5 .ruletable td { padding:5px 8px; }
+.d5 .info-card { padding:8px 12px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d5">
+    <div class="slide-label">Thesis premise</div>
+    <h2>ecDNA is not a 24th chromosome &mdash; and the word "chromosome" deletes the whole argument</h2>
+    <p class="lead">My working model was "one of the 23 chromosomes gets torn off and becomes a free 24th chromosome". About <b>70% right</b>: origin and lawlessness are correct, the rest is not &mdash; and the part that is wrong is the part that matters.</p>
+
+    <table class="ruletable" style="font-size:12px">
+      <tr><th style="width:26%">What I said</th><th style="width:8%">Verdict</th><th>What is actually the case</th><th style="width:26%">Why the correction matters</th></tr>
+      <tr><td>Originates from chromosomal DNA</td><td class="new-c">Correct</td><td>Yes &mdash; more precisely, the tearing-apart <i>causes</i> the cancer, it does not follow it</td><td>&mdash;</td></tr>
+      <tr><td>Outside, free, follows no rules</td><td class="new-c">Correct</td><td>Keep this instinct &mdash; it is exactly right</td><td>&mdash;</td></tr>
+      <tr class="hl"><td>Comes from <b>one</b> chromosome</td><td class="old-c">Usually not</td><td><b>Chromothripsis</b>: a chromosome shatters into hundreds of pieces and fragments &mdash; often from several chromosomes, some inverted, plus a hijacked enhancer &mdash; are stitched back into a circle</td><td>This is why <code>SAVANA</code> (breakpoints) + <code>hifiasm</code> (assembly) are needed at all. A clean excision would only need copy number</td></tr>
+      <tr class="hl"><td>There is <b>one</b> of them</td><td class="old-c">Wrong</td><td>Cell A: 800 copies. Cell B next to it: 120. Cell C: 0. <b>There is no "copy number for this patient"</b>, only a distribution with enormous variance</td><td>You are not measuring a scalar &mdash; ">800 copies" is a mean inferred from the mixed signal of millions of dead cells</td></tr>
+      <tr class="hl"><td>It is a <b>chromosome</b></td><td class="old-c">Fatal</td><td>It has <b>no centromere</b> &mdash; it is <b>acentric</b>, so the mitotic spindle cannot grip it and it segregates <b>randomly</b>. Size ~1&ndash;3 Mb vs chr21's ~46.7 Mb</td><td>The missing centromere <i>is</i> the danger: random segregation manufactures population diversity every division, which is how the tumour escapes therapy</td></tr>
+    </table>
+
+    <div class="cols" style="gap:16px;margin-top:10px">
+      <div class="col">
+        <div class="info-card blue">
+          <div class="card-title">The sentence that can go into the thesis</div>
+          <div style="font-size:12px;line-height:1.55">ecDNA is a circular, <b>acentric</b> DNA element assembled from fragments of one or more chromosomes (chromothripsis); lacking a centromere it segregates randomly at mitosis, so copy number per cell is a random variable from 0 to thousands. ecDNA-derived molecules enter plasma as ctDNA.</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="info-card yellow">
+          <div class="card-title">The trap in the paper &mdash; do not get this backwards</div>
+          <div style="font-size:12px;line-height:1.55">"ecDNA is 1 Mb, so long reads read the whole circle" is <b>wrong</b>, and SIMMA says so itself: in cfDNA ecDNA is <i>fragmented like chromosomal DNA</i> and is <b>not</b> the source of the longest fragments or the hypomethylation. Long reads win by <b>spanning breakpoints inside repeats</b> &mdash; and by a clean copy-number spike: <b>&gt;800 MYCN copies at 0.6x coverage</b>, assembly 1.3 Mb / 6 contigs, N50 843,316 bp.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">Scope call taken today: this thesis's core contribution is <b>same-molecule co-occurrence of &ge;2 variants on one long read</b> &mdash; that is not ecDNA. ecDNA stays <b>context</b> (why long reads are worth it, and what SIMMA already claimed), <b>not something to implement</b>. That call saves weeks, and is worth confirming with the professor.</div>
+  </div>
+</div>
+
+<style>
+  .np { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:11.5px; line-height:1.55;
+        white-space:pre-wrap; margin:0; padding:8px 10px; border-radius:5px; }
+  .np.bad  { background:#fff1f0; border:1px solid #ffa39e; color:#5c1a1a; }
+  .np.good { background:#f6ffed; border:1px solid #b7eb8f; color:#1a4d1a; }
+  .d6 .ruletable th, .d6 .ruletable td { padding:5px 8px; }
+  .d6 .lead { margin-bottom:8px; }
+  .d6 .np { font-size:12px; padding:7px 9px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d6">
+    <div class="slide-label">Note correction loop</div>
+    <h2>Four issues in <code>30.md</code> checked against the paper's own wording &mdash; two closed the same day</h2>
+    <p class="lead">The structure of the note was right (it separates "the field's problems" from "SIMMA's problems" exactly as the paper does). The content errors were reversals of meaning, not typos &mdash; the kind that get caught in a defence.</p>
+
+    <table class="ruletable" style="font-size:12.5px">
+      <tr><th style="width:20%">Issue</th><th style="width:25%">What the note said</th><th style="width:33%">What the paper says</th><th style="width:22%">State on disk, 20:56</th></tr>
+      <tr><td><b>1 &mdash; reversed meaning</b></td><td><code>similarity</code> between tumor sites</td><td>misses intra-/inter-site <b>heterogeneity</b> &mdash; the opposite word</td><td class="new-c">Fixed</td></tr>
+      <tr><td><b>2 &mdash; wrong metric</b></td><td>"less specify and mutants may become a noise background problem"</td><td>agnostic has <b>lower sensitivity</b>; mutation-based variants separately <b>lose specificity</b> to <b>non-neoplastic clonal expansions</b> &mdash; two failures, merged into one</td><td class="old-c">Half fixed &mdash; specificity clause still merged in</td></tr>
+      <tr><td><b>3 &mdash; wrong term</b></td><td>cannot read through <code>overlapping</code> region</td><td>blind to <b>repetitive</b> regions. "Overlapping reads" means something else here, and something good</td><td class="new-c">Fixed</td></tr>
+      <tr><td><b>4 &mdash; wrong category</b></td><td>ecDNA is a "cancer-gathered <b>chromosome</b>"</td><td>circular and <b>acentric</b>; calling it a chromosome erases the reason it is dangerous</td><td>Partly &mdash; now "fragment", still no <i>circular / acentric</i></td></tr>
+      <tr class="hl"><td><b>5 &mdash; missing section</b></td><td>note stopped at P4</td><td><b>P5 is the hinge</b>: (a) no low-input protocol, (b) no computational method for integration. Without it the note never says what SIMMA contributes</td><td class="new-c">Added</td></tr>
+      <tr><td><b>6 &mdash; missing caveat</b></td><td>&mdash;</td><td>a medRxiv preprint, <b>not peer reviewed</b>; <code>sauer-2026-simma.md</code> says it is "not a licence to write 'SIMMA achieves X'"</td><td class="old-c">Not added</td></tr>
+    </table>
+
+    <div class="cols" style="gap:16px;margin-top:8px">
+      <div class="col">
+        <div style="font-size:11.5px;font-weight:700;color:#a8071a;margin-bottom:4px">Still on disk (line 5)</div>
+        <pre class="np bad">- tumor-agnostic (tumor-only) is scalable but has
+  lower sensitivity and mutants may become a noise
+  background problem for filtering</pre>
+      </div>
+      <div class="col">
+        <div style="font-size:11.5px;font-weight:700;color:#135200;margin-bottom:4px">Replacement supplied</div>
+        <pre class="np good">- tumour-agnostic scales but has lower sensitivity;
+  mutation-based variants additionally lose specificity,
+  because non-neoplastic clonal expansions shed
+  mutation-bearing cfDNA that mimics tumour signal</pre>
+      </div>
+    </div>
+
+    <div class="takeaway warn">This is the exact problem my <b>oracle-free tumour-only</b> topic sits inside &mdash; getting sensitivity and specificity merged here costs the most marks of any error on the list. Also still missing from line 3: <b>"cannot be sampled serially"</b>, which for MRD is the most important half, since MRD <i>is</i> repeated monitoring.</div>
+  </div>
+</div>
+
+<style>
+.d7 .ruletable th, .d7 .ruletable td { padding:4px 7px; }
+.d7 .info-card { padding:8px 12px; }
+.d7 .lead { margin-bottom:8px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d7">
+    <div class="slide-label">Material on disk</div>
+    <h2>The disk holds two complete dilution series, not one &mdash; the docs are behind</h2>
+    <p class="lead">Surveyed on disk directly, not read from documentation. Every dilution BAM carries a <code>.meta.json</code> with real provenance (actual <code>tumor_fraction</code>, seed, fraction, the <code>samtools merge</code> command, tool version); verify logs show depth ~25.0x, <code>primary_dup=0</code>, <code>MM/ML=present</code> throughout.</p>
+
+    <div class="cols" style="gap:16px">
+      <div class="col">
+        <table class="ruletable" style="font-size:12px">
+          <tr><th colspan="3" style="background:#e6f4ff;color:#003a8c">1 &middot; Source BAMs &mdash; ONT with methylation (5mC + 5hmC)</th></tr>
+          <tr><th style="width:44%">File</th><th style="width:16%">Size</th><th>Role</th></tr>
+          <tr><td><code>HCC1395.bam</code></td><td>292 GB</td><td>Pure tumour &mdash; discovery candidate</td></tr>
+          <tr><td><code>HCC1395BL.bam</code></td><td>149 GB</td><td class="old-c">Matched normal &mdash; evaluation only, never an inference input</td></tr>
+          <tr><td><code>COLO829/ONT_PAO/PAO29420.bam</code></td><td>100 GB</td><td>Tumour</td></tr>
+          <tr><td><code>COLO829/ONT_PAO/PAO33946.bam</code></td><td>125 GB</td><td>Normal. Ships with ClairS v0.4.0/0.4.1, ClairS-TO v0.3.0, DeepSomatic(-TO) v1.8.0</td></tr>
+          <tr><th colspan="3" style="background:#e6f4ff;color:#003a8c">2 &middot; Dilution series &mdash; <code>/bip7_disk/pingting114/mixed_bam/</code></th></tr>
+          <tr><th>Set</th><th>BAMs</th><th>Levels / replicates</th></tr>
+          <tr><td><code>HCC1395/</code></td><td><b>14</b> &middot; ~1.06 TB</td><td>TF0, 1e-2, 1e-3, 1e-4 @25x &mdash; 5 blank + 3/3/3</td></tr>
+          <tr class="hl"><td><code>COLO829_PAO/</code></td><td><b>14</b> &middot; ~1.03 TB</td><td>Same layout &mdash; <b>created 2026-08-23/24</b></td></tr>
+        </table>
+      </div>
+      <div class="col">
+        <table class="ruletable" style="font-size:12px">
+          <tr><th colspan="2" style="background:#e6f4ff;color:#003a8c">3 &middot; Truth / benchmark &mdash; evaluation only</th></tr>
+          <tr><td><code>HCC1395/SEQC2/</code></td><td>high-confidence sSNV + sINDEL v1.2.1, merged VCF, <code>High-Confidence_Regions_v1.2.bed</code>, <code>CNV/</code></td></tr>
+          <tr><td><code>colo829_nygc/</code></td><td><code>colo829_truth.vcf.gz</code> + Illumina BAM 50x / BL 25x</td></tr>
+          <tr><th colspan="2" style="background:#e6f4ff;color:#003a8c">4 &middot; PoN / population</th></tr>
+          <tr><td><code>PON/clairs-to_databases/</code></td><td>gnomAD r2.1, dbSNP b138 non-somatic, 1000g-PoN, <b>CoLoRSdb</b> (long-read &mdash; notable for ONT artefacts)</td></tr>
+          <tr><th colspan="2" style="background:#e6f4ff;color:#003a8c">5 &middot; Reference &amp; unused lines</th></tr>
+          <tr><td><code>GRCh38_no_alt_analysis_set.fasta</code></td><td>3.14 GB + <code>.fai</code>, matches the BAM headers</td></tr>
+          <tr><td>Unused cell lines</td><td><code>H1437</code>, <code>H2009</code>, <code>HCC1937</code>, <code>HCC1954</code></td></tr>
+        </table>
+
+        <div class="info-card red" style="margin-top:10px">
+          <div class="card-title">Two doc/disk drifts found &mdash; both unfixed</div>
+          <div style="font-size:11.5px;line-height:1.55">
+            <b>1.</b> <code>mrd/configs/datasets/hcc1395_dilution.yaml</code> registers only <b>rep1 per level (4 samples)</b> and says <code>replicates: 1</code>. There are <b>14</b> BAMs. <code>datasets.md</code> already carries a 2026-08-20 correction about this; the config never followed.<br>
+            <b>2.</b> No <code>configs/datasets/colo829_pao_dilution.yaml</code> exists at all. <code>datasets.md</code> (surveyed <b>2026-08-19</b>) still calls a second cell line "potential material" &mdash; it has been fully on disk since <b>2026-08-23/24</b>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">Takeaway: the second cell line is not a plan, it is <b>14 verified BAMs sitting on disk</b> &mdash; the material for <code>issues/17-second-cell-line.md</code>. The registry should be written from the 12 <code>.meta.json</code> files so it carries <b>real</b> tumour fractions, not the nominal ratios.</div>
+  </div>
+</div>
+
+<style>
+.d8 .ruletable th, .d8 .ruletable td { padding:5px 8px; }
+.d8 .info-card { padding:8px 12px; }
+</style>
+<style>
+  .ag-board { position:relative; height:186px; }
+  .ag svg text { font-family: inherit; }
+  .ag .t-s { font-size:12px; fill:#595959; }
+  .ag .t-b { font-size:13px; font-weight:700; }
+  .ag .edge { fill:none; stroke:#d4380d; stroke-width:1.8; }
+  .ag .blank td { color:#bfbfbf; text-align:center; font-size:17px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d8">
+    <div class="slide-label">Operating point</div>
+    <h2>"Which signal detects tumour better?" is not a question yet &mdash; it is an arithmetic problem first</h2>
+    <p class="lead">The question assumes SNV, methylation, phasing, CNV and SV lie on one comparability axis. That premise was <b class="old">not accepted</b>. Everything here is a function of TF and coverage, so the operating point was fixed first: <b>HCC1395 dilution, 25x, TF = 1e-4</b>, with the TF0 blank as control.</p>
+
+    <div class="cols ag" style="gap:20px;align-items:stretch">
+      <div style="flex:0 0 620px">
+        <div class="ag-board">
+        <svg viewBox="0 0 620 186" preserveAspectRatio="xMidYMid meet" width="620" height="186">
+          <defs>
+            <marker id="ag-ar" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#d4380d"/></marker>
+          </defs>
+
+          <text class="t-s" x="0" y="13" fill="#8c8c8c">One locus, drawn to scale &mdash; 520 px = 25 reads, so 1 read = 20.8 px</text>
+
+          <rect x="0" y="24" width="520" height="38" rx="4" fill="#f5f5f5" stroke="#8c8c8c"/>
+          <text class="t-b" x="260" y="48" text-anchor="middle" fill="#262626">25 reads cover the locus at 25x</text>
+
+          <rect x="0" y="88" width="2.5" height="38" fill="#a8071a"/>
+          <path class="edge" d="M130 107 L14 107" marker-end="url(#ag-ar)"/>
+          <text class="t-b" x="140" y="103" fill="#a8071a">0.0025 tumour reads &mdash; 25 &times; 1e-4</text>
+          <text class="t-s" x="140" y="120" fill="#a8071a">0.05 px wide at this scale. There is nothing to draw.</text>
+
+          <text class="t-b" x="0" y="148" fill="#262626">That is one tumour read every 400 loci.</text>
+          <text class="t-s" x="0" y="165">The TF0 blank expects exactly zero. Deeper sequencing does not help &mdash;</text>
+          <text class="t-s" x="0" y="181">it only re-reads the same few molecules.</text>
+        </svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="info-card blue">
+          <div class="card-title">Question 1, issued &mdash; no computing required</div>
+          <div style="font-size:13px;line-height:1.6">
+            For <b>each</b> of the five signals, write down two numbers on paper:<br>
+            &nbsp;&nbsp;&bull; the expected value of that statistic at <b>TF0</b> (blank)<br>
+            &nbsp;&nbsp;&bull; the expected value of it at <b>TF = 1e-4</b><br><br>
+            If the two do not separate, that signal is dead <b>by arithmetic</b> &mdash; not because the right tool has not been picked yet.<br><br>
+            Failing to write a number down is also an answer: it means "better" is still an intuition, not yet a quantity.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class="ruletable" style="font-size:12.5px;margin-top:8px">
+      <tr><th style="width:16%">Signal</th><th style="width:22%">E[statistic] at TF0 (blank)</th><th style="width:22%">E[statistic] at TF = 1e-4</th><th style="width:13%">Separable?</th><th>Bits of information one tumour read carries for this signal</th></tr>
+      <tr class="blank"><td style="color:#262626;text-align:left;font-size:12.5px;font-weight:600">SNV</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+      <tr class="blank"><td style="color:#262626;text-align:left;font-size:12.5px;font-weight:600">Methylation</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+      <tr class="blank"><td style="color:#262626;text-align:left;font-size:12.5px;font-weight:600">Phasing</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+      <tr class="blank"><td style="color:#262626;text-align:left;font-size:12.5px;font-weight:600">Copy number</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+      <tr class="blank"><td style="color:#262626;text-align:left;font-size:12.5px;font-weight:600">Structural variant</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+    </table>
+
+    <div class="takeaway warn">All ten cells are <b>empty</b> &mdash; the session ended with the question open. This is the "<b>what would it look like if this were false?</b>" gate: if TF=1e-4 cannot be told apart from the blank on paper, no experiment design underneath it can rescue the comparison.</div>
+  </div>
+</div>
+
+<style>
+  .d9 .ruletable th, .d9 .ruletable td { padding:8px 10px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d9">
+    <div class="slide-label">Open items</div>
+    <h2>Four decisions are waiting on me &mdash; three of them on a one-word answer</h2>
+    <p class="lead">Nothing here is blocked by compute, data or tooling. <b class="old">Three questions were put to me during the day and the sessions ended before I answered them</b>; the fourth has not been asked yet.</p>
+
+    <table class="ruletable" style="font-size:13.5px">
+      <tr><th style="width:5%">#</th><th style="width:34%">Decision</th><th style="width:31%">Stuck where</th><th style="width:30%">Consequence if left</th></tr>
+      <tr class="hl"><td>1</td><td><b>Signal grilling, Question 1</b> &mdash; write E[statistic] at TF0 and at TF=1e-4 for SNV, methylation, phasing, CNV, SV</td><td>Asked at 20:39; the session ended the same minute with no reply</td><td>The multimodal comparison stays an intuition; no experiment underneath it can be designed</td></tr>
+      <tr class="hl"><td>2</td><td>Overwrite <code>30.md</code> with the supplied replacement block?</td><td>Offered at 16:03 ("say the word and I'll do it"); at 20:54 the same review request was re-asked instead</td><td>Items 5&ndash;7 on the next page stay unfixed by default</td></tr>
+      <tr class="hl"><td>3</td><td>Write <code>configs/datasets/colo829_pao_dilution.yaml</code> from the 12 <code>.meta.json</code> files?</td><td>Offered at 20:34, unanswered</td><td>14 verified BAMs (~1.03 TB) stay unregistered and unusable by the pipeline</td></tr>
+      <tr><td>4</td><td>Does the professor expect ecDNA <i>detection</i>, or only ecDNA in related work?</td><td>Question drafted for the professor; not yet asked</td><td>Weeks spent on an axis outside the topic &mdash; or a visible gap at the defence</td></tr>
+    </table>
+
+    <div class="cols" style="gap:16px;margin-top:12px">
+      <div class="col"><div class="info-card blue"><div class="card-title">Why #1 comes first</div><div style="font-size:13px;line-height:1.65">It is the "what would it look like if this were false?" gate. If TF=1e-4 cannot be told apart from the TF0 blank <b>on paper</b>, then no tool choice, no threshold and no model rescues the comparison &mdash; and every hour of compute after it is wasted.</div></div></div>
+      <div class="col"><div class="info-card green"><div class="card-title">Why #2 is cheap</div><div style="font-size:13px;line-height:1.65">The replacement text already exists, checked line by line against the paper's own wording. Answering #2 closes three separate open items at once and makes the note safe to cite from.</div></div></div>
+    </div>
+
+    <div class="takeaway warn">First thing tomorrow: <b>#1 and #2</b>. Both are answers, not work &mdash; and everything else in the backlog queues behind them.</div>
+  </div>
+</div>
+
+<style>
+  .d10 .ruletable th, .d10 .ruletable td { padding:5px 9px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d10">
+    <div class="slide-label">Open items</div>
+    <h2>Six things already known and simply not done</h2>
+    <p class="lead">None of these needs a decision. Four of them are edits to <code>30.md</code> and one config file, and they close the moment decision&nbsp;#2 on the previous page is answered.</p>
+
+    <table class="ruletable" style="font-size:13px">
+      <tr><th style="width:5%">#</th><th style="width:34%">Item</th><th style="width:32%">Stuck where</th><th style="width:29%">Consequence if left</th></tr>
+
+      <tr><th colspan="4" style="background:#e6f4ff;color:#003a8c">Known, small, simply not done</th></tr>
+      <tr class="hl"><td>5</td><td><code>30.md</code> line 5: split <b>lower sensitivity</b> from <b>loss of specificity to non-neoplastic clonal expansions</b></td><td>Flagged 16:03, replacement supplied; only the sensitivity half applied</td><td>The costliest error on the list &mdash; it is this topic's own problem</td></tr>
+      <tr><td>6</td><td><code>30.md</code> line 3: add <b>"cannot be sampled serially"</b></td><td>Flagged, not applied</td><td>Drops the half of P1 that motivates MRD &mdash; MRD <i>is</i> repeated monitoring</td></tr>
+      <tr><td>7</td><td><code>30.md</code>: add the <b>"medRxiv preprint, not peer reviewed"</b> source caveat</td><td>Flagged, not applied</td><td>The note gets cited as verified &mdash; the exact failure <code>sauer-2026-simma.md</code> warns about</td></tr>
+      <tr><td>8</td><td><code>30.md</code> line 13: ecDNA still lacks <b>circular / acentric / random segregation</b></td><td>"chromosome" became "fragment"; the rest was not carried over</td><td>No longer wrong, but no longer says why ecDNA matters</td></tr>
+      <tr class="hl"><td>9</td><td><code>configs/datasets/hcc1395_dilution.yaml</code>: registers 4 of 14 BAMs, <code>replicates: 1</code></td><td>Known since the 2026-08-20 <code>datasets.md</code> correction; config never followed</td><td>Any run silently uses a quarter of the available replicates</td></tr>
+
+      <tr><th colspan="4" style="background:#f5f5f5;color:#595959">Raised in discussion, unscheduled</th></tr>
+      <tr><td>10</td><td>Name <b>EM-seq</b> and <b>Duet / TAPS</b> in the thesis; move the ONT argument to end-motif + native fragment length at single-molecule resolution</td><td>Identified as a defence risk; no text written</td><td>A reviewer raises it instead, and the chapter-1 premise wobbles</td></tr>
+      <tr><td>11</td><td>Re-search the novelty claim for <b>same-molecule co-occurrence of &ge;2 variants</b>, dated at submission</td><td><code>02-literature-landscape.md</code> already warns the landscape moves fast (Lumos, TumorLens, ecDNA cfDNA monitoring)</td><td>The novelty claim may already be stale by submission</td></tr>
+    </table>
+
+    <div class="takeaway">Takeaway: items 5&ndash;8 are all the same edit to the same file, and item 9 is one line in one YAML. <b>Five of the six close in under an hour</b> &mdash; they are not hard, they are just unowned.</div>
+  </div>
+</div>
+
+</div>
+
+<div class="nav" id="nav">
+  <button id="prev">← Prev</button>
+  <div class="dots" id="dots"></div>
+  <span class="count" id="count"></span>
+  <button id="next">Next →</button>
+</div>
+<button class="nav-toggle" id="navToggle" title="Collapse the nav bar">▼</button>
+
+<script>window.DECK_NAME = 'Progress-Report-20260830'; window.DECK_DATE = '20260830'; window.DECK_PRESENTER = 'hung114';</script>
+<script>
+/* Progress-report slides - runtime behaviour of a built deck: page navigation,
+   entering/leaving presentation mode, and PPTX export.
+   Supports both the current .slide-outer/.slide structure and the legacy .block one.
+   Requires mermaid, html2canvas and pptxgenjs already loaded in <head>. The export file
+   name comes from window.DECK_NAME. */
+(function () {
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+
+  // Supports the current .slide-outer and the legacy .block
+  const newSlides = Array.from(document.querySelectorAll('.slide-outer'));
+  const oldBlocks = Array.from(document.querySelectorAll('.block'));
+  const useNew = newSlides.length > 0;
+  const slides = useNew ? newSlides : oldBlocks;
+
+  const STORAGE_KEY = 'deck_idx_' + (window.DECK_NAME || location.pathname);
+  let idx = Math.min(+(localStorage.getItem(STORAGE_KEY) || 0), slides.length - 1);
+  let slideMode = false, navCollapsed = false;
+
+  /* -- Scaling: fit .slide into .slide-outer (scroll mode) -- */
+  function scaleSlideInOuter(outer) {
+    const inner = outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = `scale(${scale})`;
+    inner.style.top = '0';
+    inner.style.left = '0';
+  }
+
+  /* -- Scaling: fit .slide centred in the viewport (presentation mode, minus the nav bar) -- */
+  function scaleSlideFullscreen(outer) {
+    const inner = outer.querySelector('.slide');
+    if (!inner) return;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const navEl = document.getElementById('nav');
+    const navH = (!navCollapsed && navEl) ? navEl.offsetHeight : 0;
+    const availH = vh - navH;
+    const scale = Math.min(vw / 1280, availH / 720);
+    const tx = (vw - 1280 * scale) / 2;
+    const ty = (availH - 720 * scale) / 2;
+    inner.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    inner.style.top = '0';
+    inner.style.left = '0';
+  }
+
+  function scaleAll() {
+    if (!useNew) return;
+    if (slideMode) {
+      const active = slides[idx];
+      if (active) scaleSlideFullscreen(active);
+    } else {
+      slides.forEach(scaleSlideInOuter);
+    }
+  }
+
+  window.addEventListener('resize', scaleAll);
+
+  function renderDots() {
+    const dots = document.getElementById('dots');
+    if (!dots) return;
+    dots.innerHTML = '';
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === idx ? ' on' : '');
+      d.onclick = () => go(i);
+      dots.appendChild(d);
+    });
+  }
+
+  function go(i) {
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    localStorage.setItem(STORAGE_KEY, idx);
+    slides.forEach((s, k) => s.classList.toggle('active', k === idx));
+    document.getElementById('prev').disabled = idx === 0;
+    document.getElementById('next').disabled = idx === slides.length - 1;
+    document.getElementById('count').textContent = (idx + 1) + ' / ' + slides.length;
+    renderDots();
+    window.scrollTo({ top: 0 });
+    if (slideMode && useNew) scaleSlideFullscreen(slides[idx]);
+  }
+
+  function setMode(on) {
+    slideMode = on;
+    document.body.classList.toggle('slides', on);
+    document.getElementById('modeBtn').textContent = on ? '◼ Exit presentation' : '▶ Presentation mode';
+    if (!on) {
+      // Reset the nav-bar collapsed state on exit
+      navCollapsed = false;
+      const navEl = document.getElementById('nav');
+      if (navEl) navEl.classList.remove('nav-collapsed');
+      const navToggleBtn = document.getElementById('navToggle');
+      if (navToggleBtn) { navToggleBtn.textContent = '▼'; navToggleBtn.title = 'Collapse the nav bar'; }
+    }
+    if (on) {
+      go(idx);
+    } else {
+      // Re-scale every slide when returning to scroll mode
+      if (useNew) slides.forEach(scaleSlideInOuter);
+    }
+  }
+
+  document.getElementById('prev').onclick = () => go(idx - 1);
+  document.getElementById('next').onclick = () => go(idx + 1);
+  document.getElementById('modeBtn').onclick = () => setMode(!slideMode);
+
+  const navToggleBtn = document.getElementById('navToggle');
+  if (navToggleBtn) {
+    navToggleBtn.onclick = () => {
+      navCollapsed = !navCollapsed;
+      const navEl = document.getElementById('nav');
+      if (navEl) navEl.classList.toggle('nav-collapsed', navCollapsed);
+      navToggleBtn.textContent = navCollapsed ? '▲' : '▼';
+      navToggleBtn.title = navCollapsed ? 'Expand the nav bar' : 'Collapse the nav bar';
+      if (slideMode && useNew) scaleSlideFullscreen(slides[idx]);
+    };
+  }
+  document.addEventListener('keydown', (e) => {
+    if (!slideMode) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { go(idx + 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(idx - 1); e.preventDefault(); }
+    if (e.key === 'Escape') setMode(false);
+    if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.metaKey) { copyCurrentSlide(); e.preventDefault(); }
+  });
+
+  /* -- Capture one slide to a canvas at 1:1 scale; video areas are punched out to white
+     (their relative positions are returned so they can be embedded later).
+     PPTX export and "Copy page" share this capture logic, so quality is identical. -- */
+  async function renderSlideToCanvas(s) {
+    let captureEl = s;
+    let restoreTransform = null;
+
+    // Find [data-pptx-video] elements, detach them before capture, reinsert afterwards
+    const videoEls = [...s.querySelectorAll('[data-pptx-video]')];
+    videoEls.forEach(v => { v._nextSibling = v.nextSibling; v._parent = v.parentNode; v.remove(); });
+
+    // html2canvas does not support object-fit:contain and stretches images to fill the box,
+    // distorting them. Compute the real displayed size proportionally, override width/height
+    // temporarily before the capture, then restore it.
+    const fitImgs = [...s.querySelectorAll('img')].filter(img => {
+      const fit = getComputedStyle(img).objectFit;
+      return fit === 'contain' && img.naturalWidth && img.naturalHeight;
+    });
+    const fitImgSnapshots = fitImgs.map(img => {
+      const prevCss = img.style.cssText;
+      const boxW = img.clientWidth;
+      const boxH = img.clientHeight;
+      const scale = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
+      img.style.objectFit = 'none';
+      img.style.width = (img.naturalWidth * scale) + 'px';
+      img.style.height = (img.naturalHeight * scale) + 'px';
+      img.style.display = 'block';
+      img.style.margin = '0 auto';
+      return { img, prevCss };
+    });
+
+    if (useNew) {
+      // Capture .slide at 1:1 for maximum quality
+      const inner = s.querySelector('.slide');
+      if (inner) {
+        restoreTransform = inner.style.transform;
+        inner.style.transform = 'none';
+        captureEl = inner;
+      }
+    }
+
+    const canvas = await html2canvas(captureEl, {
+      scale: 1.5,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      width: useNew ? 1280 : undefined,
+      height: useNew ? 720 : undefined,
+    });
+
+    if (restoreTransform !== null) {
+      captureEl.style.transform = restoreTransform;
+    }
+    videoEls.forEach(v => { v._parent.insertBefore(v, v._nextSibling); });
+    fitImgSnapshots.forEach(({ img, prevCss }) => { img.style.cssText = prevCss; });
+
+    // Punch the video areas out to white so the later video layer does not overlap
+    const ctx = canvas.getContext('2d');
+    const slideW = captureEl.offsetWidth || 1280;
+    const slideH = captureEl.offsetHeight || 720;
+    const base = captureEl.getBoundingClientRect();
+    const videoRects = videoEls.map(v => {
+      const vr = v.getBoundingClientRect();
+      return {
+        v,
+        rx: (vr.left - base.left) / slideW,
+        ry: (vr.top - base.top) / slideH,
+        rw: vr.width / slideW,
+        rh: vr.height / slideH,
+      };
+    });
+    for (const { rx, ry, rw, rh } of videoRects) {
+      ctx.clearRect(rx * canvas.width, ry * canvas.height, rw * canvas.width, rh * canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(rx * canvas.width, ry * canvas.height, rw * canvas.width, rh * canvas.height);
+    }
+    return { canvas, videoRects };
+  }
+
+  /* -- Lightweight toast (feedback for copy/download without interrupting via alert) -- */
+  function toast(msg, isErr) {
+    let t = document.getElementById('deckToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'deckToast';
+      t.style.cssText = 'position:fixed;left:50%;top:20px;transform:translateX(-50%);z-index:9999;'
+        + 'padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;color:#fff;'
+        + 'box-shadow:0 4px 14px rgba(0,0,0,.25);transition:opacity .25s;pointer-events:none;';
+      document.body.appendChild(t);
+    }
+    t.style.background = isErr ? '#dc2626' : '#16a34a';
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2400);
+  }
+
+  /* -- Copy the current page as a PNG: write to the clipboard when possible; in a
+     non-secure context (e.g. an http LAN IP) fall back to downloading the PNG.
+     Shortcut: c. -- */
+  async function copyCurrentSlide() {
+    const btn = document.getElementById('copyImgBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Capturing…'; }
+    try {
+      const { canvas } = await renderSlideToCanvas(slides[idx]);
+      const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+      const pageNo = String(idx + 1).padStart(2, '0');
+      // Writing an image to the clipboard needs a secure context (https / localhost / file://);
+      // it is unavailable over an http LAN IP
+      if (navigator.clipboard && window.ClipboardItem && window.isSecureContext) {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          toast('Copied page ' + (idx + 1) + ' to the clipboard');
+          return;
+        } catch (e) { /* fall through to the download fallback */ }
+      }
+      // Fallback: download the page as a PNG
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (window.DECK_NAME || 'slide') + '-' + pageNo + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(a.href);
+      toast('This context cannot write to the clipboard; downloaded page ' + (idx + 1) + ' as a PNG instead');
+    } catch (e) {
+      console.error(e);
+      toast('Copy failed: ' + e.message, true);
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = '⧉ Copy page'; }
+    }
+  }
+
+  const copyImgBtn = document.getElementById('copyImgBtn');
+  if (copyImgBtn) copyImgBtn.onclick = copyCurrentSlide;
+
+  async function exportPptx() {
+    const btn = document.getElementById('exportBtn');
+    const wasSlides = slideMode;
+    btn.disabled = true; btn.textContent = 'Exporting…';
+    if (wasSlides) setMode(false);
+    await new Promise(r => setTimeout(r, 80));
+    try {
+      const pptx = new PptxGenJS();
+      pptx.defineLayout({ name: 'W16x9', width: 13.333, height: 7.5 });
+      pptx.layout = 'W16x9';
+      const PW = 13.333, PH = 7.5;
+
+      // Generate the cover slide as native text (editable in PowerPoint). It exists only in
+      // the PPTX export; deck.html itself (the browsing/editing intermediate) has no cover.
+      // If deck.html was built with --titlecover its first page is already a static cover
+      // (data-titlecover="1"), so no second one is added and the PPTX does not start with two
+      // "Progress Report" covers.
+      const hasStaticCover = slides[0] && slides[0].dataset.titlecover === '1';
+      if (!hasStaticCover) {
+        const cover = pptx.addSlide();
+        cover.background = { color: 'FFFFFF' };
+        cover.addText('Progress Report', { x: 0, y: 2.2, w: PW, h: 1.1, align: 'center', fontSize: 44, bold: true, color: '1f2329' });
+        cover.addText(window.DECK_DATE || '', { x: 0, y: 3.45, w: PW, h: 0.65, align: 'center', fontSize: 22, color: '6b7280' });
+        cover.addText(window.DECK_PRESENTER || '', { x: 0, y: 4.2, w: PW, h: 0.65, align: 'center', fontSize: 22, bold: true, color: '344054' });
+      }
+
+      // Try to fetch the video src as base64; under file:// Chrome fails, so fall back
+      async function fetchVideoBase64(src) {
+        try {
+          const resp = await fetch(src);
+          if (!resp.ok) return null;
+          const buf = await resp.arrayBuffer();
+          const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+          return 'data:video/mp4;base64,' + b64;
+        } catch { return null; }
+      }
+
+      for (const s of slides) {
+        const { canvas, videoRects } = await renderSlideToCanvas(s);
+        const img = canvas.toDataURL('image/png');
+        const slide = pptx.addSlide();
+        slide.background = { color: 'FFFFFF' };
+        slide.addImage({ data: img, x: 0, y: 0, w: PW, h: PH });
+
+        // Embed the video into the PPT (at the punched-out position)
+        for (const { v, rx, ry, rw, rh } of videoRects) {
+          const mediaData = await fetchVideoBase64(v.src || v.currentSrc);
+          if (mediaData) {
+            slide.addMedia({ type: 'video', data: mediaData, extension: 'mp4',
+              x: rx * PW, y: ry * PH, w: rw * PW, h: rh * PH });
+          } else {
+            // fetch failed (file:// CORS): fall back to the current frame
+            const fc = document.createElement('canvas');
+            fc.width = v.videoWidth || 640; fc.height = v.videoHeight || 360;
+            fc.getContext('2d').drawImage(v, 0, 0, fc.width, fc.height);
+            slide.addImage({ data: fc.toDataURL('image/png'),
+              x: rx * PW, y: ry * PH, w: rw * PW, h: rh * PH });
+          }
+        }
+      }
+      await pptx.writeFile({ fileName: (window.DECK_NAME || 'progress-report') + '.pptx' });
+    } catch (e) {
+      console.error(e);
+      alert('Export failed: ' + e.message);
+    } finally {
+      if (wasSlides) setMode(true);
+      btn.disabled = false;
+      btn.textContent = '↓ Export PPTX';
+    }
+  }
+
+  document.getElementById('exportBtn').onclick = exportPptx;
+
+  /* -- Export portable HTML: images are re-encoded at their displayed size (downscaled +
+     compressed) and inlined as data URIs, and the CDN mermaid / html2canvas / pptxgenjs
+     scripts are inlined too, so the file works offline and can be moved on its own -- */
+  async function blobToDataURL(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  // Redraw already-loaded <img> elements onto a canvas at their displayed size (x2 for
+  // sharpness, never above the original) and output JPEG, so inlining the full-size originals
+  // does not bloat the HTML
+  function liveImgToDataURL(liveImg) {
+    try {
+      const dispW = liveImg.clientWidth || liveImg.naturalWidth || 1;
+      const dispH = liveImg.clientHeight || liveImg.naturalHeight || 1;
+      const w = Math.max(1, Math.min(Math.round(dispW * 2), liveImg.naturalWidth || dispW * 2));
+      const h = Math.max(1, Math.min(Math.round(dispH * 2), liveImg.naturalHeight || dispH * 2));
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(liveImg, 0, 0, w, h);
+      return c.toDataURL('image/jpeg', 0.85);
+    } catch (e) { return null; } // tainted (cross-origin) canvas and similar: let the caller fall back
+  }
+
+  async function exportPortableHtml() {
+    const btn = document.getElementById('exportPortableBtn');
+    btn.disabled = true; btn.textContent = 'Exporting…';
+    try {
+      const clone = document.documentElement.cloneNode(true);
+
+      // Inline images as data URIs (downscaled to displayed size + JPEG compression to keep the file small)
+      const liveImgs = document.querySelectorAll('img');
+      const cloneImgs = clone.querySelectorAll('img');
+      for (let i = 0; i < cloneImgs.length; i++) {
+        const src = cloneImgs[i].getAttribute('src');
+        if (!src || src.startsWith('data:')) continue;
+        let dataUrl = liveImgToDataURL(liveImgs[i]);
+        if (!dataUrl) {
+          try {
+            const resp = await fetch(new URL(src, location.href).href);
+            if (resp.ok) dataUrl = await blobToDataURL(await resp.blob());
+          } catch (e) { /* give up and keep the original link */ }
+        }
+        if (dataUrl) cloneImgs[i].setAttribute('src', dataUrl);
+      }
+
+      // Inline external <script src> content (including the CDN mermaid / html2canvas /
+      // pptxgenjs) so the file opens offline
+      const scripts = clone.querySelectorAll('script[src]');
+      for (const s of scripts) {
+        const src = s.getAttribute('src');
+        try {
+          const resp = await fetch(src);
+          const text = await resp.text();
+          const inline = document.createElement('script');
+          inline.textContent = text;
+          s.replaceWith(inline);
+        } catch (e) {
+          console.warn('Failed to inline a script; keeping the original link (needs network access):', src, e);
+        }
+      }
+
+      const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+      const blob = new Blob([html], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (window.DECK_NAME || 'deck') + '_portable.html';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+    } catch (e) {
+      console.error(e);
+      alert('Portable export failed: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '⇓ Export portable HTML';
+    }
+  }
+
+  const exportPortableBtn = document.getElementById('exportPortableBtn');
+  if (exportPortableBtn) exportPortableBtn.onclick = exportPortableHtml;
+
+  /* mermaid measures labels with getBoundingClientRect, which picks up the .slide
+     transform: scale(). Remove the scaling during rendering (see .mermaid-measuring in
+     slides.css) and restore it afterwards, otherwise node boxes shrink with the scale and
+     their text overflows and is clipped. */
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    if (useNew) slides.forEach(scaleSlideInOuter);
+    renderDots();
+    setMode(true);
+  });
+})();
+
+</script>
+</body>
+</html>

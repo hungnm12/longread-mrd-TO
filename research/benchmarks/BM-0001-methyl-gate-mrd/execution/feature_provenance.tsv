@@ -1,0 +1,11 @@
+feature	source_file	source_tool	source_version	derivation	uses_truth	available_at_inference	missing_count	missing_fraction	protocol_section
+alt_read_count_at_candidate	sample-under-test BAM	pysam.pileup	pysam 0.24.0	reads carrying ALT at the candidate, BQ>=20 MQ>=20, stepper=samtools	FALSE	TRUE	0	0.0	§9, §11
+depth_at_candidate	sample-under-test BAM	pysam.pileup	pysam 0.24.0	pileup depth under the same quality filters	FALSE	TRUE	0	0.0	§9, §11
+per_read_cpg_methylation_calls	sample-under-test BAM MM/ML tags	pysam.modified_bases	pysam 0.24.0	per-read modification probabilities thresholded at ML=128/255, mapped to reference coordinates	FALSE	TRUE	see missingness_report.tsv	see missingness_report.tsv	§10, §11
+consensus_methylation_rate	derived, sample under test only	this benchmark	protocol v1.0	mean of thresholded calls per reference position over the reads overlapping the candidates; positions with <10 observations excluded	FALSE	TRUE	positions below MIN_COV excluded	reported per sample	§10, §11
+confident_position_set	derived, sample under test only	this benchmark	protocol v1.0	consensus positions with rate <0.1 or >0.9	FALSE	TRUE	0	0.0	§10, §11
+score_B1_methylation_disagreement	derived, sample under test only	this benchmark	protocol v1.0	disagreements with the consensus / confident positions on the read; undefined below MIN_CPG=5	FALSE	TRUE	see missingness_report.tsv	see missingness_report.tsv	§10, §11
+score_C2_confident_position_count	derived, sample under test only	this benchmark	protocol v1.0	number of confident positions on the read	FALSE	TRUE	same scorable set as B1	same as B1	§10 C2
+cut_B1_C1_C2	derived, sample under test only	this benchmark	protocol v1.0	95th percentile of that sample's own scorable-read scores by the frozen index rule; 1.0 when no read is scorable	FALSE	TRUE	0	0.0	§10
+candidate_coordinates	exp-s1-002 / exp-s1-007 counts_TF0.tsv	frozen upstream	drawn seeds 20260824 / 20260825	chrom, pos, ref, alt only; depth and n_alt columns NOT used	FALSE	TRUE	0	0.0	§8
+nominal_tumour_fraction	directory provenance	n/a	n/a	EVALUATION ONLY — never enters any score	n/a (label)	n/a	0	0.0	§7

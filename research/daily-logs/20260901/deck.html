@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Report</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<style>
+/* Progress-report slides - shared styles (used by both single pages and the built deck) */
+:root { --br:#1677ff; --old:#d4380d; --new:#389e0d; --warn:#d48806; }
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, "Segoe UI", "Noto Sans TC", Roboto, sans-serif;
+  margin: 0; padding: 40px 32px; background: #f5f6f8; color: #1f2329; line-height: 1.65;
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1 { font-size: 26px; margin: 0 0 4px; }
+.sub { color: #6b7280; margin-bottom: 32px; }
+
+/* ---- Shared semantic styles (work in both .slide and legacy .block) ---- */
+.lead { color: #444; margin: 0 0 14px; font-size: 15px; }
+.lead b.old { color: var(--old); }
+.lead b.new { color: var(--new); }
+.mermaid { display: flex; justify-content: center; margin: 8px 0; }
+.takeaway {
+  margin-top: 14px; padding: 10px 14px; border-radius: 6px; font-size: 13.5px;
+  background: #f6ffed; border-left: 4px solid var(--new); color: #135200;
+}
+.takeaway b { color: #237804; }
+.takeaway.warn { background:#fffbe6; border-left-color:var(--warn); color:#613400; }
+.takeaway.warn b { color:#ad6800; }
+.ruletable { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 4px; }
+.ruletable th, .ruletable td { border: 1px solid #e5e7eb; padding: 7px 10px; text-align: left; vertical-align: top; }
+.ruletable th { background: #fafafa; }
+.ruletable tr.drop td { background: #fff1f0; color: #820014; text-decoration: line-through; text-decoration-color:#d4380d80; }
+.ruletable tr.drop td:first-child { text-decoration: none; }
+.ruletable tr.hl td { background: #fffbe6; }
+.keep { color: var(--new); font-weight: 600; }
+.drop-badge { color:#fff; background:var(--old); font-size:11px; font-weight:700; padding:1px 8px; border-radius:99px; }
+.smrn-badge { color:#fff; background:var(--new); font-size:11px; font-weight:700; padding:1px 8px; border-radius:99px; }
+.old-c { color: var(--old); font-weight: 600; }
+.new-c { color: var(--new); font-weight: 600; }
+code { background: #f0f1f3; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+.num { display: none; }
+
+/* Dashed section divider (splits one slide into upper/lower sections) */
+.divider { border: none; border-top: 1px dashed #d1d5db; margin: 4px 0; }
+
+/* Small layout helpers */
+.row  { display:flex; align-items:center; gap:8px; }        /* horizontal row, vertically centred */
+.cols { display:flex; align-items:flex-start; gap:20px; }   /* two columns, top-aligned */
+.col  { flex:1; min-width:0; }                              /* equal-width column */
+
+/* ---- Fixed 16:9 slide container (PPTX default 1280x720) ---- */
+.slide-outer {
+  width: 100%;
+  max-width: 1040px;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto 32px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.12);
+  background: #fff;
+  container-type: inline-size;
+}
+.slide {
+  position: absolute;
+  width: 1280px;
+  height: 720px;
+  top: 0; left: 0;
+  /* CSS-driven scaling first (container query, no JS needed); scaleSlide() later overrides the
+     same value with an inline style as a fallback where container queries are unsupported.
+     The two do not conflict. */
+  transform: scale(calc(100cqw / 1280px));
+  transform-origin: top left;
+  background: #fff;
+  padding: 52px 60px 40px;
+  font-size: 15px;
+}
+/* Standard padding class: use this by default. Most slides (title + body, medium density) take
+   it, and pages should avoid hard-coding their own inline padding - slightly different inline px
+   values per page are the usual reason titles "look misaligned from page to page" in one deck.
+   A page whose layout genuinely needs it (e.g. the full-width mermaid of layout 3, or a cover)
+   may override the padding inline, but consistency is the rule and the reason should be noted
+   on that page. */
+.slide.pad-std { padding: 28px 44px 18px; }
+/* The .slide scaling must be removed while mermaid renders. mermaid inserts labels into the DOM
+   and sizes its node boxes from getBoundingClientRect; with transform: scale(k) on .slide the
+   measurement comes back k times smaller, so node boxes are off by k (the deck default is
+   1040/1280 = 0.8125) and the text ends up 23% larger than its box and gets clipped - the
+   classic "broken layout". visibility:hidden during measurement stops the user seeing an
+   unscaled 1280px flash. */
+body.mermaid-measuring .slide { transform: none !important; visibility: hidden; }
+
+.slide h2 { font-size: 22px; margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+/* Top-left section label (pages in one section share identical text) */
+.slide-label {
+  position: absolute;
+  top: 14px; left: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---- Legacy .block support (backwards compatibility; not used by new pages) ---- */
+.block {
+  background: #fff; border-radius: 14px; padding: 24px 28px; margin-bottom: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.block h2 { font-size: 20px; margin: 0 0 6px; display: flex; align-items: center; gap: 12px; }
+
+/* ---- Contents cover (agenda, optional) ---- */
+.cover { text-align: center; padding: 64px 28px; }
+.cover .kicker { color: var(--br); font-weight: 700; letter-spacing: 2px; font-size: 14px; }
+.cover h2 { display: block; font-size: 34px; margin: 14px 0 10px; line-height: 1.3; }
+.cover .desc { color: #6b7280; font-size: 16px; }
+.cover .meta { margin-top: 28px; color: #8a8f98; font-size: 14px; }
+.cover .agenda { display: inline-flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; justify-content: center; }
+.cover .agenda span {
+  background: #eef2ff; color: #3344aa; border-radius: 99px; padding: 8px 18px; font-size: 14px; font-weight: 600;
+}
+
+/* ---- Presentation mode (slide mode) ---- */
+body.slides { padding: 0; background: #111; overflow: hidden; }
+body.slides .wrap > h1,
+body.slides .wrap > .sub { display: none; }
+
+/* Legacy .block behaviour in slide mode */
+body.slides .block { display: none; }
+body.slides .block.active { display: block; animation: fade .25s ease; }
+
+/* Current .slide-outer in slide mode: centred full screen */
+body.slides .slide-outer {
+  display: none;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: #111;
+}
+body.slides .slide-outer.active {
+  display: block;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  max-width: none;
+  aspect-ratio: unset;
+  z-index: 10;
+  overflow: hidden;
+}
+/* transform/position of a slide is set by JS */
+body.slides .slide-outer.active .slide {
+  box-shadow: 0 4px 32px rgba(0,0,0,.4);
+}
+
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---- Nav bar ---- */
+.nav {
+  position: fixed; left: 0; right: 0; bottom: 0; display: none;
+  align-items: center; justify-content: center; gap: 18px;
+  padding: 12px; background: rgba(0,0,0,.55); backdrop-filter: blur(6px);
+  z-index: 50; transition: transform .2s ease;
+}
+body.slides .nav { display: flex; }
+body.slides .nav.nav-collapsed { transform: translateY(100%); }
+
+/* ---- Nav-bar collapse button ---- */
+.nav-toggle {
+  display: none;
+  position: fixed; bottom: 8px; right: 12px; z-index: 60;
+  border: none; background: rgba(255,255,255,.18); color: #fff;
+  font-size: 13px; width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; backdrop-filter: blur(4px); transition: background .2s;
+  align-items: center; justify-content: center; line-height: 1;
+}
+body.slides .nav-toggle { display: flex; }
+.nav-toggle:hover { background: rgba(255,255,255,.35); }
+.nav button {
+  border: none; background: var(--br); color: #fff; font-size: 15px; font-weight: 600;
+  padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: opacity .2s;
+}
+.nav button:disabled { opacity: .35; cursor: default; }
+.nav .dots { display: flex; gap: 9px; }
+.nav .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.3); cursor: pointer; transition: all .2s; }
+.nav .dot.on { background: #fff; transform: scale(1.3); }
+.nav .count { font-size: 13px; color: rgba(255,255,255,.7); min-width: 42px; text-align: center; }
+.modetoggle {
+  position: fixed; top: 16px; right: 16px; z-index: 60;
+  border: 1px solid #d0d5dd; background: #fff; color: #344054; font-size: 13px; font-weight: 600;
+  padding: 6px 14px; border-radius: 8px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+.modetoggle:hover { border-color: var(--br); color: var(--br); }
+
+/* ════════════════════════════════════════════════════
+   Layout components
+   The classes below can be used directly inside any .slide, with no inline style
+   ════════════════════════════════════════════════════ */
+
+/* ---- Info card (left colour band) ---- */
+/* Usage: <div class="info-card red"><div class="card-title">Title</div>body</div> */
+.info-card {
+  border-left: 4px solid; padding: 10px 12px; border-radius: 0 4px 4px 0;
+  font-size: 13px; line-height: 1.6;
+}
+.info-card .card-title { font-weight: 700; margin-bottom: 4px; }
+.info-card.red   { background:#fff1f0; border-color:#ff4d4f; color:#5c1a1a; }
+.info-card.red   .card-title { color:#820014; }
+.info-card.green { background:#f6ffed; border-color:#52c41a; color:#1a4d1a; }
+.info-card.green .card-title { color:#135200; }
+.info-card.blue  { background:#e6f4ff; border-color:#1677ff; color:#0b3d91; }
+.info-card.blue  .card-title { color:#003a8c; }
+.info-card.yellow{ background:#fffbe6; border-color:#faad14; color:#613400; }
+.info-card.yellow .card-title { color:#ad6800; }
+
+/* ---- Vertical dashed divider (between two columns) ---- */
+/* Usage: <div class="vdivider"></div> inside a .cols or display:flex container */
+.vdivider {
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, #d1d5db 0, #d1d5db 6px, transparent 6px, transparent 12px);
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* ---- Pipeline diagram (.ap-* family) ---- */
+/* For Write Path / Read Path two-lane flows */
+/* Lane container */
+.ap-lane {
+  border-radius: 14px; padding: 14px 18px 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ap-lane-lbl {
+  font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.ap-lane-lbl::after {
+  content: ''; flex: 1; height: 1px; border-radius: 1px;
+  background: currentColor; opacity: .25;
+}
+/* Node (white card; the top border sets its colour) */
+.ap-node {
+  background: #fff; border-radius: 10px; flex: 1; min-width: 0;
+  padding: 12px 13px 11px; display: flex; flex-direction: column;
+  gap: 7px; box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+.ap-badge {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0;
+}
+.ap-title {
+  font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; gap: 7px; margin-bottom: 1px;
+}
+.ap-sub  { font-size: 9.5px; color: #6b7280; line-height: 1.5; }
+.ap-chip {
+  display: inline-block; font-size: 9px; font-weight: 600;
+  padding: 2px 8px; border-radius: 10px; margin-top: 2px;
+}
+/* Reads bar (illustrative) */
+.ap-rb   { height: 5px; border-radius: 3px; margin: 2px 0; }
+/* Code badge */
+.ap-code {
+  font-size: 9px; font-weight: 700;
+  padding: 2.5px 7px; border-radius: 5px;
+}
+/* Arrow connector */
+.ap-arr {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  width: 46px; flex-shrink: 0; gap: 3px;
+}
+.ap-arr-bar {
+  position: relative; width: 100%; height: 3.5px; border-radius: 2px;
+}
+.ap-arr-head {
+  position: absolute; right: -10px; top: -6px;
+  border-top: 7px solid transparent; border-bottom: 7px solid transparent;
+  /* border-left colour matches the .ap-arr-bar background; set inline */
+}
+.ap-arr-lbl { font-size: 8.5px; color: #9ca3af; text-align: center; line-height: 1.3; }
+
+/* ---- Before/After labels ---- */
+/* Usage: <div class="before-label">Before</div> / <div class="after-label">After</div> */
+.before-label {
+  font-size: 12px; font-weight: 700; color: #820014;
+  white-space: nowrap; min-width: 56px;
+}
+.after-label {
+  font-size: 12px; font-weight: 700; color: #135200;
+  white-space: nowrap; min-width: 56px;
+}
+
+</style>
+</head>
+<body>
+<button class="modetoggle" id="copyImgBtn" style="right:490px;" title="Copy the current page as an image (shortcut: c); on a non-secure connection it downloads a PNG instead">⧉ Copy page</button>
+<button class="modetoggle" id="exportPortableBtn" style="right:330px;">⇓ Export portable HTML</button>
+<button class="modetoggle" id="exportBtn" style="right:170px;">↓ Export PPTX</button>
+<button class="modetoggle" id="modeBtn">▶ Presentation mode</button>
+<div class="wrap">
+  <h1>Progress Report</h1>
+  <div class="sub">20260901</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:10px;">
+    <div class="slide-label">Today's map</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">A day of subtraction: the deck got shorter, and the claims got bounded</h2>
+    <p class="lead">Three sessions, 2026-09-01, 14:49&ndash;22:09 local. A deck-building thread and a paper-reading thread ran on the same source and met at the same verdict &mdash; only two of SIMMA's four signals transfer here.</p>
+
+    <table class="ruletable" style="font-size:16px;">
+      <tr><th style="width:180px;">Theme</th><th>What moved</th><th style="width:255px;">Representative evidence</th><th style="width:150px;">State at end of day</th></tr>
+      <tr class="hl">
+        <td><b>Deck construction</b><br><span style="font-size:12px;color:#888;">7 tasks · 14:49&ndash;22:09</span></td>
+        <td>An 11-slide SIMMA weekly report built by <b>cutting</b>: two written feedback rounds removed a slide, a framing device, three closing slides, and most of the numbers. Each slide now does one job.</td>
+        <td>13 &rarr; 14 &rarr; 11 slides · <code>0.5×</code>, <code>R=0.97</code>, <code>792/277</code>, <code>500 trees</code>, <code>76-gene</code> dropped</td>
+        <td><b class="new">Deck built</b> &mdash; one label fix outstanding</td>
+      </tr>
+      <tr class="hl">
+        <td><b>Paper interrogation</b><br><span style="font-size:12px;color:#888;">4 tasks · 15:26&ndash;21:53</span></td>
+        <td>Read SIMMA's Methods directly: what enters the model, what each axis is measured with, and how low each has actually been shown to go.</td>
+        <td>7 RF feature blocks, <b>none of them ecDNA</b> · fragmentomics is a <code>samtools</code>+<code>perl</code> one-liner · only <b>2 of 6</b> axes report an LOD</td>
+        <td><b class="old">Not written down</b> &mdash; none of it reached the repo</td>
+      </tr>
+      <tr class="hl">
+        <td><b>Bounds on this project</b><br><span style="font-size:12px;color:#888;">2 tasks · 16:49&ndash;22:03</span></td>
+        <td>Two premises the user brought were corrected into constraints: which signals can transfer to this dataset at all, and how low a dilution series on them may honestly aim.</td>
+        <td>CN + methylation transfer, already on disk · <b>0.001% = 1×10⁻⁵ is 10× below the LOD</b>, and the paper's own 10⁻⁶ run plateaued</td>
+        <td><b>Decided</b> &mdash; no experiment drafted</td>
+      </tr>
+    </table>
+
+    <div class="takeaway">Takeaway: the deck's closing finding and the day's hardest number say the same thing &mdash; <b>copy number and methylation are what transfers, and ~10⁻³&ndash;10⁻⁴ is where this class of signal stops</b>.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:9px;">
+    <div class="slide-label">Deck construction</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">The deck grew once and shrank twice &mdash; every cut came from a written note</h2>
+    <p class="lead">Four checkpoints, evenly spaced (clock times labelled &mdash; the gaps are not to scale). Feedback arrived as a file, <code>research/user-note/september/1_9_slidenote.md</code>, in two blocks.</p>
+
+    <svg viewBox="0 0 1200 268" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+      <text x="6" y="26" font-size="12.5" fill="#8c8c8c">slides in the deck</text>
+      <line x1="80" y1="200" x2="1150" y2="200" stroke="#d9d9d9" stroke-width="1.5"/>
+
+      <rect x="150" y="44" width="130" height="156" rx="3" fill="#bfdbfe"/>
+      <text x="215" y="36" font-size="22" font-weight="700" fill="#1d4ed8" text-anchor="middle">13</text>
+      <text x="215" y="220" font-size="13" font-weight="700" fill="#262626" text-anchor="middle">15:09 · restructure</text>
+      <text x="215" y="238" font-size="12" fill="#595959" text-anchor="middle">dropped "Liquid biopsy is</text>
+      <text x="215" y="253" font-size="12" fill="#595959" text-anchor="middle">forced to choose"</text>
+
+      <rect x="420" y="32" width="130" height="168" rx="3" fill="#93c5fd"/>
+      <text x="485" y="24" font-size="22" font-weight="700" fill="#1d4ed8" text-anchor="middle">14</text>
+      <text x="485" y="220" font-size="13" font-weight="700" fill="#262626" text-anchor="middle">16:10 · ecDNA added</text>
+      <text x="485" y="238" font-size="12" fill="#595959" text-anchor="middle">then rebuilt at 16:14 to</text>
+      <text x="485" y="253" font-size="12" fill="#595959" text-anchor="middle">answer one question</text>
+
+      <rect x="690" y="32" width="130" height="168" rx="3" fill="#93c5fd"/>
+      <text x="755" y="24" font-size="22" font-weight="700" fill="#1d4ed8" text-anchor="middle">14</text>
+      <text x="755" y="220" font-size="13" font-weight="700" fill="#262626" text-anchor="middle">21:41 · note, 5 items</text>
+      <text x="755" y="238" font-size="12" fill="#595959" text-anchor="middle">count unchanged &mdash; the</text>
+      <text x="755" y="253" font-size="12" fill="#595959" text-anchor="middle">numbers came out instead</text>
+
+      <rect x="960" y="68" width="130" height="132" rx="3" fill="#52c41a"/>
+      <text x="1025" y="60" font-size="22" font-weight="700" fill="#135200" text-anchor="middle">11</text>
+      <text x="1025" y="220" font-size="13" font-weight="700" fill="#135200" text-anchor="middle">22:09 · note, 7 items</text>
+      <text x="1025" y="238" font-size="12" fill="#595959" text-anchor="middle">slides 12&ndash;14 removed</text>
+      <text x="1025" y="253" font-size="12" fill="#595959" text-anchor="middle">("bỏ 12-14")</text>
+    </svg>
+
+    <table class="ruletable" style="font-size:14px;">
+      <tr><th style="width:230px;">What the note asked for</th><th style="width:400px;">Dropped</th><th>Kept, and promoted</th></tr>
+      <tr class="hl"><td>Experimental design: <i>"bỏ hết các con số"</i></td><td class="old-c"><code>0.5×</code> · <code>R = 0.97</code> · <code>792/277</code> · <code>76-gene</code> · native barcode · pool 16&ndash;32 · the whole "Read this precisely" band</td><td class="new-c"><code>2,282×</code> and <code>5 × 10⁻⁴</code>, moved into a full-width bottom band at <b>34 pt</b> under <code>TARGETED BRANCH, AFTER CONSENSUS CALLING</code></td></tr>
+      <tr><td>Integration: strip the jargon</td><td class="old-c"><code>500 trees</code> · R² · RMSE · Y-scrambling metric cards · the "No SNV feature" line</td><td>Retitled <b>"Three signals in, one number out"</b></td></tr>
+      <tr><td>Four signals: <i>"trả lời thật đơn giản"</i></td><td class="old-c">Every explanatory sentence</td><td>Noun phrases only: <i>Tumour fraction · Tumour presence, and tumour type · Which molecules are tumour-derived · Which lesion, and whether it is changing</i></td></tr>
+      <tr><td>Critical reading: <i>"chỉ giữ lại các claim strong"</i></td><td class="old-c">Every non-STRONG row</td><td>Three rows: C1 the protocol · C2 long-read signal · C3 ecDNA in cfDNA</td></tr>
+    </table>
+
+    <div class="takeaway">Takeaway: nothing was added to make the deck fuller &mdash; <b>the two numbers that survived got bigger instead</b>, and the closing line now names what the deck does <i>not</i> rely on: the paper's clinical lead time and its sensitivity limit.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:11px;">
+    <div class="slide-label">Deck construction</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">One slide, rebuilt eight minutes later &mdash; a title became a question, and text became a picture</h2>
+    <p class="lead">The user's instruction: <i>"slide ecDNA nên để trả lời câu hỏi <b>Why can ecDNA remain detectable when ordinary genome-wide ctDNA signal becomes weak?</b> nên là ít text thôi dùng hình ảnh đi"</i></p>
+
+    <div style="display:flex;gap:16px;align-items:stretch;">
+      <div style="flex:1;border:1px solid #ffccc7;border-radius:6px;padding:11px 14px;background:#fff8f7;">
+        <div class="before-label" style="margin-bottom:6px;">16:10 &mdash; first version</div>
+        <div style="font-size:16px;font-weight:700;color:#a8071a;margin-bottom:7px;">"ecDNA &mdash; the lesion short reads cannot see"</div>
+        <div style="font-size:14px;color:#595959;line-height:1.55;">Three columns of text: <i>What it is / How SIMMA sees it / What it buys</i>, plus three footer cards. Carried <code>3&ndash;4 months</code> lead time, <code>7&ndash;15 months</code> clearance, <code>65 of 792 = 8.2%</code>, <code>1,000 computer-made mixtures</code>.</div>
+        <div style="font-size:13.5px;color:#a8071a;margin-top:8px;"><b>Problem:</b> the title asserts a property; the reader still has to work out why.</div>
+      </div>
+
+      <div style="flex:1;border:1px solid #b7eb8f;border-radius:6px;padding:11px 14px;background:#f6ffed;">
+        <div class="after-label" style="margin-bottom:6px;">16:14 &mdash; rebuilt in place</div>
+        <div style="font-size:16px;font-weight:700;color:#135200;margin-bottom:7px;">"Why ecDNA outlives the genome-wide signal"</div>
+        <div style="font-size:14px;color:#595959;line-height:1.55;">Two <b>mirrored</b> panels on an identical background, so the only visible difference is the mechanism: <b>2 copies</b> of any region per tumour cell vs <b>hundreds</b> of copies of one small region &mdash; then the same two at low tumour fraction, one sinking under the detection threshold, one still a spike.</div>
+        <div style="font-size:13.5px;color:#135200;margin-top:8px;"><b>Kept text:</b> <i>"Not because the circle survives longer &mdash; it fragments in plasma like any other cfDNA. There is simply more of it."</i></div>
+      </div>
+    </div>
+
+    <div class="info-card yellow" style="font-size:14px;">
+      <div class="card-title">And the overclaim the script caught, at 17:26</div>
+      Writing the ~90-second speaking script exposed a label problem: the left panel says <code>GENOME-WIDE SIGNAL</code>, but the evidence behind the slide is ecDNA beating <b>broad copy number</b> only. SIMMA's reported multimodal LOD (<b>~1×10⁻⁴</b>) is in fact <b>better</b> than its reported ecDNA LOD (<b>~1×10⁻³</b>) &mdash; so as labelled, the slide invites the claim that ecDNA beats the whole model. A relabel to <code>BROAD COPY NUMBER</code> was proposed at 17:26 and again at 21:41. <b class="old">It is still not applied.</b>
+    </div>
+
+    <div class="takeaway">Takeaway: the editing rule that emerged today is <b>one slide, one question, answered by the picture</b> &mdash; and writing the script, not reviewing the slide, is what caught the claim the picture was quietly making.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:9px;">
+    <div class="slide-label">Paper interrogation</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">What SIMMA is actually built from: one novel tool, and a fragmentomics axis with no tool at all</h2>
+    <p class="lead">Read straight out of the Methods in <code>mrd/data/papers/2026.04.08.26350410v1.full.pdf</code>. Common backbone for every axis: Guppy <b>v6.5.7</b> (WGS, super-accurate) or Dorado <b>v7.4.14</b> (targeted) &rarr; minimap2 <b>v2.24</b> <code>-ax map-ont --MD</code> &rarr; GRCh38 or T2T-CHM13v2.0 &rarr; mosdepth <b>v0.3.3</b>.</p>
+
+    <table class="ruletable" style="font-size:14.5px;">
+      <tr><th style="width:190px;">Axis</th><th style="width:400px;">Core tool</th><th>What it is</th></tr>
+      <tr class="hl"><td><b>Copy number / TF</b></td><td><b>COPYBARA</b> <span style="color:#888;">github.com/cortes-ciriano-lab/copybara-cf</span></td><td class="new-c">Written for this paper &mdash; the only genuinely new tool in the stack</td></tr>
+      <tr class="hl"><td><b>ecDNA quantify + track</b></td><td><b>COPYBARA-focal</b> &mdash; calls ecDNA at absolute CN &ge; 8, BH-FDR</td><td class="new-c">Written for this paper. Threshold is FDR-adjusted <b>P &lt; 0.5</b> &mdash; not 0.05</td></tr>
+      <tr><td>Methylation</td><td>modkit <b>v0.3.2</b> (<code>summary --only-mapped</code>, <code>pileup --cpg</code>, <code>extract --cpg</code>); <b>v0.5.0</b> for <code>stats</code> over repeats</td><td>Off the shelf (ONT). Satellite classes need the T2T alignment</td></tr>
+      <tr class="drop"><td><b>Fragmentomics</b></td><td><code>samtools view $bam | cut -f 10 | perl -ne 'print length($_)'</code> + hard-coded size bins</td><td>No tool at all. And no filter flag &mdash; <code>-F 0x900</code> is missing, so secondary and supplementary alignments are double-counted</td></tr>
+      <tr><td>SV / breakpoints</td><td>SAVANA <b>v1.3.7</b> tumour-only, 10 kb bins, primed by COPYBARA TF+ploidy, <code>savana classify --cna_rescue</code></td><td>Off the shelf</td></tr>
+      <tr><td>ecDNA assembly + cross-check</td><td>hifiasm <b>v0.25.0-r726</b> <code>-ont</code>; CoRAL v1 and AmpliconArchitect v1.2.2 as corroboration</td><td>Off the shelf</td></tr>
+      <tr><td>Model</td><td>scikit-learn Random Forest + conformal prediction</td><td>Off the shelf. Takes <b>7 feature blocks</b> &mdash; copy number, methylation, fragmentomics. <b class="old">No ecDNA or SV block exists</b></td></tr>
+    </table>
+
+    <div class="takeaway">Takeaway: only <b>COPYBARA</b> and <b>COPYBARA-focal</b> are new; everything else is a version pin away from reproducible. ecDNA runs as a <b>parallel track</b>, never as a model feature &mdash; the design guardrail being that a signal present in only <b>65/792 (8.2%)</b> of samples does not belong in a feature column.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:11px;">
+    <div class="slide-label">Paper interrogation</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">Only two of six signal axes carry a limit of detection &mdash; and the paper never ran a single-modality ablation</h2>
+    <p class="lead">A grep of the source for <code>unimodal</code>, <code>single modality</code>, <code>alone</code>, <code>each data type</code> returned nothing. The <b>10⁻⁴</b> figure belongs to the three signals combined, and no one knows which axis contributes what.</p>
+
+    <table class="ruletable" style="font-size:15px;">
+      <tr><th style="width:265px;">Signal axis</th><th style="width:150px;">Reported LOD</th><th>What backs it</th></tr>
+      <tr class="hl"><td><b>Multimodal + conformal</b><br><span style="font-size:12.5px;color:#888;">SCNA + methylation + fragmentomics</span></td><td class="new-c">~1×10⁻⁴<br><span style="font-size:12.5px;">(100 ppm)</span></td><td>~30,000 <i>in silico</i> admixtures, LOPO, PPV 99.97% &mdash; <b>entirely synthetic data</b>. The LOD is located by changepoint detection on interval width</td></tr>
+      <tr class="hl"><td><b>ecDNA</b> <span style="font-size:12.5px;color:#888;">(COPYBARA-focal)</span></td><td class="new-c">~1×10⁻³</td><td>6 ecDNA-positive samples diluted 10⁻⁶ &rarr; 0.9, logistic fit; LOD = the TF at <b>50% detection probability</b>. Tumour-informed, and it moves with the circle's copy number</td></tr>
+      <tr class="drop"><td>SCNA genome-wide (COPYBARA)</td><td>not reported</td><td>Only concordance with Illumina. Inferred to be well above 10⁻⁴</td></tr>
+      <tr class="drop"><td>Fragmentomics alone</td><td>no number</td><td>Qualitative only: "observed even in samples where SCNA detected no ctDNA"</td></tr>
+      <tr class="drop"><td>Methylation alone</td><td>no number</td><td>Qualitative only: separates control / SCNA-negative cancer / SCNA-positive cancer</td></tr>
+      <tr class="drop"><td>SNV panel (76 gene, UMI)</td><td>none stated</td><td>Error rate ~5×10⁻⁴, consensus depth 2,282×, lowest observed VAF 0.0014 &rarr; effectively ~10⁻³</td></tr>
+    </table>
+
+    <div class="takeaway warn">Takeaway: the two numbers that exist use <b>two different definitions</b>, and both are edges, not safe points &mdash; ecDNA's is a <b>coin flip</b> (50% detection), and the multimodal one is <b>the point the model admits it is unsure</b> (the changepoint where intervals start to widen). The missing ablation is exactly where this thesis can contribute.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:11px;">
+    <div class="slide-label">Bounds on this project</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">"Dilute to 0.001% and still get a call" &mdash; the paper already ran that experiment, and it failed</h2>
+    <p class="lead">A unit check settled it before any argument: <b>0.001% = 1×10⁻⁵</b>, while SIMMA's LOD is <b>100 ppm = 1×10⁻⁴ = 0.01%</b>. The ask was <b>ten times below</b> the reported limit.</p>
+
+    <svg viewBox="0 0 1200 252" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+      <defs>
+        <marker id="dn" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="5.5" refY="10" orient="auto">
+          <path d="M0,0 L11,0 L5.5,11 Z" fill="#cf1322"/>
+        </marker>
+      </defs>
+
+      <rect x="120" y="72" width="404" height="80" fill="#fff1f0" stroke="#ffccc7" stroke-width="1"/>
+      <text x="322" y="100" font-size="15" font-weight="700" fill="#a8071a" text-anchor="middle">below the LOD</text>
+      <text x="322" y="122" font-size="13.5" fill="#a8071a" text-anchor="middle">"predictions plateaued &hellip; undetectable</text>
+      <text x="322" y="140" font-size="13.5" fill="#a8071a" text-anchor="middle">by the model" &mdash; the paper's own words</text>
+
+      <text x="322" y="30" font-size="14.5" font-weight="700" fill="#cf1322" text-anchor="middle">asked for: 0.001% = 1×10⁻⁵ &#10007;</text>
+      <line x1="322" y1="38" x2="322" y2="64" stroke="#cf1322" stroke-width="2" marker-end="url(#dn)"/>
+
+      <line x1="524" y1="56" x2="524" y2="186" stroke="#d48806" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <text x="536" y="86" font-size="14.5" font-weight="700" fill="#ad6800">SIMMA multimodal LOD</text>
+      <text x="536" y="106" font-size="13.5" fill="#ad6800">1×10⁻⁴ = 0.01% = 100 ppm &mdash; the edge, not a safe point</text>
+
+      <line x1="726" y1="112" x2="726" y2="186" stroke="#8c8c8c" stroke-width="2" stroke-dasharray="3 4"/>
+      <text x="738" y="134" font-size="13.5" fill="#595959">ecDNA LOD ~1×10⁻³, tumour-informed</text>
+
+      <line x1="110" y1="186" x2="1160" y2="186" stroke="#8c8c8c" stroke-width="1.5"/>
+      <g font-size="13" fill="#595959" text-anchor="middle">
+        <line x1="120" y1="182" x2="120" y2="190" stroke="#8c8c8c"/><text x="120" y="208">10⁻⁶</text>
+        <line x1="322" y1="182" x2="322" y2="190" stroke="#8c8c8c"/><text x="322" y="208">10⁻⁵</text>
+        <line x1="524" y1="182" x2="524" y2="190" stroke="#8c8c8c"/><text x="524" y="208">10⁻⁴</text>
+        <line x1="726" y1="182" x2="726" y2="190" stroke="#8c8c8c"/><text x="726" y="208">10⁻³</text>
+        <line x1="928" y1="182" x2="928" y2="190" stroke="#8c8c8c"/><text x="928" y="208">10⁻²</text>
+        <line x1="1130" y1="182" x2="1130" y2="190" stroke="#8c8c8c"/><text x="1130" y="208">10⁻¹</text>
+      </g>
+      <text x="1160" y="232" font-size="12.5" fill="#8c8c8c" text-anchor="end">tumour fraction, log scale</text>
+      <text x="6" y="232" font-size="13.5" fill="#595959">The paper simulated <tspan font-weight="700" fill="#262626">down to 10⁻⁶</tspan> &#8212; the whole shaded stretch &#8212; and reported the plateau itself: the authors' own result, not an extrapolation.</text>
+    </svg>
+
+    <div style="display:flex;gap:14px;">
+      <div class="info-card red" style="flex:1;font-size:14.5px;">
+        <div class="card-title">Ceiling 1 &mdash; counting statistics</div>
+        At 10⁻⁴ roughly <b>42</b> independent features suffice to hold the z-score. At 10⁻⁵ you would need about <b>4,200</b> &mdash; and only <b>tens</b> of independent copy-number segments exist. The features run out before the arithmetic does.
+      </div>
+      <div class="info-card yellow" style="flex:1;font-size:14.5px;">
+        <div class="card-title">Ceiling 2 &mdash; the biological floor</div>
+        Healthy-person variation in copy number, methylation and fragment length is <b>3&ndash;4 orders of magnitude larger</b> than a 10⁻⁵ tumour signal. These are distribution-shift signals, so they sit in an already-salty pool.
+      </div>
+    </div>
+
+    <div class="takeaway warn">Takeaway: to reach 10⁻⁵ you must <b>change evidence type</b> &mdash; to SNV (personalised, tumour-informed) or an SV/ecDNA junction, where the background is zero. At exactly 10⁻⁴ all you get is a scalar tumour fraction with an interval; SCNA, ecDNA and SNV are each already dead at that level.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:11px;">
+    <div class="slide-label">Bounds on this project</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">Two of the four signals transfer &mdash; and both are already on disk</h2>
+    <p class="lead">The deck's closing slide, and the same verdict reached independently in the paper-reading thread. Written in plain language on purpose, per the note: <i>"dùng từ ngữ phổ thông hơn"</i>.</p>
+
+    <table class="ruletable" style="font-size:15px;">
+      <tr><th style="width:190px;">Signal</th><th style="width:150px;">Available here</th><th>Why</th></tr>
+      <tr class="hl"><td><b>Copy number</b></td><td class="new-c">YES &mdash; free</td><td>The tumour line has an abnormal genome, and every dilution is that tumour mixed into its own normal cells, so the copy-number signal grows with the amount of tumour</td></tr>
+      <tr class="hl"><td><b>Methylation</b></td><td class="new-c">YES &mdash; free</td><td>The marks are already stored inside the files we have. Reading them costs nothing and needs no new sequencing &mdash; which holds only because the WGS branch is <b>PCR-free</b>; PCR would have erased them</td></tr>
+      <tr class="drop"><td>Fragmentomics</td><td>NO</td><td>Our DNA came from cells grown in a dish, not from blood. Fragment lengths here reflect how the library was made, not the biology</td></tr>
+      <tr><td>SV / ecDNA</td><td><b style="color:#d48806;">NOT YET</b><br><span style="font-size:12.5px;color:#888;">new work</span></td><td>No ecDNA is known in this cell line and we have never looked. Doable, but new work rather than a re-analysis &mdash; and the real barrier in cfDNA is <b>tumour fraction, not read length</b>, since cfDNA arrives at ~167 bp regardless</td></tr>
+    </table>
+
+    <div class="info-card yellow" style="font-size:14.5px;">
+      <div class="card-title">The design trap named while checking the dilution question</div>
+      Diluting every point into <b>one shared control pool</b> erases inter-individual variance and produces an artificially optimistic LOD. The fix is a <b>paired dilution series</b> &mdash; the same control at every point, versus a different control at every point &mdash; which measures the false-optimism gap directly. Not drafted.
+    </div>
+
+    <div class="takeaway">Takeaway: this is the same conclusion the 2026-08-31 signal inventory reached in private &mdash; today it became <b>a slide that can be presented</b>, with the reason for each verdict written in words a non-specialist can check.</div>
+  </div>
+</div>
+
+<style>
+  .oi .ruletable th, .oi .ruletable td { padding:2.5px 8px; }
+  .oi .ruletable { font-size:12px; line-height:1.33; }
+  .oi .ruletable code { font-size:11.5px; padding:0 3px; }
+  .oi .takeaway { margin-top:5px; padding:6px 12px; font-size:12.5px; }
+</style>
+<div class="slide-outer">
+  <div class="slide oi" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:8px;">
+    <div class="slide-label">Open items</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">What tomorrow starts with &mdash; and where each item is stuck</h2>
+    <p class="lead">Nine items. Three are one-line fixes to a deck that is otherwise finished; three are knowledge that exists only in conversation.</p>
+
+    <table class="ruletable">
+      <tr><th style="width:26px;">#</th><th style="width:262px;">Item</th><th style="width:300px;">Stuck where</th><th>Why it matters</th></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:11.6px;">THE DECK IS DONE EXCEPT FOR THESE</td></tr>
+      <tr class="hl"><td>1</td><td>Relabel the ecDNA panel <code>GENOME-WIDE SIGNAL</code> &rarr; <code>BROAD COPY NUMBER</code></td><td>Proposed at 17:26 and again at 21:41; <code>grep</code> of <code>build.js</code> still returns <b>1</b> for the old label and <b>0</b> for the new</td><td>As labelled, the slide claims ecDNA beats the whole multimodal model &mdash; but the model's LOD (10⁻⁴) is <b>better</b> than ecDNA's (10⁻³). The deck's one live overclaim</td></tr>
+      <tr class="hl"><td>2</td><td>Decide whether the deck needs a closing slide</td><td>Slides 12&ndash;14 were dropped at 22:09; the deck now ends on <i>"Two of the four signals transfer"</i> &mdash; a finding, with no next steps</td><td>A weekly report that ends on a finding leaves the room without knowing what happens next. A single dark one-line slide was offered, not answered</td></tr>
+      <tr><td>3</td><td>Verify the project's own BAMs are genuinely PCR-free</td><td>Command written at 14:51, never run: <code>samtools view -H &lt;bam&gt; | grep -E '^@PG|^@RG'</code></td><td>The whole "methylation is free" row on the transfer slide rests on there being no amplification step. It is currently an assumption</td></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:11.6px;">KNOWLEDGE THAT EXISTS ONLY IN CONVERSATION</td></tr>
+      <tr class="hl"><td>4</td><td>Write the per-axis toolchain into <code>sauer-2026-simma.md</code></td><td>The note records SAVANA, hifiasm, CoRAL, COPYBARA &mdash; but <b>zero</b> versions and no basecalling / alignment / coverage / methylation chain. Today's Guppy, Dorado, minimap2, mosdepth, modkit versions are nowhere in the repo</td><td>This is the methods-reproducibility reference for the thesis. Losing it means reading the PDF again</td></tr>
+      <tr><td>5</td><td>Record the LOD survey and the missing-ablation gap</td><td>Established at 21:53; not written anywhere</td><td>"Only 2 of 6 axes have a number, and no single-modality ablation exists" is the clearest opening this thesis has found for its own contribution</td></tr>
+      <tr><td>6</td><td>Record the <code>-F 0x900</code> defect in the paper's fragment-length command</td><td>Found at 21:35 while reading Methods</td><td>Anyone reproducing that one-liner double-counts secondary and supplementary alignments</td></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:11.6px;">UNANSWERED, AND CARRIED FORWARD</td></tr>
+      <tr class="hl"><td>7</td><td><b>BM-0001 protocol v1.1</b> &mdash; did not move today</td><td><code>workflow_state.yaml</code> still <code>current_stage: DESIGN</code>, <code>last_status: REDESIGN_REQUIRED</code>; <code>protocols/</code> holds nothing past <code>v1.0_locked.md</code></td><td>Yesterday's QC blocked on QC-01 and QC-02. The retention sweep that would settle the mechanism claim is still unrun</td></tr>
+      <tr><td>8</td><td>Is there tissue WGS for the same individual?</td><td>Asked at 16:51, never answered</td><td>It decides whether a tumour-informed ecDNA junction-tracking route is possible at all &mdash; the only route that reaches 10⁻⁵</td></tr>
+      <tr><td>9</td><td>Which internal number is authoritative: <b>43 samples TF&gt;0.30</b> or <b>32 patients TF&gt;0.46</b>?</td><td>The paper contradicts itself between Results and Methods</td><td>Standing instruction from today: <i>cite neither until a peer-reviewed version exists</i></td></tr>
+    </table>
+
+    <div class="takeaway warn">Takeaway: items 4&ndash;6 share one failure mode &mdash; <b>a whole day of paper reading produced no repo artifact</b>. The only files touched today were <code>build.js</code>, the <code>.pptx</code>, and the user's own note. Nothing is committed.</div>
+  </div>
+</div>
+
+</div>
+
+<div class="nav" id="nav">
+  <button id="prev">← Prev</button>
+  <div class="dots" id="dots"></div>
+  <span class="count" id="count"></span>
+  <button id="next">Next →</button>
+</div>
+<button class="nav-toggle" id="navToggle" title="Collapse the nav bar">▼</button>
+
+<script>window.DECK_NAME = 'Progress-Report-20260901'; window.DECK_DATE = '20260901'; window.DECK_PRESENTER = 'hung114';</script>
+<script>
+/* Progress-report slides - runtime behaviour of a built deck: page navigation,
+   entering/leaving presentation mode, and PPTX export.
+   Supports both the current .slide-outer/.slide structure and the legacy .block one.
+   Requires mermaid, html2canvas and pptxgenjs already loaded in <head>. The export file
+   name comes from window.DECK_NAME. */
+(function () {
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+
+  // Supports the current .slide-outer and the legacy .block
+  const newSlides = Array.from(document.querySelectorAll('.slide-outer'));
+  const oldBlocks = Array.from(document.querySelectorAll('.block'));
+  const useNew = newSlides.length > 0;
+  const slides = useNew ? newSlides : oldBlocks;
+
+  const STORAGE_KEY = 'deck_idx_' + (window.DECK_NAME || location.pathname);
+  let idx = Math.min(+(localStorage.getItem(STORAGE_KEY) || 0), slides.length - 1);
+  let slideMode = false, navCollapsed = false;
+
+  /* -- Scaling: fit .slide into .slide-outer (scroll mode) -- */
+  function scaleSlideInOuter(outer) {
+    const inner = outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = `scale(${scale})`;
+    inner.style.top = '0';
+    inner.style.left = '0';
+  }
+
+  /* -- Scaling: fit .slide centred in the viewport (presentation mode, minus the nav bar) -- */
+  function scaleSlideFullscreen(outer) {
+    const inner = outer.querySelector('.slide');
+    if (!inner) return;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const navEl = document.getElementById('nav');
+    const navH = (!navCollapsed && navEl) ? navEl.offsetHeight : 0;
+    const availH = vh - navH;
+    const scale = Math.min(vw / 1280, availH / 720);
+    const tx = (vw - 1280 * scale) / 2;
+    const ty = (availH - 720 * scale) / 2;
+    inner.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    inner.style.top = '0';
+    inner.style.left = '0';
+  }
+
+  function scaleAll() {
+    if (!useNew) return;
+    if (slideMode) {
+      const active = slides[idx];
+      if (active) scaleSlideFullscreen(active);
+    } else {
+      slides.forEach(scaleSlideInOuter);
+    }
+  }
+
+  window.addEventListener('resize', scaleAll);
+
+  function renderDots() {
+    const dots = document.getElementById('dots');
+    if (!dots) return;
+    dots.innerHTML = '';
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === idx ? ' on' : '');
+      d.onclick = () => go(i);
+      dots.appendChild(d);
+    });
+  }
+
+  function go(i) {
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    localStorage.setItem(STORAGE_KEY, idx);
+    slides.forEach((s, k) => s.classList.toggle('active', k === idx));
+    document.getElementById('prev').disabled = idx === 0;
+    document.getElementById('next').disabled = idx === slides.length - 1;
+    document.getElementById('count').textContent = (idx + 1) + ' / ' + slides.length;
+    renderDots();
+    window.scrollTo({ top: 0 });
+    if (slideMode && useNew) scaleSlideFullscreen(slides[idx]);
+  }
+
+  function setMode(on) {
+    slideMode = on;
+    document.body.classList.toggle('slides', on);
+    document.getElementById('modeBtn').textContent = on ? '◼ Exit presentation' : '▶ Presentation mode';
+    if (!on) {
+      // Reset the nav-bar collapsed state on exit
+      navCollapsed = false;
+      const navEl = document.getElementById('nav');
+      if (navEl) navEl.classList.remove('nav-collapsed');
+      const navToggleBtn = document.getElementById('navToggle');
+      if (navToggleBtn) { navToggleBtn.textContent = '▼'; navToggleBtn.title = 'Collapse the nav bar'; }
+    }
+    if (on) {
+      go(idx);
+    } else {
+      // Re-scale every slide when returning to scroll mode
+      if (useNew) slides.forEach(scaleSlideInOuter);
+    }
+  }
+
+  document.getElementById('prev').onclick = () => go(idx - 1);
+  document.getElementById('next').onclick = () => go(idx + 1);
+  document.getElementById('modeBtn').onclick = () => setMode(!slideMode);
+
+  const navToggleBtn = document.getElementById('navToggle');
+  if (navToggleBtn) {
+    navToggleBtn.onclick = () => {
+      navCollapsed = !navCollapsed;
+      const navEl = document.getElementById('nav');
+      if (navEl) navEl.classList.toggle('nav-collapsed', navCollapsed);
+      navToggleBtn.textContent = navCollapsed ? '▲' : '▼';
+      navToggleBtn.title = navCollapsed ? 'Expand the nav bar' : 'Collapse the nav bar';
+      if (slideMode && useNew) scaleSlideFullscreen(slides[idx]);
+    };
+  }
+  document.addEventListener('keydown', (e) => {
+    if (!slideMode) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { go(idx + 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(idx - 1); e.preventDefault(); }
+    if (e.key === 'Escape') setMode(false);
+    if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.metaKey) { copyCurrentSlide(); e.preventDefault(); }
+  });
+
+  /* -- Capture one slide to a canvas at 1:1 scale; video areas are punched out to white
+     (their relative positions are returned so they can be embedded later).
+     PPTX export and "Copy page" share this capture logic, so quality is identical. -- */
+  async function renderSlideToCanvas(s) {
+    let captureEl = s;
+    let restoreTransform = null;
+
+    // Find [data-pptx-video] elements, detach them before capture, reinsert afterwards
+    const videoEls = [...s.querySelectorAll('[data-pptx-video]')];
+    videoEls.forEach(v => { v._nextSibling = v.nextSibling; v._parent = v.parentNode; v.remove(); });
+
+    // html2canvas does not support object-fit:contain and stretches images to fill the box,
+    // distorting them. Compute the real displayed size proportionally, override width/height
+    // temporarily before the capture, then restore it.
+    const fitImgs = [...s.querySelectorAll('img')].filter(img => {
+      const fit = getComputedStyle(img).objectFit;
+      return fit === 'contain' && img.naturalWidth && img.naturalHeight;
+    });
+    const fitImgSnapshots = fitImgs.map(img => {
+      const prevCss = img.style.cssText;
+      const boxW = img.clientWidth;
+      const boxH = img.clientHeight;
+      const scale = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
+      img.style.objectFit = 'none';
+      img.style.width = (img.naturalWidth * scale) + 'px';
+      img.style.height = (img.naturalHeight * scale) + 'px';
+      img.style.display = 'block';
+      img.style.margin = '0 auto';
+      return { img, prevCss };
+    });
+
+    if (useNew) {
+      // Capture .slide at 1:1 for maximum quality
+      const inner = s.querySelector('.slide');
+      if (inner) {
+        restoreTransform = inner.style.transform;
+        inner.style.transform = 'none';
+        captureEl = inner;
+      }
+    }
+
+    const canvas = await html2canvas(captureEl, {
+      scale: 1.5,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      width: useNew ? 1280 : undefined,
+      height: useNew ? 720 : undefined,
+    });
+
+    if (restoreTransform !== null) {
+      captureEl.style.transform = restoreTransform;
+    }
+    videoEls.forEach(v => { v._parent.insertBefore(v, v._nextSibling); });
+    fitImgSnapshots.forEach(({ img, prevCss }) => { img.style.cssText = prevCss; });
+
+    // Punch the video areas out to white so the later video layer does not overlap
+    const ctx = canvas.getContext('2d');
+    const slideW = captureEl.offsetWidth || 1280;
+    const slideH = captureEl.offsetHeight || 720;
+    const base = captureEl.getBoundingClientRect();
+    const videoRects = videoEls.map(v => {
+      const vr = v.getBoundingClientRect();
+      return {
+        v,
+        rx: (vr.left - base.left) / slideW,
+        ry: (vr.top - base.top) / slideH,
+        rw: vr.width / slideW,
+        rh: vr.height / slideH,
+      };
+    });
+    for (const { rx, ry, rw, rh } of videoRects) {
+      ctx.clearRect(rx * canvas.width, ry * canvas.height, rw * canvas.width, rh * canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(rx * canvas.width, ry * canvas.height, rw * canvas.width, rh * canvas.height);
+    }
+    return { canvas, videoRects };
+  }
+
+  /* -- Lightweight toast (feedback for copy/download without interrupting via alert) -- */
+  function toast(msg, isErr) {
+    let t = document.getElementById('deckToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'deckToast';
+      t.style.cssText = 'position:fixed;left:50%;top:20px;transform:translateX(-50%);z-index:9999;'
+        + 'padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;color:#fff;'
+        + 'box-shadow:0 4px 14px rgba(0,0,0,.25);transition:opacity .25s;pointer-events:none;';
+      document.body.appendChild(t);
+    }
+    t.style.background = isErr ? '#dc2626' : '#16a34a';
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2400);
+  }
+
+  /* -- Copy the current page as a PNG: write to the clipboard when possible; in a
+     non-secure context (e.g. an http LAN IP) fall back to downloading the PNG.
+     Shortcut: c. -- */
+  async function copyCurrentSlide() {
+    const btn = document.getElementById('copyImgBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Capturing…'; }
+    try {
+      const { canvas } = await renderSlideToCanvas(slides[idx]);
+      const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+      const pageNo = String(idx + 1).padStart(2, '0');
+      // Writing an image to the clipboard needs a secure context (https / localhost / file://);
+      // it is unavailable over an http LAN IP
+      if (navigator.clipboard && window.ClipboardItem && window.isSecureContext) {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          toast('Copied page ' + (idx + 1) + ' to the clipboard');
+          return;
+        } catch (e) { /* fall through to the download fallback */ }
+      }
+      // Fallback: download the page as a PNG
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (window.DECK_NAME || 'slide') + '-' + pageNo + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(a.href);
+      toast('This context cannot write to the clipboard; downloaded page ' + (idx + 1) + ' as a PNG instead');
+    } catch (e) {
+      console.error(e);
+      toast('Copy failed: ' + e.message, true);
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = '⧉ Copy page'; }
+    }
+  }
+
+  const copyImgBtn = document.getElementById('copyImgBtn');
+  if (copyImgBtn) copyImgBtn.onclick = copyCurrentSlide;
+
+  async function exportPptx() {
+    const btn = document.getElementById('exportBtn');
+    const wasSlides = slideMode;
+    btn.disabled = true; btn.textContent = 'Exporting…';
+    if (wasSlides) setMode(false);
+    await new Promise(r => setTimeout(r, 80));
+    try {
+      const pptx = new PptxGenJS();
+      pptx.defineLayout({ name: 'W16x9', width: 13.333, height: 7.5 });
+      pptx.layout = 'W16x9';
+      const PW = 13.333, PH = 7.5;
+
+      // Generate the cover slide as native text (editable in PowerPoint). It exists only in
+      // the PPTX export; deck.html itself (the browsing/editing intermediate) has no cover.
+      // If deck.html was built with --titlecover its first page is already a static cover
+      // (data-titlecover="1"), so no second one is added and the PPTX does not start with two
+      // "Progress Report" covers.
+      const hasStaticCover = slides[0] && slides[0].dataset.titlecover === '1';
+      if (!hasStaticCover) {
+        const cover = pptx.addSlide();
+        cover.background = { color: 'FFFFFF' };
+        cover.addText('Progress Report', { x: 0, y: 2.2, w: PW, h: 1.1, align: 'center', fontSize: 44, bold: true, color: '1f2329' });
+        cover.addText(window.DECK_DATE || '', { x: 0, y: 3.45, w: PW, h: 0.65, align: 'center', fontSize: 22, color: '6b7280' });
+        cover.addText(window.DECK_PRESENTER || '', { x: 0, y: 4.2, w: PW, h: 0.65, align: 'center', fontSize: 22, bold: true, color: '344054' });
+      }
+
+      // Try to fetch the video src as base64; under file:// Chrome fails, so fall back
+      async function fetchVideoBase64(src) {
+        try {
+          const resp = await fetch(src);
+          if (!resp.ok) return null;
+          const buf = await resp.arrayBuffer();
+          const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+          return 'data:video/mp4;base64,' + b64;
+        } catch { return null; }
+      }
+
+      for (const s of slides) {
+        const { canvas, videoRects } = await renderSlideToCanvas(s);
+        const img = canvas.toDataURL('image/png');
+        const slide = pptx.addSlide();
+        slide.background = { color: 'FFFFFF' };
+        slide.addImage({ data: img, x: 0, y: 0, w: PW, h: PH });
+
+        // Embed the video into the PPT (at the punched-out position)
+        for (const { v, rx, ry, rw, rh } of videoRects) {
+          const mediaData = await fetchVideoBase64(v.src || v.currentSrc);
+          if (mediaData) {
+            slide.addMedia({ type: 'video', data: mediaData, extension: 'mp4',
+              x: rx * PW, y: ry * PH, w: rw * PW, h: rh * PH });
+          } else {
+            // fetch failed (file:// CORS): fall back to the current frame
+            const fc = document.createElement('canvas');
+            fc.width = v.videoWidth || 640; fc.height = v.videoHeight || 360;
+            fc.getContext('2d').drawImage(v, 0, 0, fc.width, fc.height);
+            slide.addImage({ data: fc.toDataURL('image/png'),
+              x: rx * PW, y: ry * PH, w: rw * PW, h: rh * PH });
+          }
+        }
+      }
+      await pptx.writeFile({ fileName: (window.DECK_NAME || 'progress-report') + '.pptx' });
+    } catch (e) {
+      console.error(e);
+      alert('Export failed: ' + e.message);
+    } finally {
+      if (wasSlides) setMode(true);
+      btn.disabled = false;
+      btn.textContent = '↓ Export PPTX';
+    }
+  }
+
+  document.getElementById('exportBtn').onclick = exportPptx;
+
+  /* -- Export portable HTML: images are re-encoded at their displayed size (downscaled +
+     compressed) and inlined as data URIs, and the CDN mermaid / html2canvas / pptxgenjs
+     scripts are inlined too, so the file works offline and can be moved on its own -- */
+  async function blobToDataURL(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  // Redraw already-loaded <img> elements onto a canvas at their displayed size (x2 for
+  // sharpness, never above the original) and output JPEG, so inlining the full-size originals
+  // does not bloat the HTML
+  function liveImgToDataURL(liveImg) {
+    try {
+      const dispW = liveImg.clientWidth || liveImg.naturalWidth || 1;
+      const dispH = liveImg.clientHeight || liveImg.naturalHeight || 1;
+      const w = Math.max(1, Math.min(Math.round(dispW * 2), liveImg.naturalWidth || dispW * 2));
+      const h = Math.max(1, Math.min(Math.round(dispH * 2), liveImg.naturalHeight || dispH * 2));
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(liveImg, 0, 0, w, h);
+      return c.toDataURL('image/jpeg', 0.85);
+    } catch (e) { return null; } // tainted (cross-origin) canvas and similar: let the caller fall back
+  }
+
+  async function exportPortableHtml() {
+    const btn = document.getElementById('exportPortableBtn');
+    btn.disabled = true; btn.textContent = 'Exporting…';
+    try {
+      const clone = document.documentElement.cloneNode(true);
+
+      // Inline images as data URIs (downscaled to displayed size + JPEG compression to keep the file small)
+      const liveImgs = document.querySelectorAll('img');
+      const cloneImgs = clone.querySelectorAll('img');
+      for (let i = 0; i < cloneImgs.length; i++) {
+        const src = cloneImgs[i].getAttribute('src');
+        if (!src || src.startsWith('data:')) continue;
+        let dataUrl = liveImgToDataURL(liveImgs[i]);
+        if (!dataUrl) {
+          try {
+            const resp = await fetch(new URL(src, location.href).href);
+            if (resp.ok) dataUrl = await blobToDataURL(await resp.blob());
+          } catch (e) { /* give up and keep the original link */ }
+        }
+        if (dataUrl) cloneImgs[i].setAttribute('src', dataUrl);
+      }
+
+      // Inline external <script src> content (including the CDN mermaid / html2canvas /
+      // pptxgenjs) so the file opens offline
+      const scripts = clone.querySelectorAll('script[src]');
+      for (const s of scripts) {
+        const src = s.getAttribute('src');
+        try {
+          const resp = await fetch(src);
+          const text = await resp.text();
+          const inline = document.createElement('script');
+          inline.textContent = text;
+          s.replaceWith(inline);
+        } catch (e) {
+          console.warn('Failed to inline a script; keeping the original link (needs network access):', src, e);
+        }
+      }
+
+      const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+      const blob = new Blob([html], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (window.DECK_NAME || 'deck') + '_portable.html';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+    } catch (e) {
+      console.error(e);
+      alert('Portable export failed: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '⇓ Export portable HTML';
+    }
+  }
+
+  const exportPortableBtn = document.getElementById('exportPortableBtn');
+  if (exportPortableBtn) exportPortableBtn.onclick = exportPortableHtml;
+
+  /* mermaid measures labels with getBoundingClientRect, which picks up the .slide
+     transform: scale(). Remove the scaling during rendering (see .mermaid-measuring in
+     slides.css) and restore it afterwards, otherwise node boxes shrink with the scale and
+     their text overflows and is clipped. */
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    if (useNew) slides.forEach(scaleSlideInOuter);
+    renderDots();
+    setMode(true);
+  });
+})();
+
+</script>
+</body>
+</html>

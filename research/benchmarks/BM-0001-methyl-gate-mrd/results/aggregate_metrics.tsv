@@ -1,0 +1,17 @@
+benchmark_id	individual	arm	variance_construction	metric	value	delta_vs_B0	delta_vs_C1	delta_vs_C2	retention_blank	retention_0p1	retention_ratio	levels_detected	n_positive	n_negative
+BM-0001-methyl-gate-mrd	COLO829	B0	V1	zlo_min@0.1% (PRIMARY)	-0.3667	0.0	1.4446	-0.5343	1.0	1.0	1.0	1%	9	5
+BM-0001-methyl-gate-mrd	COLO829	B0	V2	zlo_min@0.1% (PRIMARY)	-0.4543	0.0	2.0108	-0.8567	1.0	1.0	1.0	1%	9	5
+BM-0001-methyl-gate-mrd	COLO829	B1	V1	zlo_min@0.1% (PRIMARY)	0.6931	1.0598	2.5044	0.5255	0.092428	0.269213	2.9127	1%	9	5
+BM-0001-methyl-gate-mrd	COLO829	B1	V2	zlo_min@0.1% (PRIMARY)	1.4364	1.8907	3.9015	1.034	0.092428	0.269213	2.9127	1%	9	5
+BM-0001-methyl-gate-mrd	COLO829	C1	V1	zlo_min@0.1% (PRIMARY)	-1.8113	-1.4446	0.0	-1.9789	0.040607	0.047127	1.1605	1%	9	5
+BM-0001-methyl-gate-mrd	COLO829	C1	V2	zlo_min@0.1% (PRIMARY)	-2.4651	-2.0108	0.0	-2.8675	0.040607	0.047127	1.1605	1%	9	5
+BM-0001-methyl-gate-mrd	COLO829	C2	V1	zlo_min@0.1% (PRIMARY)	0.1676	0.5343	1.9789	0.0	0.021429	0.06223	2.9041	1%	9	5
+BM-0001-methyl-gate-mrd	COLO829	C2	V2	zlo_min@0.1% (PRIMARY)	0.4024	0.8568	2.8675	0.0	0.021429	0.06223	2.9041	1%	9	5
+BM-0001-methyl-gate-mrd	HCC1395	B0	V1	zlo_min@0.1% (PRIMARY)	0.7396	0.0	2.547	0.8126	1.0	1.0	1.0	1%	9	5
+BM-0001-methyl-gate-mrd	HCC1395	B0	V2	zlo_min@0.1% (PRIMARY)	0.8557	0.0	3.34	0.9794	1.0	1.0	1.0	1%	9	5
+BM-0001-methyl-gate-mrd	HCC1395	B1	V1	zlo_min@0.1% (PRIMARY)	2.2995	1.56	4.1069	2.3725	0.363463	0.608466	1.6741	1%	9	5
+BM-0001-methyl-gate-mrd	HCC1395	B1	V2	zlo_min@0.1% (PRIMARY)	3.5547	2.6989	6.039	3.6784	0.363463	0.608466	1.6741	1%;0.1%	9	5
+BM-0001-methyl-gate-mrd	HCC1395	C1	V1	zlo_min@0.1% (PRIMARY)	-1.8074	-2.547	0.0	-1.7344	0.045706	0.039153	0.8566	none	9	5
+BM-0001-methyl-gate-mrd	HCC1395	C1	V2	zlo_min@0.1% (PRIMARY)	-2.4843	-3.34	0.0	-2.3606	0.045706	0.039153	0.8566	1%	9	5
+BM-0001-methyl-gate-mrd	HCC1395	C2	V1	zlo_min@0.1% (PRIMARY)	-0.073	-0.8126	1.7344	0.0	0.037706	0.063492	1.6839	none	9	5
+BM-0001-methyl-gate-mrd	HCC1395	C2	V2	zlo_min@0.1% (PRIMARY)	-0.1237	-0.9794	2.3606	0.0	0.037706	0.063492	1.6839	1%	9	5

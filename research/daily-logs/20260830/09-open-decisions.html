@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<style>
+  .d9 .ruletable th, .d9 .ruletable td { padding:8px 10px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d9">
+    <div class="slide-label">Open items</div>
+    <h2>Four decisions are waiting on me &mdash; three of them on a one-word answer</h2>
+    <p class="lead">Nothing here is blocked by compute, data or tooling. <b class="old">Three questions were put to me during the day and the sessions ended before I answered them</b>; the fourth has not been asked yet.</p>
+
+    <table class="ruletable" style="font-size:13.5px">
+      <tr><th style="width:5%">#</th><th style="width:34%">Decision</th><th style="width:31%">Stuck where</th><th style="width:30%">Consequence if left</th></tr>
+      <tr class="hl"><td>1</td><td><b>Signal grilling, Question 1</b> &mdash; write E[statistic] at TF0 and at TF=1e-4 for SNV, methylation, phasing, CNV, SV</td><td>Asked at 20:39; the session ended the same minute with no reply</td><td>The multimodal comparison stays an intuition; no experiment underneath it can be designed</td></tr>
+      <tr class="hl"><td>2</td><td>Overwrite <code>30.md</code> with the supplied replacement block?</td><td>Offered at 16:03 ("say the word and I'll do it"); at 20:54 the same review request was re-asked instead</td><td>Items 5&ndash;7 on the next page stay unfixed by default</td></tr>
+      <tr class="hl"><td>3</td><td>Write <code>configs/datasets/colo829_pao_dilution.yaml</code> from the 12 <code>.meta.json</code> files?</td><td>Offered at 20:34, unanswered</td><td>14 verified BAMs (~1.03 TB) stay unregistered and unusable by the pipeline</td></tr>
+      <tr><td>4</td><td>Does the professor expect ecDNA <i>detection</i>, or only ecDNA in related work?</td><td>Question drafted for the professor; not yet asked</td><td>Weeks spent on an axis outside the topic &mdash; or a visible gap at the defence</td></tr>
+    </table>
+
+    <div class="cols" style="gap:16px;margin-top:12px">
+      <div class="col"><div class="info-card blue"><div class="card-title">Why #1 comes first</div><div style="font-size:13px;line-height:1.65">It is the "what would it look like if this were false?" gate. If TF=1e-4 cannot be told apart from the TF0 blank <b>on paper</b>, then no tool choice, no threshold and no model rescues the comparison &mdash; and every hour of compute after it is wasted.</div></div></div>
+      <div class="col"><div class="info-card green"><div class="card-title">Why #2 is cheap</div><div style="font-size:13px;line-height:1.65">The replacement text already exists, checked line by line against the paper's own wording. Answering #2 closes three separate open items at once and makes the note safe to cite from.</div></div></div>
+    </div>
+
+    <div class="takeaway warn">First thing tomorrow: <b>#1 and #2</b>. Both are answers, not work &mdash; and everything else in the backlog queues behind them.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+</script>
+</body>
+</html>

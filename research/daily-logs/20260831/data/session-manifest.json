@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "report_kind": "daily",
+  "report_date": "2026-08-31",
+  "selected_tool": "all",
+  "source_mode": "scan",
+  "sessions": [
+    {
+      "source": "claude",
+      "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/d6b1f878-b601-4756-835b-f5b9a4992c49.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-08-31T01:49:42.688Z",
+      "ended_at": "2026-08-31T08:22:04.642Z",
+      "turn_count": 5
+    },
+    {
+      "source": "claude",
+      "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/5a081983-86c3-4800-9831-7b33599ea8a1.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-08-31T03:19:08.719Z",
+      "ended_at": "2026-08-31T03:19:08.719Z",
+      "turn_count": 1
+    },
+    {
+      "source": "claude",
+      "session_id": "7a509925-1add-4aed-90b3-072bacb00486",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/7a509925-1add-4aed-90b3-072bacb00486.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-08-31T07:22:30.862Z",
+      "ended_at": "2026-08-31T07:22:30.862Z",
+      "turn_count": 1
+    },
+    {
+      "source": "claude",
+      "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/5cc09158-2059-4f41-9c25-b9f1abe3f4e2.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-08-31T08:00:37.990Z",
+      "ended_at": "2026-08-31T08:23:28.400Z",
+      "turn_count": 8
+    },
+    {
+      "source": "claude",
+      "session_id": "7cd9b3c8-e6db-4ba5-bd43-b1d04601d25f",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/7cd9b3c8-e6db-4ba5-bd43-b1d04601d25f.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-08-31T08:26:23.165Z",
+      "ended_at": "2026-08-31T08:26:23.165Z",
+      "turn_count": 1
+    }
+  ]
+}

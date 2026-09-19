@@ -1,0 +1,9 @@
+benchmark_id	individual	level	level_label	arm	variance_construction	zlo_min	zlo_min_p05	zlo_min_p95	delta_vs_B0	delta_vs_C1	delta_vs_C2	retention_blank	retention_level	retention_ratio	retention_ratio_p05	retention_ratio_p95	levels_detected_replicate_rule	criterion	criterion_outcome
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	B0	V1	-0.78	NA	NA	0.0	UNDEFINED	UNDEFINED	1.0	1.0	1.0	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	B1	V1	UNDEFINED	NA	NA	UNDEFINED	UNDEFINED	UNDEFINED	0.0	0.333333	NA	NA	NA	none	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	C1	V1	UNDEFINED	NA	NA	UNDEFINED	UNDEFINED	UNDEFINED	0.0	0.0	NA	0.0	0.0	none	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	C2	V1	UNDEFINED	NA	NA	UNDEFINED	UNDEFINED	UNDEFINED	0.0	0.0	NA	NA	NA	none	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	B0	V2	-1.3296	NA	NA	0.0	1.7321	UNDEFINED	1.0	1.0	1.0	NA	NA	1%	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	B1	V2	UNDEFINED	NA	NA	UNDEFINED	UNDEFINED	UNDEFINED	0.0	0.333333	NA	NA	NA	none	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	C1	V2	-3.0617	-3.0617	-3.0617	-1.7321	0.0	UNDEFINED	0.0	0.0	NA	0.0	0.0	none	-	-
+BM-0001-methyl-gate-mrd	COLO829	TF1e-3	0.1%	C2	V2	UNDEFINED	NA	NA	UNDEFINED	UNDEFINED	UNDEFINED	0.0	0.0	NA	NA	NA	none	-	-

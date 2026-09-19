@@ -1,0 +1,24 @@
+# BM-0001-methyl-gate-mrd — seeds (protocol §10, §23)
+base_seed: 20260831
+
+c2_tiebreak:
+  rule: "sha256('20260831|' + basename(bam))[:12] as int, seeded python random.Random, shuffle then stable sort by -score_C2"
+  scope: per sample
+  determinism: DETERMINISTIC — same BAM gives the same tie order on every re-run
+
+c1_permutation:
+  rule: "numpy default_rng( sha256('20260831|C1|' + individual + '|' + str(draw_index))[:12] as int )"
+  scope: >-
+    one draw index spans ALL of that individual's samples, blanks included, as required by
+    protocol §10; within a draw each sample is permuted with a stream derived from the same
+    generator advanced in a fixed sample order, so a draw is reproducible end to end
+  draws: 200
+
+pileup:
+  determinism: DETERMINISTIC — pysam pileup over a fixed candidate list, no sampling
+
+overall_determinism:
+  status: DETERMINISTIC
+  reason: >-
+    no arm fits a model, no subsampling is performed, and both stochastic components (C2's
+    tie-break, C1's 200 permutations) are seeded from fixed strings.

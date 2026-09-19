@@ -1,0 +1,12 @@
+# BM-0001-methyl-gate-mrd — registered outcome under protocol v1.0 §20/§21
+# Mechanical application of the preregistered rules. No interpretation.
+
+S1: HELD
+S2: HELD
+S3: HELD
+S4: HELD
+
+S1 holds for individuals: ['COLO829', 'HCC1395']
+S1 holds for constructions: ['V1', 'V2']
+
+REGISTERED_OUTCOME: H1 SUPPORTED

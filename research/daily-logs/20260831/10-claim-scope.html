@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:12px;">
+    <div class="slide-label">Claim control</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">What may actually be said: one cell of a four-cell table, on single-digit counts</h2>
+    <p class="lead"><code>zlo_min</code> improved for B1 in all four cells. The <b>detection</b> outcome under the frozen replicate rule changed in exactly <b>one</b>.</p>
+
+    <div style="display:flex;gap:14px;align-items:stretch;">
+      <div style="flex:0.85;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#262626;">QC-03 &mdash; levels called <code>detected</code></div>
+        <table class="ruletable" style="font-size:17px;">
+          <tr><th>Arm</th><th style="width:90px;">V1</th><th style="width:120px;">V2</th></tr>
+          <tr><td>HCC1395 B0</td><td>1%</td><td>1%</td></tr>
+          <tr class="hl"><td>HCC1395 <b>B1</b></td><td>1%</td><td class="new-c">1% and 0.1%</td></tr>
+          <tr><td>COLO829 B0</td><td>1%</td><td>1%</td></tr>
+          <tr><td>COLO829 <b>B1</b></td><td>1%</td><td>1%</td></tr>
+        </table>
+        <div style="font-size:14.5px;color:#595959;line-height:1.55;">Any sentence of the form <i>"methylation enables 0.1% detection"</i> is a sentence about <b>one cell</b>: one individual, one of two preregistered variance constructions.</div>
+      </div>
+
+      <div style="flex:1.15;display:flex;flex-direction:column;gap:8px;">
+        <div class="info-card yellow" style="font-size:14.5px;">
+          <div class="card-title">QC-04 &mdash; COLO829's statistic runs on single-digit counts</div>
+          B1 blank totals are <b>2 / 0 / 4 / 3 / 6</b> reads; 0.1% totals are 9 / 19 / 18. The headline S4 ratio of <b>2.9127</b> is computed from roughly <b>three kept reads</b> in the blank. Four significant figures overstate what three reads can support. One blank gives <code>G = 0</code> &rarr; <code>sample_sd = 0</code> &rarr; <code>no estimate</code> &mdash; the case §15 defined a priori, so handled rather than broken.
+        </div>
+        <div class="info-card yellow" style="font-size:14.5px;">
+          <div class="card-title">QC-05 &mdash; S3 holds, but thinly under V2</div>
+          Two COLO829 blanks return <code>UNRELIABLE</code> under V2: rep3 at [&minus;1.64, +3.15], rep5 at [+0.69, +4.31]. Neither is a false detection &mdash; both straddle the call threshold, which is what <code>UNRELIABLE</code> is for &mdash; and both sit in the same single-digit-count regime.
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Takeaway: the redesign is now written with the result known, so QC bound it in advance &mdash; <b>every new criterion must be strictly harder to satisfy</b>, and the new criteria must be labelled <b>POST HOC permanently</b>, with the v1.0 preregistered outcome reported beside them in full.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>

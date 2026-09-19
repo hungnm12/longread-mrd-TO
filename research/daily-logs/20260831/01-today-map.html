@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:10px;">
+    <div class="slide-label">Today's map</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">Methylation went from "the one addable signal" to a locked benchmark, a positive result, and a QC refusal — in one day</h2>
+    <p class="lead">Five sessions, 2026-08-31. A paper-reading thread and an autonomous benchmark thread ran in parallel and landed on the same conclusion. The benchmark then ran to completion and its own QC sent it back. Nothing is committed.</p>
+
+    <table class="ruletable" style="font-size:16.5px;">
+      <tr><th style="width:170px;">Theme</th><th>What moved</th><th style="width:250px;">Representative evidence</th><th style="width:150px;">State at end of day</th></tr>
+      <tr class="hl">
+        <td><b>Signal inventory</b><br><span style="font-size:12px;color:#888;">4 tasks · 09:49–16:22</span></td>
+        <td>Which ONT signals the tumour/normal dilution data can actually carry, and in what role. The user's ordering was reversed: <b class="new">SNV is the baseline</b>, methylation the one addition; <b class="old">copy number is a positive control, not evidence</b>; fragment length unusable on machine-sheared cell-line DNA.</td>
+        <td>0.27 molecules vs 5,000,000 fragments from the same 9&nbsp;ng · ecDNA in 65/792 samples (8.2%)</td>
+        <td><b>Decided</b> — not yet written into <code>claim-boundaries.md</code></td>
+      </tr>
+      <tr class="hl">
+        <td><b>Protocol governance</b><br><span style="font-size:12px;color:#888;">2 tasks · 16:00–16:19</span></td>
+        <td>An autonomous design ↔ adversarial-review loop turned that conclusion into <code>BM-0001-methyl-gate-mrd</code>, frozen at <b class="new">v1.0 LOCKED</b> after 5 design and 5 review iterations and 14 closed blocking findings.</td>
+        <td>8 → 3 → 2 → 1 → 0 blocking issues · B001 degenerate control · B014 aggressiveness confound</td>
+        <td><b>Done</b> — checksum recorded, nothing committed</td>
+      </tr>
+      <tr class="hl">
+        <td><b>Execution &amp; QC</b><br><span style="font-size:12px;color:#888;">2 tasks · 16:20&ndash;17:10</span></td>
+        <td>28 BAM passes launched at parallelism 13–14 with inputs, seeds, feature provenance and environment captured before any number existed.</td>
+        <td>42 passes, 0 failures, 21,043 s CPU · reproduced EXP-S1-022 to 4 figures · S1&ndash;S4 all HELD &rarr; <b>H1 SUPPORTED</b></td>
+        <td><b class="old">REDESIGN_REQUIRED</b> &mdash; result preserved, not usable yet</td>
+      </tr>
+    </table>
+
+    <div class="takeaway">Takeaway: the day's output is <b>a decision about which signals may be claimed</b> and <b>a preregistration that cannot be revised by its own results</b> — no measurement has been produced yet.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>

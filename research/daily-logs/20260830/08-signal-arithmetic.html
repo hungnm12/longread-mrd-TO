@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<style>
+.d8 .ruletable th, .d8 .ruletable td { padding:5px 8px; }
+.d8 .info-card { padding:8px 12px; }
+</style>
+<style>
+  .ag-board { position:relative; height:186px; }
+  .ag svg text { font-family: inherit; }
+  .ag .t-s { font-size:12px; fill:#595959; }
+  .ag .t-b { font-size:13px; font-weight:700; }
+  .ag .edge { fill:none; stroke:#d4380d; stroke-width:1.8; }
+  .ag .blank td { color:#bfbfbf; text-align:center; font-size:17px; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std d8">
+    <div class="slide-label">Operating point</div>
+    <h2>"Which signal detects tumour better?" is not a question yet &mdash; it is an arithmetic problem first</h2>
+    <p class="lead">The question assumes SNV, methylation, phasing, CNV and SV lie on one comparability axis. That premise was <b class="old">not accepted</b>. Everything here is a function of TF and coverage, so the operating point was fixed first: <b>HCC1395 dilution, 25x, TF = 1e-4</b>, with the TF0 blank as control.</p>
+
+    <div class="cols ag" style="gap:20px;align-items:stretch">
+      <div style="flex:0 0 620px">
+        <div class="ag-board">
+        <svg viewBox="0 0 620 186" preserveAspectRatio="xMidYMid meet" width="620" height="186">
+          <defs>
+            <marker id="ag-ar" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#d4380d"/></marker>
+          </defs>
+
+          <text class="t-s" x="0" y="13" fill="#8c8c8c">One locus, drawn to scale &mdash; 520 px = 25 reads, so 1 read = 20.8 px</text>
+
+          <rect x="0" y="24" width="520" height="38" rx="4" fill="#f5f5f5" stroke="#8c8c8c"/>
+          <text class="t-b" x="260" y="48" text-anchor="middle" fill="#262626">25 reads cover the locus at 25x</text>
+
+          <rect x="0" y="88" width="2.5" height="38" fill="#a8071a"/>
+          <path class="edge" d="M130 107 L14 107" marker-end="url(#ag-ar)"/>
+          <text class="t-b" x="140" y="103" fill="#a8071a">0.0025 tumour reads &mdash; 25 &times; 1e-4</text>
+          <text class="t-s" x="140" y="120" fill="#a8071a">0.05 px wide at this scale. There is nothing to draw.</text>
+
+          <text class="t-b" x="0" y="148" fill="#262626">That is one tumour read every 400 loci.</text>
+          <text class="t-s" x="0" y="165">The TF0 blank expects exactly zero. Deeper sequencing does not help &mdash;</text>
+          <text class="t-s" x="0" y="181">it only re-reads the same few molecules.</text>
+        </svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="info-card blue">
+          <div class="card-title">Question 1, issued &mdash; no computing required</div>
+          <div style="font-size:13px;line-height:1.6">
+            For <b>each</b> of the five signals, write down two numbers on paper:<br>
+            &nbsp;&nbsp;&bull; the expected value of that statistic at <b>TF0</b> (blank)<br>
+            &nbsp;&nbsp;&bull; the expected value of it at <b>TF = 1e-4</b><br><br>
+            If the two do not separate, that signal is dead <b>by arithmetic</b> &mdash; not because the right tool has not been picked yet.<br><br>
+            Failing to write a number down is also an answer: it means "better" is still an intuition, not yet a quantity.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class="ruletable" style="font-size:12.5px;margin-top:8px">
+      <tr><th style="width:16%">Signal</th><th style="width:22%">E[statistic] at TF0 (blank)</th><th style="width:22%">E[statistic] at TF = 1e-4</th><th style="width:13%">Separable?</th><th>Bits of information one tumour read carries for this signal</th></tr>
+      <tr class="blank"><td style="color:#262626;text-align:left;font-size:12.5px;font-weight:600">SNV</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+      <tr class="blank"><td style="color:#262626;text-align:left;font-size:12.5px;font-weight:600">Methylation</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+      <tr class="blank"><td style="color:#262626;text-align:left;font-size:12.5px;font-weight:600">Phasing</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+      <tr class="blank"><td style="color:#262626;text-align:left;font-size:12.5px;font-weight:600">Copy number</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+      <tr class="blank"><td style="color:#262626;text-align:left;font-size:12.5px;font-weight:600">Structural variant</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+    </table>
+
+    <div class="takeaway warn">All ten cells are <b>empty</b> &mdash; the session ended with the question open. This is the "<b>what would it look like if this were false?</b>" gate: if TF=1e-4 cannot be told apart from the blank on paper, no experiment design underneath it can rescue the comparison.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+</script>
+</body>
+</html>

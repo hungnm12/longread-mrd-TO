@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<style>
+  .oi .ruletable th, .oi .ruletable td { padding:2.5px 8px; }
+  .oi .ruletable { font-size:12px; line-height:1.33; }
+  .oi .ruletable code { font-size:11.5px; padding:0 3px; }
+  .oi .takeaway { margin-top:5px; padding:6px 12px; font-size:12.5px; }
+</style>
+<div class="slide-outer">
+  <div class="slide oi" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:8px;">
+    <div class="slide-label">Open items</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">What tomorrow starts with &mdash; and where each item is stuck</h2>
+    <p class="lead">Nine items. Three are one-line fixes to a deck that is otherwise finished; three are knowledge that exists only in conversation.</p>
+
+    <table class="ruletable">
+      <tr><th style="width:26px;">#</th><th style="width:262px;">Item</th><th style="width:300px;">Stuck where</th><th>Why it matters</th></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:11.6px;">THE DECK IS DONE EXCEPT FOR THESE</td></tr>
+      <tr class="hl"><td>1</td><td>Relabel the ecDNA panel <code>GENOME-WIDE SIGNAL</code> &rarr; <code>BROAD COPY NUMBER</code></td><td>Proposed at 17:26 and again at 21:41; <code>grep</code> of <code>build.js</code> still returns <b>1</b> for the old label and <b>0</b> for the new</td><td>As labelled, the slide claims ecDNA beats the whole multimodal model &mdash; but the model's LOD (10⁻⁴) is <b>better</b> than ecDNA's (10⁻³). The deck's one live overclaim</td></tr>
+      <tr class="hl"><td>2</td><td>Decide whether the deck needs a closing slide</td><td>Slides 12&ndash;14 were dropped at 22:09; the deck now ends on <i>"Two of the four signals transfer"</i> &mdash; a finding, with no next steps</td><td>A weekly report that ends on a finding leaves the room without knowing what happens next. A single dark one-line slide was offered, not answered</td></tr>
+      <tr><td>3</td><td>Verify the project's own BAMs are genuinely PCR-free</td><td>Command written at 14:51, never run: <code>samtools view -H &lt;bam&gt; | grep -E '^@PG|^@RG'</code></td><td>The whole "methylation is free" row on the transfer slide rests on there being no amplification step. It is currently an assumption</td></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:11.6px;">KNOWLEDGE THAT EXISTS ONLY IN CONVERSATION</td></tr>
+      <tr class="hl"><td>4</td><td>Write the per-axis toolchain into <code>sauer-2026-simma.md</code></td><td>The note records SAVANA, hifiasm, CoRAL, COPYBARA &mdash; but <b>zero</b> versions and no basecalling / alignment / coverage / methylation chain. Today's Guppy, Dorado, minimap2, mosdepth, modkit versions are nowhere in the repo</td><td>This is the methods-reproducibility reference for the thesis. Losing it means reading the PDF again</td></tr>
+      <tr><td>5</td><td>Record the LOD survey and the missing-ablation gap</td><td>Established at 21:53; not written anywhere</td><td>"Only 2 of 6 axes have a number, and no single-modality ablation exists" is the clearest opening this thesis has found for its own contribution</td></tr>
+      <tr><td>6</td><td>Record the <code>-F 0x900</code> defect in the paper's fragment-length command</td><td>Found at 21:35 while reading Methods</td><td>Anyone reproducing that one-liner double-counts secondary and supplementary alignments</td></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:11.6px;">UNANSWERED, AND CARRIED FORWARD</td></tr>
+      <tr class="hl"><td>7</td><td><b>BM-0001 protocol v1.1</b> &mdash; did not move today</td><td><code>workflow_state.yaml</code> still <code>current_stage: DESIGN</code>, <code>last_status: REDESIGN_REQUIRED</code>; <code>protocols/</code> holds nothing past <code>v1.0_locked.md</code></td><td>Yesterday's QC blocked on QC-01 and QC-02. The retention sweep that would settle the mechanism claim is still unrun</td></tr>
+      <tr><td>8</td><td>Is there tissue WGS for the same individual?</td><td>Asked at 16:51, never answered</td><td>It decides whether a tumour-informed ecDNA junction-tracking route is possible at all &mdash; the only route that reaches 10⁻⁵</td></tr>
+      <tr><td>9</td><td>Which internal number is authoritative: <b>43 samples TF&gt;0.30</b> or <b>32 patients TF&gt;0.46</b>?</td><td>The paper contradicts itself between Results and Methods</td><td>Standing instruction from today: <i>cite neither until a peer-reviewed version exists</i></td></tr>
+    </table>
+
+    <div class="takeaway warn">Takeaway: items 4&ndash;6 share one failure mode &mdash; <b>a whole day of paper reading produced no repo artifact</b>. The only files touched today were <code>build.js</code>, the <code>.pptx</code>, and the user's own note. Nothing is committed.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>

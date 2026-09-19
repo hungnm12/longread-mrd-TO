@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:11px;">
+    <div class="slide-label">Deck construction</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">One slide, rebuilt eight minutes later &mdash; a title became a question, and text became a picture</h2>
+    <p class="lead">The user's instruction: <i>"slide ecDNA nên để trả lời câu hỏi <b>Why can ecDNA remain detectable when ordinary genome-wide ctDNA signal becomes weak?</b> nên là ít text thôi dùng hình ảnh đi"</i></p>
+
+    <div style="display:flex;gap:16px;align-items:stretch;">
+      <div style="flex:1;border:1px solid #ffccc7;border-radius:6px;padding:11px 14px;background:#fff8f7;">
+        <div class="before-label" style="margin-bottom:6px;">16:10 &mdash; first version</div>
+        <div style="font-size:16px;font-weight:700;color:#a8071a;margin-bottom:7px;">"ecDNA &mdash; the lesion short reads cannot see"</div>
+        <div style="font-size:14px;color:#595959;line-height:1.55;">Three columns of text: <i>What it is / How SIMMA sees it / What it buys</i>, plus three footer cards. Carried <code>3&ndash;4 months</code> lead time, <code>7&ndash;15 months</code> clearance, <code>65 of 792 = 8.2%</code>, <code>1,000 computer-made mixtures</code>.</div>
+        <div style="font-size:13.5px;color:#a8071a;margin-top:8px;"><b>Problem:</b> the title asserts a property; the reader still has to work out why.</div>
+      </div>
+
+      <div style="flex:1;border:1px solid #b7eb8f;border-radius:6px;padding:11px 14px;background:#f6ffed;">
+        <div class="after-label" style="margin-bottom:6px;">16:14 &mdash; rebuilt in place</div>
+        <div style="font-size:16px;font-weight:700;color:#135200;margin-bottom:7px;">"Why ecDNA outlives the genome-wide signal"</div>
+        <div style="font-size:14px;color:#595959;line-height:1.55;">Two <b>mirrored</b> panels on an identical background, so the only visible difference is the mechanism: <b>2 copies</b> of any region per tumour cell vs <b>hundreds</b> of copies of one small region &mdash; then the same two at low tumour fraction, one sinking under the detection threshold, one still a spike.</div>
+        <div style="font-size:13.5px;color:#135200;margin-top:8px;"><b>Kept text:</b> <i>"Not because the circle survives longer &mdash; it fragments in plasma like any other cfDNA. There is simply more of it."</i></div>
+      </div>
+    </div>
+
+    <div class="info-card yellow" style="font-size:14px;">
+      <div class="card-title">And the overclaim the script caught, at 17:26</div>
+      Writing the ~90-second speaking script exposed a label problem: the left panel says <code>GENOME-WIDE SIGNAL</code>, but the evidence behind the slide is ecDNA beating <b>broad copy number</b> only. SIMMA's reported multimodal LOD (<b>~1×10⁻⁴</b>) is in fact <b>better</b> than its reported ecDNA LOD (<b>~1×10⁻³</b>) &mdash; so as labelled, the slide invites the claim that ecDNA beats the whole model. A relabel to <code>BROAD COPY NUMBER</code> was proposed at 17:26 and again at 21:41. <b class="old">It is still not applied.</b>
+    </div>
+
+    <div class="takeaway">Takeaway: the editing rule that emerged today is <b>one slide, one question, answered by the picture</b> &mdash; and writing the script, not reviewing the slide, is what caught the claim the picture was quietly making.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>

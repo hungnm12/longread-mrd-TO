@@ -91,3 +91,11 @@ site/.wrangler/
 # Scratch output lane — nothing here is tracked
 outputs/temporary/*
 !outputs/temporary/.gitkeep
+
+# Daily work-log working sets: keep the report HTML, never commit raw session
+# transcripts (they carry absolute server paths and colleagues' directory names)
+outputs/accepted/daily-html/**/data/transcript_*.txt
+outputs/accepted/daily-html/**/assets
+research/daily-logs/**/data/transcript_*.txt
+research/daily-logs/**/data/extract.err
+research/daily-logs/**/assets

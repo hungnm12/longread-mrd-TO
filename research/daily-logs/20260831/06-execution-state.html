@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:12px;">
+    <div class="slide-label">Execution state</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">The run finished clean, and reproduced a months-old result to four figures</h2>
+    <p class="lead">16:24 &rarr; 17:02 local. <b>42 BAM passes, 0 failures, 21,043&nbsp;s CPU</b> (mean 513&nbsp;s), 27/27 artifacts written and checksummed, 5 deviations all classified <code>Methodology changed: NO</code>.</p>
+
+    <div style="display:flex;gap:14px;align-items:stretch;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#135200;">Reproducibility &mdash; two implementations written months apart</div>
+        <table class="ruletable" style="font-size:15.5px;">
+          <tr><th>Quantity (HCC1395 TF0 rep1)</th><th style="width:105px;">EXP-S1-022</th><th style="width:105px;">This run</th></tr>
+          <tr><td>consensus positions</td><td>1,153,835</td><td class="new-c">1,153,835</td></tr>
+          <tr><td>confident positions</td><td>353,719</td><td class="new-c">353,719</td></tr>
+          <tr><td>cut / gated / kept</td><td>0.0769 / 39 / 10</td><td class="new-c">0.0769 / 39 / 10</td></tr>
+          <tr class="hl"><td><code>zlo_min</code> B0 at 0.1%</td><td>+0.74</td><td class="new-c">+0.7396</td></tr>
+          <tr class="hl"><td><code>zlo_min</code> B1 at 0.1%</td><td>+2.30</td><td class="new-c">+2.2995</td></tr>
+        </table>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#135200;">Leakage &mdash; verified by evidence, not declared</div>
+        <div class="info-card green" style="font-size:14.5px;">
+          <div class="card-title">31 paths opened by 42 workers, all captured</div>
+          28 dilution BAMs + 2 candidate frames + <code>mrdz/score.py</code>. <b>No matched-normal BAM, no SEQC2 or orthogonal truth VCF, no panel of normals, no population database.</b> Consensus, confident-position set and cutoff are fitted per sample on that sample alone.
+        </div>
+        <div class="info-card yellow" style="font-size:14.5px;">
+          <div class="card-title">Negative results kept, not dropped</div>
+          0.01% not detected in any arm (<code>z_lo</code> &minus;4.11 to +0.38). The exploratory COLO829 chr1 arm is reported <b>degenerate</b> &mdash; consensus 97,789 vs the primary run's 1,153,835, every blank yields zero kept ALT reads &rarr; <code>no estimate</code>. Exactly the consensus-limited failure review_003 predicted in advance.
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">Takeaway: nothing about the execution is in dispute &mdash; and that is what makes the next page's finding a <b>methodology</b> finding rather than a bug.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>

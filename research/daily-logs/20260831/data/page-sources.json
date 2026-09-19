@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "report_kind": "daily",
+  "report_date": "2026-08-31",
+  "manifest": "session-manifest.json",
+  "pages": [
+    {
+      "page": "01-today-map.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        },
+        {
+          "source": "claude",
+          "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1"
+        },
+        {
+          "source": "claude",
+          "session_id": "7a509925-1add-4aed-90b3-072bacb00486"
+        },
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        }
+      ]
+    },
+    {
+      "page": "02-signal-roles.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        },
+        {
+          "source": "claude",
+          "session_id": "7a509925-1add-4aed-90b3-072bacb00486"
+        }
+      ]
+    },
+    {
+      "page": "03-two-denominators.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5a081983-86c3-4800-9831-7b33599ea8a1"
+        }
+      ]
+    },
+    {
+      "page": "04-review-loop.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        }
+      ]
+    },
+    {
+      "page": "05-control-design.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        }
+      ]
+    },
+    {
+      "page": "06-execution-state.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        }
+      ]
+    },
+    {
+      "page": "08-registered-outcome.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        }
+      ]
+    },
+    {
+      "page": "09-qc-reversal.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        }
+      ]
+    },
+    {
+      "page": "10-claim-scope.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        }
+      ]
+    },
+    {
+      "page": "07-open-items.html",
+      "sessions": [
+        {
+          "source": "claude",
+          "session_id": "5cc09158-2059-4f41-9c25-b9f1abe3f4e2"
+        },
+        {
+          "source": "claude",
+          "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<style>
+  .oi .ruletable th, .oi .ruletable td { padding:3px 8px; }
+  .oi .ruletable { font-size:12.5px; line-height:1.35; }
+  .oi .ruletable code { font-size:11.5px; padding:0 3px; }
+  .oi .takeaway { margin-top:6px; padding:7px 12px; font-size:13px; }
+</style>
+<div class="slide-outer">
+  <div class="slide oi" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:6px;">
+    <div class="slide-label">Open items</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">What tomorrow starts with &mdash; and where each item is stuck</h2>
+    <p class="lead">Ten items, as of 20:08 local. Four of them are one job: <b>protocol v1.1</b>, which QC has already constrained before a line of it is written.</p>
+
+    <table class="ruletable">
+      <tr><th style="width:30px;">#</th><th style="width:255px;">Item</th><th style="width:310px;">Stuck where</th><th>Why it matters</th></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">PROTOCOL v1.1 &mdash; THE WORKFLOW IS SITTING AT THIS GATE</td></tr>
+      <tr class="hl"><td>1</td><td>Draft v1.1 resolving <b>QC-01</b> (S4 passed by C2) and <b>QC-02</b> (incomparable count scales)</td><td><code>workflow_state.yaml</code>: <code>current_stage: DESIGN</code>, <code>last_status: REDESIGN_REQUIRED</code>, <code>design_iteration: 5</code> &rarr; 6. No <code>v1.1</code> file exists</td><td>The whole lifecycle is blocked here. v1.0 and EXEC-001 are preserved unchanged &mdash; v1.1 is a new draft, not a mutation</td></tr>
+      <tr class="hl"><td>2</td><td>Run the <b>retention sweep</b> QC named as the settling comparison</td><td>Not started. Computable from the same 42 passes; needs no new methodological assumption</td><td>Trace each arm's <code>zlo_min</code> against realised ALT retention and ask whether B1's curve is above C2's <i>at matched retention</i>. That is the mechanism test S4 failed to be</td></tr>
+      <tr class="hl"><td>3</td><td>Label every new criterion <b>POST HOC</b>, permanently</td><td>A rule with nothing yet written to enforce it</td><td>They will be authored after C2's ratio was seen. They may qualify or withdraw the v1.0 conclusion; they may never be reported as preregistered, and v1.0's outcome must appear beside them in full</td></tr>
+      <tr><td>4</td><td>Fold deviations <b>D3</b> and <b>D4</b> into v1.1</td><td>Recorded as standing deviations against v1.0</td><td>Both are corrections of internal inconsistencies in the locked protocol, not executor choices &mdash; leaving them as deviations hides that</td></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">DECISIONS NOT YET MADE</td></tr>
+      <tr class="hl"><td>5</td><td>How to handle reads whose MM/ML tags fail to parse</td><td><b>1,935 rejected reads per 25&times; pass</b>; no missingness rule in v1.0 covers this case</td><td>Must be decided as a recorded amendment in v1.1, not silently &mdash; and under the same strictly-harder rule</td></tr>
+      <tr><td>6</td><td>Whether BM-0001 gets an entry in <code>research/experiments/registry/</code></td><td>Lives only under <code>research/benchmarks/</code>; no <code>EXP-</code> id assigned</td><td>The 2026-08-25 note required methylation to be "a separate experiment, separately registered". The registration half is still missing</td></tr>
+      <tr><td>7</td><td>Write the evidence summary with QC-03's scope stated</td><td>No summary exists &mdash; QC withholds it until QC passes</td><td>"Methylation enables 0.1% detection" is true of <b>one</b> of four individual &times; construction cells. The summary has to say which</td></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">KNOWN, UNSCHEDULED</td></tr>
+      <tr class="hl"><td>8</td><td>Nothing is committed</td><td><code>git status</code> in <code>mrd/</code>: <b>193+ changed or untracked paths</b>, the entire benchmark included</td><td>Protocol lock, 5 reviews, EXEC-001 and the QC report exist only in the working tree</td></tr>
+      <tr><td>9</td><td>Write the signal-role decision into <code>claim-boundaries.md</code></td><td>Settled in conversation at 16:22 only &mdash; "CN is a positive control, not evidence"; "fragment length is unusable here"</td><td>The most defence-relevant conclusion of the day exists nowhere in the repo</td></tr>
+      <tr><td>10</td><td>Apply the SIMMA citation rule in the thesis draft</td><td>Decided at 14:45; the draft still has no literature section written to it</td><td>Cite it for conformal prediction and hold-out scale (43 individuals vs 6), not as an ecDNA paper</td></tr>
+    </table>
+
+    <div class="takeaway warn">Takeaway: the day ends with <b>a positive registered result that its own QC will not let you use yet</b>. Items 1&ndash;4 are the price of keeping it honest, and item 2 is the one that decides whether the mechanism claim survives.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>

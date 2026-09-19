@@ -1,0 +1,216 @@
+=== RESULT 1 — per-target size and power, leg (i), AXIS-L, THE RULE AS INSTALLED ===
+(empirical 5th-percentile bootstrap rule; region filter applied; n_tau re-derived per resample)
+ind      mdl f     vc  tau   n_tau         sim_sd_D P(discrim) P(hold)H0 P(hold)1.5x P(hold)2x
+HCC1395  I     1.0 V1   0.10 [np.int64(4), np.int64(4), np.int64(4)]      nan      0.000       nan         nan       nan
+HCC1395  I     1.0 V1   0.20 [np.int64(9), np.int64(7), np.int64(9)]    1.130      0.567     0.044       0.195     0.425
+HCC1395  I     1.0 V1   0.30 [np.int64(14), np.int64(10), np.int64(14)]    1.079      0.724     0.071       0.271     0.558
+HCC1395  I     1.0 V1   0.40 [np.int64(18), np.int64(14), np.int64(18)]    0.979      0.744     0.075       0.326     0.660
+HCC1395  I     1.0 V1   0.50 [np.int64(22), np.int64(18), np.int64(22)]    0.934      0.824     0.067       0.387     0.753
+HCC1395  I     1.0 V1   0.60 [np.int64(27), np.int64(21), np.int64(27)]    0.900      0.890     0.064       0.439     0.822
+HCC1395  I     1.0 V1   0.70 [np.int64(31), np.int64(24), np.int64(31)]    0.864      0.911     0.050       0.503     0.891
+HCC1395  I     1.0 V2   0.10 [np.int64(4), np.int64(4), np.int64(4)]      nan      0.000       nan         nan       nan
+HCC1395  I     1.0 V2   0.20 [np.int64(9), np.int64(7), np.int64(9)]    1.761      0.582     0.047       0.175     0.351
+HCC1395  I     1.0 V2   0.30 [np.int64(14), np.int64(10), np.int64(14)]    1.734      0.838     0.080       0.269     0.485
+HCC1395  I     1.0 V2   0.40 [np.int64(18), np.int64(14), np.int64(18)]    1.666      0.920     0.081       0.332     0.597
+HCC1395  I     1.0 V2   0.50 [np.int64(22), np.int64(18), np.int64(22)]    1.567      0.960     0.079       0.383     0.705
+HCC1395  I     1.0 V2   0.60 [np.int64(27), np.int64(21), np.int64(27)]    1.467      0.973     0.083       0.450     0.794
+HCC1395  I     1.0 V2   0.70 [np.int64(31), np.int64(24), np.int64(31)]    1.416      0.979     0.071       0.523     0.856
+HCC1395  I    11.7 V1   0.10 [np.int64(4), np.int64(4), np.int64(4)]      nan      0.000       nan         nan       nan
+HCC1395  I    11.7 V1   0.20 [np.int64(9), np.int64(7), np.int64(9)]   11.700      0.632     0.011       0.045     0.104
+HCC1395  I    11.7 V1   0.30 [np.int64(14), np.int64(10), np.int64(14)]   11.149      0.920     0.016       0.051     0.094
+HCC1395  I    11.7 V1   0.40 [np.int64(18), np.int64(14), np.int64(18)]   11.051      0.979     0.018       0.035     0.066
+HCC1395  I    11.7 V1   0.50 [np.int64(22), np.int64(18), np.int64(22)]   10.307      0.994     0.008       0.025     0.045
+HCC1395  I    11.7 V1   0.60 [np.int64(27), np.int64(21), np.int64(27)]   10.040      0.985     0.010       0.024     0.023
+HCC1395  I    11.7 V1   0.70 [np.int64(31), np.int64(24), np.int64(31)]    9.428      0.998     0.006       0.015     0.004
+HCC1395  I    11.7 V2   0.10 [np.int64(4), np.int64(4), np.int64(4)]      nan      0.000       nan         nan       nan
+HCC1395  I    11.7 V2   0.20 [np.int64(9), np.int64(7), np.int64(9)]   16.412      0.633     0.000       0.006     0.011
+HCC1395  I    11.7 V2   0.30 [np.int64(14), np.int64(10), np.int64(14)]   16.670      0.917     0.006       0.005     0.008
+HCC1395  I    11.7 V2   0.40 [np.int64(18), np.int64(14), np.int64(18)]   16.804      0.981     0.006       0.007     0.005
+HCC1395  I    11.7 V2   0.50 [np.int64(22), np.int64(18), np.int64(22)]   15.895      0.990     0.005       0.006     0.004
+HCC1395  I    11.7 V2   0.60 [np.int64(27), np.int64(21), np.int64(27)]   15.476      0.997     0.008       0.004     0.000
+HCC1395  I    11.7 V2   0.70 [np.int64(31), np.int64(24), np.int64(31)]   14.587      0.999     0.004       0.004     0.000
+HCC1395  C     1.0 V1   0.10 [np.int64(4), np.int64(4), np.int64(4)]      nan      0.000       nan         nan       nan
+HCC1395  C     1.0 V1   0.20 [np.int64(9), np.int64(7), np.int64(9)]    0.563      0.358     0.304       0.559     0.725
+HCC1395  C     1.0 V1   0.30 [np.int64(14), np.int64(10), np.int64(14)]    0.506      0.642     0.324       0.652     0.840
+HCC1395  C     1.0 V1   0.40 [np.int64(18), np.int64(14), np.int64(18)]    0.476      0.853     0.321       0.709     0.913
+HCC1395  C     1.0 V1   0.50 [np.int64(22), np.int64(18), np.int64(22)]    0.438      0.950     0.307       0.744     0.944
+HCC1395  C     1.0 V1   0.60 [np.int64(27), np.int64(21), np.int64(27)]    0.416      0.973     0.314       0.795     0.977
+HCC1395  C     1.0 V1   0.70 [np.int64(31), np.int64(24), np.int64(31)]    0.393      0.980     0.312       0.830     0.994
+HCC1395  C     1.0 V2   0.10 [np.int64(4), np.int64(4), np.int64(4)]      nan      0.000       nan         nan       nan
+HCC1395  C     1.0 V2   0.20 [np.int64(9), np.int64(7), np.int64(9)]    0.933      0.473     0.295       0.506     0.667
+HCC1395  C     1.0 V2   0.30 [np.int64(14), np.int64(10), np.int64(14)]    0.976      0.766     0.317       0.624     0.805
+HCC1395  C     1.0 V2   0.40 [np.int64(18), np.int64(14), np.int64(18)]    0.897      0.922     0.340       0.696     0.894
+HCC1395  C     1.0 V2   0.50 [np.int64(22), np.int64(18), np.int64(22)]    0.801      0.968     0.337       0.745     0.934
+HCC1395  C     1.0 V2   0.60 [np.int64(27), np.int64(21), np.int64(27)]    0.727      0.981     0.351       0.799     0.975
+HCC1395  C     1.0 V2   0.70 [np.int64(31), np.int64(24), np.int64(31)]    0.676      0.986     0.358       0.843     0.993
+HCC1395  C    11.7 V1   0.10 [np.int64(4), np.int64(4), np.int64(4)]      nan      0.000       nan         nan       nan
+HCC1395  C    11.7 V1   0.20 [np.int64(9), np.int64(7), np.int64(9)]    5.909      0.552     0.145       0.177     0.241
+HCC1395  C    11.7 V1   0.30 [np.int64(14), np.int64(10), np.int64(14)]    5.380      0.839     0.083       0.154     0.231
+HCC1395  C    11.7 V1   0.40 [np.int64(18), np.int64(14), np.int64(18)]    5.063      0.941     0.060       0.110     0.187
+HCC1395  C    11.7 V1   0.50 [np.int64(22), np.int64(18), np.int64(22)]    4.804      0.972     0.032       0.070     0.114
+HCC1395  C    11.7 V1   0.60 [np.int64(27), np.int64(21), np.int64(27)]    4.494      0.986     0.015       0.035     0.057
+HCC1395  C    11.7 V1   0.70 [np.int64(31), np.int64(24), np.int64(31)]    4.196      0.980     0.010       0.013     0.016
+HCC1395  C    11.7 V2   0.10 [np.int64(4), np.int64(4), np.int64(4)]      nan      0.000       nan         nan       nan
+HCC1395  C    11.7 V2   0.20 [np.int64(9), np.int64(7), np.int64(9)]    8.025      0.552     0.000       0.000     0.000
+HCC1395  C    11.7 V2   0.30 [np.int64(14), np.int64(10), np.int64(14)]    7.700      0.839     0.000       0.000     0.000
+HCC1395  C    11.7 V2   0.40 [np.int64(18), np.int64(14), np.int64(18)]    7.343      0.942     0.000       0.000     0.000
+HCC1395  C    11.7 V2   0.50 [np.int64(22), np.int64(18), np.int64(22)]    7.013      0.970     0.000       0.000     0.000
+HCC1395  C    11.7 V2   0.60 [np.int64(27), np.int64(21), np.int64(27)]    6.548      0.986     0.000       0.000     0.000
+HCC1395  C    11.7 V2   0.70 [np.int64(31), np.int64(24), np.int64(31)]    6.219      0.980     0.000       0.000     0.000
+COLO829  I     1.0 V1   0.10 [np.int64(5), np.int64(6), np.int64(6)]      nan      0.007       nan       0.027     0.084
+COLO829  I     1.0 V1   0.20 [np.int64(10), np.int64(11), np.int64(13)]    0.799      0.238     0.039       0.148     0.351
+COLO829  I     1.0 V1   0.30 [np.int64(15), np.int64(16), np.int64(19)]    0.737      0.620     0.070       0.245     0.498
+COLO829  I     1.0 V1   0.40 [np.int64(20), np.int64(22), np.int64(25)]    0.707      0.838     0.077       0.302     0.594
+COLO829  I     1.0 V1   0.50 [np.int64(26), np.int64(28), np.int64(32)]    0.679      0.931     0.082       0.347     0.655
+COLO829  I     1.0 V1   0.60 [np.int64(31), np.int64(33), np.int64(38)]    0.652      0.973     0.082       0.380     0.724
+COLO829  I     1.0 V1   0.70 [np.int64(36), np.int64(38), np.int64(44)]    0.615      0.990     0.089       0.421     0.774
+COLO829  I     1.0 V2   0.10 [np.int64(5), np.int64(6), np.int64(6)]      nan      0.008       nan       0.026     0.070
+COLO829  I     1.0 V2   0.20 [np.int64(10), np.int64(11), np.int64(13)]    1.977      0.255     0.060       0.195     0.392
+COLO829  I     1.0 V2   0.30 [np.int64(15), np.int64(16), np.int64(19)]    2.150      0.625     0.123       0.357     0.616
+COLO829  I     1.0 V2   0.40 [np.int64(20), np.int64(22), np.int64(25)]    2.135      0.840     0.152       0.437     0.729
+COLO829  I     1.0 V2   0.50 [np.int64(26), np.int64(28), np.int64(32)]    1.964      0.931     0.167       0.510     0.794
+COLO829  I     1.0 V2   0.60 [np.int64(31), np.int64(33), np.int64(38)]    1.846      0.973     0.171       0.576     0.859
+COLO829  I     1.0 V2   0.70 [np.int64(36), np.int64(38), np.int64(44)]    1.694      0.990     0.175       0.631     0.915
+COLO829  I    11.7 V1   0.10 [np.int64(5), np.int64(6), np.int64(6)]      nan      0.006       nan       0.044     0.024
+COLO829  I    11.7 V1   0.20 [np.int64(10), np.int64(11), np.int64(13)]    8.517      0.254     0.013       0.056     0.113
+COLO829  I    11.7 V1   0.30 [np.int64(15), np.int64(16), np.int64(19)]    7.799      0.645     0.025       0.092     0.156
+COLO829  I    11.7 V1   0.40 [np.int64(20), np.int64(22), np.int64(25)]    7.547      0.858     0.029       0.094     0.165
+COLO829  I    11.7 V1   0.50 [np.int64(26), np.int64(28), np.int64(32)]    7.372      0.946     0.033       0.114     0.175
+COLO829  I    11.7 V1   0.60 [np.int64(31), np.int64(33), np.int64(38)]    7.041      0.976     0.040       0.120     0.200
+COLO829  I    11.7 V1   0.70 [np.int64(36), np.int64(38), np.int64(44)]    6.914      0.989     0.039       0.123     0.219
+COLO829  I    11.7 V2   0.10 [np.int64(5), np.int64(6), np.int64(6)]      nan      0.006       nan       0.000     0.000
+COLO829  I    11.7 V2   0.20 [np.int64(10), np.int64(11), np.int64(13)]   15.634      0.254     0.000       0.007     0.018
+COLO829  I    11.7 V2   0.30 [np.int64(15), np.int64(16), np.int64(19)]   15.915      0.645     0.005       0.025     0.037
+COLO829  I    11.7 V2   0.40 [np.int64(20), np.int64(22), np.int64(25)]   16.037      0.858     0.010       0.036     0.046
+COLO829  I    11.7 V2   0.50 [np.int64(26), np.int64(28), np.int64(32)]   15.966      0.946     0.016       0.046     0.054
+COLO829  I    11.7 V2   0.60 [np.int64(31), np.int64(33), np.int64(38)]   15.144      0.976     0.023       0.053     0.061
+COLO829  I    11.7 V2   0.70 [np.int64(36), np.int64(38), np.int64(44)]   15.009      0.988     0.030       0.055     0.072
+COLO829  C     1.0 V1   0.10 [np.int64(5), np.int64(6), np.int64(6)]    0.727      0.022     0.161       0.225     0.326
+COLO829  C     1.0 V1   0.20 [np.int64(10), np.int64(11), np.int64(13)]    0.428      0.324     0.220       0.368     0.546
+COLO829  C     1.0 V1   0.30 [np.int64(15), np.int64(16), np.int64(19)]    0.406      0.617     0.252       0.454     0.670
+COLO829  C     1.0 V1   0.40 [np.int64(20), np.int64(22), np.int64(25)]    0.389      0.804     0.269       0.519     0.770
+COLO829  C     1.0 V1   0.50 [np.int64(26), np.int64(28), np.int64(32)]    0.366      0.908     0.265       0.589     0.831
+COLO829  C     1.0 V1   0.60 [np.int64(31), np.int64(33), np.int64(38)]    0.345      0.954     0.279       0.635     0.883
+COLO829  C     1.0 V1   0.70 [np.int64(36), np.int64(38), np.int64(44)]    0.324      0.976     0.273       0.664     0.921
+COLO829  C     1.0 V2   0.10 [np.int64(5), np.int64(6), np.int64(6)]    0.945      0.048     0.157       0.241     0.293
+COLO829  C     1.0 V2   0.20 [np.int64(10), np.int64(11), np.int64(13)]    1.242      0.328     0.263       0.400     0.569
+COLO829  C     1.0 V2   0.30 [np.int64(15), np.int64(16), np.int64(19)]    1.495      0.618     0.322       0.523     0.724
+COLO829  C     1.0 V2   0.40 [np.int64(20), np.int64(22), np.int64(25)]    1.491      0.804     0.347       0.605     0.823
+COLO829  C     1.0 V2   0.50 [np.int64(26), np.int64(28), np.int64(32)]    1.347      0.908     0.362       0.679     0.878
+COLO829  C     1.0 V2   0.60 [np.int64(31), np.int64(33), np.int64(38)]    1.223      0.954     0.366       0.716     0.916
+COLO829  C     1.0 V2   0.70 [np.int64(36), np.int64(38), np.int64(44)]    1.072      0.976     0.377       0.749     0.953
+COLO829  C    11.7 V1   0.10 [np.int64(5), np.int64(6), np.int64(6)]    6.239      0.054     0.059       0.119     0.153
+COLO829  C    11.7 V1   0.20 [np.int64(10), np.int64(11), np.int64(13)]    4.744      0.310     0.090       0.142     0.224
+COLO829  C    11.7 V1   0.30 [np.int64(15), np.int64(16), np.int64(19)]    4.482      0.611     0.090       0.173     0.275
+COLO829  C    11.7 V1   0.40 [np.int64(20), np.int64(22), np.int64(25)]    4.268      0.820     0.091       0.193     0.307
+COLO829  C    11.7 V1   0.50 [np.int64(26), np.int64(28), np.int64(32)]    4.048      0.918     0.084       0.227     0.373
+COLO829  C    11.7 V1   0.60 [np.int64(31), np.int64(33), np.int64(38)]    3.841      0.961     0.081       0.241     0.404
+COLO829  C    11.7 V1   0.70 [np.int64(36), np.int64(38), np.int64(44)]    3.647      0.978     0.076       0.247     0.454
+COLO829  C    11.7 V2   0.10 [np.int64(5), np.int64(6), np.int64(6)]    8.822      0.054     0.000       0.000     0.000
+COLO829  C    11.7 V2   0.20 [np.int64(10), np.int64(11), np.int64(13)]    8.498      0.310     0.000       0.003     0.004
+COLO829  C    11.7 V2   0.30 [np.int64(15), np.int64(16), np.int64(19)]    8.588      0.611     0.003       0.008     0.011
+COLO829  C    11.7 V2   0.40 [np.int64(20), np.int64(22), np.int64(25)]    8.498      0.820     0.007       0.013     0.027
+COLO829  C    11.7 V2   0.50 [np.int64(26), np.int64(28), np.int64(32)]    8.297      0.918     0.011       0.025     0.040
+COLO829  C    11.7 V2   0.60 [np.int64(31), np.int64(33), np.int64(38)]    7.909      0.961     0.015       0.038     0.049
+COLO829  C    11.7 V2   0.70 [np.int64(36), np.int64(38), np.int64(44)]    7.483      0.978     0.017       0.043     0.072
+
+=== RESULT 2 — the all-target intersection (S6-STRICT), leg (i), AXIS-L ===
+ind      mdl f     alt    P(>=3 discrim)  P(HOLDS everywhere)  P(some target FAILS)
+HCC1395  I     1.0 H0               1.000                0.006                0.213
+HCC1395  I     1.0 1.5x             0.998                0.067                0.020
+HCC1395  I     1.0 2x               0.999                0.245                0.002
+HCC1395  I    11.7 H0               0.999                0.000                0.052
+HCC1395  I    11.7 1.5x             1.000                0.000                0.021
+HCC1395  I    11.7 2x               1.000                0.000                0.011
+HCC1395  C     1.0 H0               0.998                0.119                0.577
+HCC1395  C     1.0 1.5x             1.000                0.422                0.201
+HCC1395  C     1.0 2x               1.000                0.666                0.066
+HCC1395  C    11.7 H0               0.999                0.000                0.181
+HCC1395  C    11.7 1.5x             1.000                0.000                0.056
+HCC1395  C    11.7 2x               1.000                0.000                0.019
+COLO829  I     1.0 H0               0.975                0.014                0.322
+COLO829  I     1.0 1.5x             0.988                0.111                0.052
+COLO829  I     1.0 2x               0.988                0.311                0.005
+COLO829  I    11.7 H0               0.978                0.003                0.093
+COLO829  I    11.7 1.5x             0.986                0.003                0.026
+COLO829  I    11.7 2x               0.989                0.003                0.012
+COLO829  C     1.0 H0               0.969                0.109                0.580
+COLO829  C     1.0 1.5x             0.984                0.316                0.287
+COLO829  C     1.0 2x               0.983                0.539                0.109
+COLO829  C    11.7 H0               0.975                0.003                0.210
+COLO829  C    11.7 1.5x             0.986                0.007                0.078
+COLO829  C    11.7 2x               0.985                0.006                0.035
+
+=== RESULT 3 — the POOLED rule §20.4 installs, leg (i), AXIS-L, per cell ===
+(5th percentile of the joint-bootstrap mean over DISCRIMINATING targets of D*/null_sd*)
+ind      mdl f     vc  P(hold)H0 P(hold)1.5x P(hold)2x P(fail)H0
+HCC1395  I     1.0 V1      0.093       0.502     0.870     0.093
+HCC1395  I     1.0 V2      0.107       0.500     0.820     0.110
+HCC1395  I    11.7 V1      0.015       0.078     0.173     0.017
+HCC1395  I    11.7 V2      0.007       0.006     0.003     0.004
+HCC1395  C     1.0 V1      0.313       0.778     0.954     0.316
+HCC1395  C     1.0 V2      0.329       0.774     0.953     0.339
+HCC1395  C    11.7 V1      0.049       0.179     0.381     0.049
+HCC1395  C    11.7 V2      0.000       0.000     0.000     0.000
+COLO829  I     1.0 V1      0.107       0.457     0.784     0.117
+COLO829  I     1.0 V2      0.182       0.589     0.867     0.178
+COLO829  I    11.7 V1      0.035       0.153     0.281     0.033
+COLO829  I    11.7 V2      0.019       0.056     0.069     0.019
+COLO829  C     1.0 V1      0.269       0.608     0.865     0.295
+COLO829  C     1.0 V2      0.343       0.677     0.904     0.359
+COLO829  C    11.7 V1      0.070       0.256     0.440     0.068
+COLO829  C    11.7 V2      0.013       0.036     0.050     0.009
+
+=== RESULT 4 - the CENTRED family-wise refutation rule of section 15.5.8 (d) ===
+(size under exact equivalence; power when the COMPARATOR is 1.5x / 2x B1)
+ind      mdl f     vc  size     pow 1.5x  pow 2x   
+HCC1395  I     1.0 V1     0.158     0.268     0.310
+HCC1395  I     1.0 V2     0.199     0.412     0.505
+HCC1395  I    11.7 V1     0.119     0.112     0.111
+HCC1395  I    11.7 V2     0.145     0.153     0.169
+HCC1395  C     1.0 V1     0.245     0.371     0.442
+HCC1395  C     1.0 V2     0.417     0.674     0.762
+HCC1395  C    11.7 V1     0.123     0.099     0.062
+HCC1395  C    11.7 V2     0.155     0.247     0.285
+COLO829  I     1.0 V1     0.206     0.287     0.370
+COLO829  I     1.0 V2     0.253     0.413     0.480
+COLO829  I    11.7 V1     0.159     0.188     0.186
+COLO829  I    11.7 V2     0.193     0.255     0.272
+COLO829  C     1.0 V1     0.298     0.448     0.532
+COLO829  C     1.0 V2     0.407     0.579     0.692
+COLO829  C    11.7 V1     0.192     0.222     0.226
+COLO829  C    11.7 V2     0.245     0.368     0.417
+
+=== RESULT 5 — UPPER BOUND on the criterion §20.4 actually installs ===
+S6 as installed requires 4 legs x 2 axes x 2 constructions per individual, and S7
+doubles it. This script simulates leg (i) on AXIS-L only. What it can bound:
+ind      mdl f     UB P(S6|ind) H0  UB 1.5x   UB 2x    
+HCC1395  I     1.0            0.093     0.500     0.820
+HCC1395  I    11.7            0.007     0.006     0.003
+HCC1395  C     1.0            0.313     0.774     0.953
+HCC1395  C    11.7            0.000     0.000     0.000
+COLO829  I     1.0            0.107     0.457     0.784
+COLO829  I    11.7            0.019     0.056     0.069
+COLO829  C     1.0            0.269     0.608     0.865
+COLO829  C    11.7            0.013     0.036     0.050
+
+UPPER BOUND on P(S6 HOLDS on BOTH individuals) = product of the per-individual
+upper bounds (leg (i), AXIS-L, pooled, both constructions):
+  MODEL-I f= 1.0 H0     <= 0.0100
+  MODEL-I f= 1.0 1.5x   <= 0.2285
+  MODEL-I f= 1.0 2x     <= 0.6428
+  MODEL-I f=11.7 H0     <= 0.0001
+  MODEL-I f=11.7 1.5x   <= 0.0003
+  MODEL-I f=11.7 2x     <= 0.0002
+  MODEL-C f= 1.0 H0     <= 0.0843
+  MODEL-C f= 1.0 1.5x   <= 0.4707
+  MODEL-C f= 1.0 2x     <= 0.8242
+  MODEL-C f=11.7 H0     <= 0.0000
+  MODEL-C f=11.7 1.5x   <= 0.0000
+  MODEL-C f=11.7 2x     <= 0.0000
+
+P(L-I) = 0 EXACTLY, independently of every figure above: §21 F11 freezes EXEC-001's
+retention_ratio values, on which HCC1395 has point(B1) 1.6741 < point(C2) 1.6839, so
+§16.2's dominance rule cannot return HOLDS for S5 leg (b) on that individual. See
+§20.6 clause 0b. THE POWER OF S6 AS INSTALLED IS UNKNOWN AND STRICTLY LOWER THAN THE
+LEG-(i) FIGURES ABOVE.

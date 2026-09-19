@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<style>
+  .mc-board { position:relative; height:352px; }
+  .mc-board svg { display:block; }
+  .mc svg text { font-family: inherit; }
+  .mc .lbl { font-size:11px; fill:#374151; }
+  .mc .lane { font-size:12.5px; font-weight:700; letter-spacing:.4px; }
+  .mc .bartxt { font-size:11px; font-weight:600; }
+  .mc .edge { fill:none; stroke-linecap:round; stroke-width:2.5; }
+  .mc .edge.red { stroke:#d4380d; }
+  .mc .edge.green { stroke:#389e0d; }
+  .mc .edge.dashed { stroke:#bfbfbf; stroke-dasharray:7 6; stroke-width:2; }
+</style>
+<div class="slide-outer">
+  <div class="slide pad-std">
+    <div class="slide-label">Thesis premise</div>
+    <h2>The bottleneck is not how deep short-read looks — it is what looking costs in material</h2>
+    <p class="lead">The framing "short-read cannot dig into plasma biology, therefore ONT" was <b class="old">rejected</b>: nearly everything known about cfDNA biology was found with short reads, and short reads beat ONT on per-base accuracy. Scale below: <b>1 ng = 80 px</b>.</p>
+
+    <div class="cols mc" style="gap:18px;align-items:stretch">
+      <div style="flex:0 0 720px">
+        <div class="mc-board">
+        <svg viewBox="0 0 720 352" preserveAspectRatio="xMidYMid meet" width="720" height="352">
+          <defs>
+            <marker id="ar-red" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="9.5" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 Z" fill="#d4380d"/></marker>
+            <marker id="ar-green" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="9.5" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 Z" fill="#389e0d"/></marker>
+          </defs>
+
+          <text class="lane" x="0" y="14" fill="#a8071a">SHORT-READ &mdash; one assay per modality</text>
+
+          <rect x="150" y="22" width="400" height="28" rx="4" fill="#f5f5f5" stroke="#8c8c8c"/>
+          <text class="bartxt" x="350" y="41" text-anchor="middle" fill="#262626">5 ng cfDNA &mdash; a few mL of paediatric plasma</text>
+
+          <path class="edge red" d="M215 52 L215 68" marker-end="url(#ar-red)"/>
+          <path class="edge red" d="M350 52 L350 68" marker-end="url(#ar-red)"/>
+          <path class="edge red" d="M485 52 L485 68" marker-end="url(#ar-red)"/>
+
+          <rect x="150" y="72" width="130" height="26" rx="4" fill="#fff1f0" stroke="#ff4d4f"/>
+          <rect x="285" y="72" width="130" height="26" rx="4" fill="#fff1f0" stroke="#ff4d4f"/>
+          <rect x="420" y="72" width="130" height="26" rx="4" fill="#fff1f0" stroke="#ff4d4f"/>
+          <text class="bartxt" x="215" y="89" text-anchor="middle" fill="#820014">SNV &middot; 1.67 ng</text>
+          <text class="bartxt" x="350" y="89" text-anchor="middle" fill="#820014">Methylation &middot; 1.67 ng</text>
+          <text class="bartxt" x="485" y="89" text-anchor="middle" fill="#820014">Fragmentomics &middot; 1.67 ng</text>
+
+          <path class="edge red" d="M350 100 L350 128" marker-end="url(#ar-red)"/>
+          <text class="lbl" x="358" y="118" fill="#a8071a">bisulfite conversion</text>
+
+          <rect x="285" y="132" width="27" height="26" rx="3" fill="#ffccc7" stroke="#ff4d4f"/>
+          <rect x="285" y="132" width="7" height="26" rx="2" fill="#a8071a"/>
+          <text class="lbl" x="322" y="144" fill="#a8071a" font-weight="700">0.08 &ndash; 0.33 ng survives</text>
+          <text class="lbl" x="322" y="157" fill="#595959">bisulfite destroys 80&ndash;95% of the material</text>
+          <text class="lbl" x="322" y="170" fill="#595959">and turns C&rarr;T, erasing C&rarr;T mutations too</text>
+
+          <path class="edge dashed" d="M150 196 L550 196"/>
+          <text class="lbl" x="350" y="190" text-anchor="middle" fill="#8c8c8c">&#10007; three tubes = three different molecules &mdash; no way to ask whether the SAME fragment carries two signals</text>
+
+          <text class="lane" x="0" y="228" fill="#135200">ONT &mdash; one aliquot, all modalities</text>
+
+          <rect x="150" y="236" width="400" height="28" rx="4" fill="#f6ffed" stroke="#52c41a"/>
+          <text class="bartxt" x="350" y="255" text-anchor="middle" fill="#135200">5 ng cfDNA &mdash; not split, not copied, not converted</text>
+
+          <path class="edge green" d="M197 296 L197 270" marker-end="url(#ar-green)"/>
+          <path class="edge green" d="M301 296 L301 270" marker-end="url(#ar-green)"/>
+          <path class="edge green" d="M405 296 L405 270" marker-end="url(#ar-green)"/>
+          <path class="edge green" d="M509 296 L509 270" marker-end="url(#ar-green)"/>
+
+          <rect x="150" y="298" width="94" height="24" rx="4" fill="#f6ffed" stroke="#52c41a"/>
+          <rect x="254" y="298" width="94" height="24" rx="4" fill="#f6ffed" stroke="#52c41a"/>
+          <rect x="358" y="298" width="94" height="24" rx="4" fill="#f6ffed" stroke="#52c41a"/>
+          <rect x="462" y="298" width="94" height="24" rx="4" fill="#f6ffed" stroke="#52c41a"/>
+          <text class="bartxt" x="197" y="314" text-anchor="middle" fill="#135200">SNV</text>
+          <text class="bartxt" x="301" y="314" text-anchor="middle" fill="#135200">methylation</text>
+          <text class="bartxt" x="405" y="314" text-anchor="middle" fill="#135200">fragment length</text>
+          <text class="bartxt" x="509" y="314" text-anchor="middle" fill="#135200">end motif</text>
+          <text class="lbl" x="353" y="342" text-anchor="middle" fill="#135200" font-weight="700">&#8593; all four signals come off the SAME molecule &mdash; the linkage short-read cannot make</text>
+        </svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="info-card red" style="margin-bottom:10px">
+          <div class="card-title">The claim that dies in 30 seconds</div>
+          <div style="font-size:13.5px;line-height:1.65">"Short-read cannot dig into the biology of plasma, so we need ONT."<br>
+          Short reads found the <b>167 bp</b> nucleosome periodicity, tumour-fragment shortening, end motifs and tissue-of-origin &mdash; and cfDNA is only 167 bp, so paired-end reads cover the whole molecule. <b>ONT's read-length advantage is nearly useless here.</b></div>
+        </div>
+        <div class="info-card green">
+          <div class="card-title">The claim that holds</div>
+          <div style="font-size:13.5px;line-height:1.65">"With a few nanograms, short-read forces a choice &mdash; either mutation or methylation, never both on the same molecule. ONT does not force that choice."<br>
+          A single fragment carrying a mutation <i>and</i> a tumour methylation pattern <i>and</i> anomalous length has a near-zero chance of being noise. That linkage is what is lost when the tube is split.</div>
+        </div>
+        <div class="info-card yellow" style="margin-top:10px">
+          <div class="card-title">Short-read's own record &mdash; do not write it off</div>
+          <div style="font-size:13px;line-height:1.65">It found the 167 bp nucleosome periodicity, that tumour cfDNA runs 10&ndash;20 bp shorter, tumour-vs-normal end motifs, tissue-of-origin from methylation &mdash; and it counts mutations at 1-in-10,000 <b>more accurately than ONT does</b>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Must be named in the thesis, or a reviewer will name it for me: <b>EM-seq</b> (enzymatic, far gentler than bisulfite) and <b>Duet / TAPS</b> (retain mutation and methylation together). The argument survives, but only if it moves to: even those give no end-motif and native fragment length at single-molecule resolution.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+</script>
+</body>
+</html>

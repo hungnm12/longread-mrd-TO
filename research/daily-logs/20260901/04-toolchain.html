@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:9px;">
+    <div class="slide-label">Paper interrogation</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">What SIMMA is actually built from: one novel tool, and a fragmentomics axis with no tool at all</h2>
+    <p class="lead">Read straight out of the Methods in <code>mrd/data/papers/2026.04.08.26350410v1.full.pdf</code>. Common backbone for every axis: Guppy <b>v6.5.7</b> (WGS, super-accurate) or Dorado <b>v7.4.14</b> (targeted) &rarr; minimap2 <b>v2.24</b> <code>-ax map-ont --MD</code> &rarr; GRCh38 or T2T-CHM13v2.0 &rarr; mosdepth <b>v0.3.3</b>.</p>
+
+    <table class="ruletable" style="font-size:14.5px;">
+      <tr><th style="width:190px;">Axis</th><th style="width:400px;">Core tool</th><th>What it is</th></tr>
+      <tr class="hl"><td><b>Copy number / TF</b></td><td><b>COPYBARA</b> <span style="color:#888;">github.com/cortes-ciriano-lab/copybara-cf</span></td><td class="new-c">Written for this paper &mdash; the only genuinely new tool in the stack</td></tr>
+      <tr class="hl"><td><b>ecDNA quantify + track</b></td><td><b>COPYBARA-focal</b> &mdash; calls ecDNA at absolute CN &ge; 8, BH-FDR</td><td class="new-c">Written for this paper. Threshold is FDR-adjusted <b>P &lt; 0.5</b> &mdash; not 0.05</td></tr>
+      <tr><td>Methylation</td><td>modkit <b>v0.3.2</b> (<code>summary --only-mapped</code>, <code>pileup --cpg</code>, <code>extract --cpg</code>); <b>v0.5.0</b> for <code>stats</code> over repeats</td><td>Off the shelf (ONT). Satellite classes need the T2T alignment</td></tr>
+      <tr class="drop"><td><b>Fragmentomics</b></td><td><code>samtools view $bam | cut -f 10 | perl -ne 'print length($_)'</code> + hard-coded size bins</td><td>No tool at all. And no filter flag &mdash; <code>-F 0x900</code> is missing, so secondary and supplementary alignments are double-counted</td></tr>
+      <tr><td>SV / breakpoints</td><td>SAVANA <b>v1.3.7</b> tumour-only, 10 kb bins, primed by COPYBARA TF+ploidy, <code>savana classify --cna_rescue</code></td><td>Off the shelf</td></tr>
+      <tr><td>ecDNA assembly + cross-check</td><td>hifiasm <b>v0.25.0-r726</b> <code>-ont</code>; CoRAL v1 and AmpliconArchitect v1.2.2 as corroboration</td><td>Off the shelf</td></tr>
+      <tr><td>Model</td><td>scikit-learn Random Forest + conformal prediction</td><td>Off the shelf. Takes <b>7 feature blocks</b> &mdash; copy number, methylation, fragmentomics. <b class="old">No ecDNA or SV block exists</b></td></tr>
+    </table>
+
+    <div class="takeaway">Takeaway: only <b>COPYBARA</b> and <b>COPYBARA-focal</b> are new; everything else is a version pin away from reproducible. ecDNA runs as a <b>parallel track</b>, never as a model feature &mdash; the design guardrail being that a signal present in only <b>65/792 (8.2%)</b> of samples does not belong in a feature column.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>

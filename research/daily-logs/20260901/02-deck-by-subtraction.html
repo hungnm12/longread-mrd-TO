@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:9px;">
+    <div class="slide-label">Deck construction</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">The deck grew once and shrank twice &mdash; every cut came from a written note</h2>
+    <p class="lead">Four checkpoints, evenly spaced (clock times labelled &mdash; the gaps are not to scale). Feedback arrived as a file, <code>research/user-note/september/1_9_slidenote.md</code>, in two blocks.</p>
+
+    <svg viewBox="0 0 1200 268" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+      <text x="6" y="26" font-size="12.5" fill="#8c8c8c">slides in the deck</text>
+      <line x1="80" y1="200" x2="1150" y2="200" stroke="#d9d9d9" stroke-width="1.5"/>
+
+      <rect x="150" y="44" width="130" height="156" rx="3" fill="#bfdbfe"/>
+      <text x="215" y="36" font-size="22" font-weight="700" fill="#1d4ed8" text-anchor="middle">13</text>
+      <text x="215" y="220" font-size="13" font-weight="700" fill="#262626" text-anchor="middle">15:09 · restructure</text>
+      <text x="215" y="238" font-size="12" fill="#595959" text-anchor="middle">dropped "Liquid biopsy is</text>
+      <text x="215" y="253" font-size="12" fill="#595959" text-anchor="middle">forced to choose"</text>
+
+      <rect x="420" y="32" width="130" height="168" rx="3" fill="#93c5fd"/>
+      <text x="485" y="24" font-size="22" font-weight="700" fill="#1d4ed8" text-anchor="middle">14</text>
+      <text x="485" y="220" font-size="13" font-weight="700" fill="#262626" text-anchor="middle">16:10 · ecDNA added</text>
+      <text x="485" y="238" font-size="12" fill="#595959" text-anchor="middle">then rebuilt at 16:14 to</text>
+      <text x="485" y="253" font-size="12" fill="#595959" text-anchor="middle">answer one question</text>
+
+      <rect x="690" y="32" width="130" height="168" rx="3" fill="#93c5fd"/>
+      <text x="755" y="24" font-size="22" font-weight="700" fill="#1d4ed8" text-anchor="middle">14</text>
+      <text x="755" y="220" font-size="13" font-weight="700" fill="#262626" text-anchor="middle">21:41 · note, 5 items</text>
+      <text x="755" y="238" font-size="12" fill="#595959" text-anchor="middle">count unchanged &mdash; the</text>
+      <text x="755" y="253" font-size="12" fill="#595959" text-anchor="middle">numbers came out instead</text>
+
+      <rect x="960" y="68" width="130" height="132" rx="3" fill="#52c41a"/>
+      <text x="1025" y="60" font-size="22" font-weight="700" fill="#135200" text-anchor="middle">11</text>
+      <text x="1025" y="220" font-size="13" font-weight="700" fill="#135200" text-anchor="middle">22:09 · note, 7 items</text>
+      <text x="1025" y="238" font-size="12" fill="#595959" text-anchor="middle">slides 12&ndash;14 removed</text>
+      <text x="1025" y="253" font-size="12" fill="#595959" text-anchor="middle">("bỏ 12-14")</text>
+    </svg>
+
+    <table class="ruletable" style="font-size:14px;">
+      <tr><th style="width:230px;">What the note asked for</th><th style="width:400px;">Dropped</th><th>Kept, and promoted</th></tr>
+      <tr class="hl"><td>Experimental design: <i>"bỏ hết các con số"</i></td><td class="old-c"><code>0.5×</code> · <code>R = 0.97</code> · <code>792/277</code> · <code>76-gene</code> · native barcode · pool 16&ndash;32 · the whole "Read this precisely" band</td><td class="new-c"><code>2,282×</code> and <code>5 × 10⁻⁴</code>, moved into a full-width bottom band at <b>34 pt</b> under <code>TARGETED BRANCH, AFTER CONSENSUS CALLING</code></td></tr>
+      <tr><td>Integration: strip the jargon</td><td class="old-c"><code>500 trees</code> · R² · RMSE · Y-scrambling metric cards · the "No SNV feature" line</td><td>Retitled <b>"Three signals in, one number out"</b></td></tr>
+      <tr><td>Four signals: <i>"trả lời thật đơn giản"</i></td><td class="old-c">Every explanatory sentence</td><td>Noun phrases only: <i>Tumour fraction · Tumour presence, and tumour type · Which molecules are tumour-derived · Which lesion, and whether it is changing</i></td></tr>
+      <tr><td>Critical reading: <i>"chỉ giữ lại các claim strong"</i></td><td class="old-c">Every non-STRONG row</td><td>Three rows: C1 the protocol · C2 long-read signal · C3 ecDNA in cfDNA</td></tr>
+    </table>
+
+    <div class="takeaway">Takeaway: nothing was added to make the deck fuller &mdash; <b>the two numbers that survived got bigger instead</b>, and the closing line now names what the deck does <i>not</i> rely on: the paper's clinical lead time and its sensitivity limit.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>

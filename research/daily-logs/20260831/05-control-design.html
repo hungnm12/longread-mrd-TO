@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <style>
+  .cd .ruletable th, .cd .ruletable td { padding:5px 9px; }
+  .cd .ruletable { line-height:1.4; }
+  .cd .takeaway { margin-top:6px; padding:8px 13px; }
+</style>
+<div class="slide cd" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:6px;">
+    <div class="slide-label">Protocol governance</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">One confound, killed twice: is methylation selecting tumour reads, or is the filter just more aggressive?</h2>
+    <p class="lead">Two of the fourteen findings were structural &mdash; without them the benchmark could have produced a clean win that meant nothing.</p>
+
+    <table class="ruletable" style="font-size:14px;">
+      <tr><th style="width:78px;">Finding</th><th style="width:330px;">What was wrong</th><th>What the protocol now does instead</th></tr>
+      <tr class="hl">
+        <td><b class="old">B001</b><br><span style="font-size:11.5px;color:#888;">review_001</span></td>
+        <td><b>The control was arithmetically identical to the treatment.</b> The outcome-matched random control was matched on B1's own answer, so it could never differ from it</td>
+        <td>Control removed. Replaced by two controls matched on the <b>cutoff rule</b>, not on the answer: <b class="new">C1</b> permuted-score (read&ndash;score correspondence destroyed) and <b class="new">C2</b> CpG-density. Neither can equal B1 by construction</td>
+      </tr>
+      <tr class="hl">
+        <td><b class="old">B014</b><br><span style="font-size:11.5px;color:#888;">review_004</span></td>
+        <td><b>The confound came back through C1.</b> C1 retains ~<b>5%</b> of ALT reads in every sample, while B1's measured retention on HCC1395 was <b>26%</b> in the blank, <b>67%</b> at 1%, <b>37&ndash;50%</b> at 0.1%. A z-win over C1 could be counting statistics, not selection</td>
+        <td>New preregistered condition <b class="new">S4 (differential retention)</b>: B1's ALT retention at 0.1% must exceed its retention in the blank, on both individuals, with C1's 5th/95th percentiles over 200 draws as the noise band</td>
+      </tr>
+      <tr>
+        <td>B003</td>
+        <td>The variance model was being chosen silently &mdash; two different constructions existed in the project record</td>
+        <td>Both preregistered together: <b>V1</b> plug-in binomial sd (frozen <code>mrdz</code> construction) and <b>V2</b> Poisson &radic;(mean_blank). S1 must hold under <b>both</b></td>
+      </tr>
+      <tr>
+        <td>B006</td>
+        <td>S3 would have been decided by noise; two of five blank replicates went unused</td>
+        <td>All five TF0 replicates executed per individual (24 &rarr; 28 BAM passes); S3 is leave-one-out over all five, failing if <b>any</b> of the ten blanks returns <code>detected</code></td>
+      </tr>
+      <tr>
+        <td>&mdash;</td>
+        <td>A pre-registration that its own results can revise is not one</td>
+        <td>Named non-success outcomes that may not be relabelled: <code>MECHANISM UNSUPPORTED</code>, <code>SD-MODEL DEPENDENT</code>, <code>NOT REPLICATED</code>, <code>FAILURE TO DEMONSTRATE</code>. No p-value is computed, so none can be selected after the fact</td>
+      </tr>
+    </table>
+
+    <div class="takeaway warn">Takeaway: <b>a z-win over C1 alone does not establish the mechanism</b> &mdash; S4 is the leg that carries the claim. The protocol says so in writing, before the first number exists.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>

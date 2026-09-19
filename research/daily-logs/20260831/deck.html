@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Report</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<style>
+/* Progress-report slides - shared styles (used by both single pages and the built deck) */
+:root { --br:#1677ff; --old:#d4380d; --new:#389e0d; --warn:#d48806; }
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, "Segoe UI", "Noto Sans TC", Roboto, sans-serif;
+  margin: 0; padding: 40px 32px; background: #f5f6f8; color: #1f2329; line-height: 1.65;
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1 { font-size: 26px; margin: 0 0 4px; }
+.sub { color: #6b7280; margin-bottom: 32px; }
+
+/* ---- Shared semantic styles (work in both .slide and legacy .block) ---- */
+.lead { color: #444; margin: 0 0 14px; font-size: 15px; }
+.lead b.old { color: var(--old); }
+.lead b.new { color: var(--new); }
+.mermaid { display: flex; justify-content: center; margin: 8px 0; }
+.takeaway {
+  margin-top: 14px; padding: 10px 14px; border-radius: 6px; font-size: 13.5px;
+  background: #f6ffed; border-left: 4px solid var(--new); color: #135200;
+}
+.takeaway b { color: #237804; }
+.takeaway.warn { background:#fffbe6; border-left-color:var(--warn); color:#613400; }
+.takeaway.warn b { color:#ad6800; }
+.ruletable { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 4px; }
+.ruletable th, .ruletable td { border: 1px solid #e5e7eb; padding: 7px 10px; text-align: left; vertical-align: top; }
+.ruletable th { background: #fafafa; }
+.ruletable tr.drop td { background: #fff1f0; color: #820014; text-decoration: line-through; text-decoration-color:#d4380d80; }
+.ruletable tr.drop td:first-child { text-decoration: none; }
+.ruletable tr.hl td { background: #fffbe6; }
+.keep { color: var(--new); font-weight: 600; }
+.drop-badge { color:#fff; background:var(--old); font-size:11px; font-weight:700; padding:1px 8px; border-radius:99px; }
+.smrn-badge { color:#fff; background:var(--new); font-size:11px; font-weight:700; padding:1px 8px; border-radius:99px; }
+.old-c { color: var(--old); font-weight: 600; }
+.new-c { color: var(--new); font-weight: 600; }
+code { background: #f0f1f3; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+.num { display: none; }
+
+/* Dashed section divider (splits one slide into upper/lower sections) */
+.divider { border: none; border-top: 1px dashed #d1d5db; margin: 4px 0; }
+
+/* Small layout helpers */
+.row  { display:flex; align-items:center; gap:8px; }        /* horizontal row, vertically centred */
+.cols { display:flex; align-items:flex-start; gap:20px; }   /* two columns, top-aligned */
+.col  { flex:1; min-width:0; }                              /* equal-width column */
+
+/* ---- Fixed 16:9 slide container (PPTX default 1280x720) ---- */
+.slide-outer {
+  width: 100%;
+  max-width: 1040px;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto 32px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.12);
+  background: #fff;
+  container-type: inline-size;
+}
+.slide {
+  position: absolute;
+  width: 1280px;
+  height: 720px;
+  top: 0; left: 0;
+  /* CSS-driven scaling first (container query, no JS needed); scaleSlide() later overrides the
+     same value with an inline style as a fallback where container queries are unsupported.
+     The two do not conflict. */
+  transform: scale(calc(100cqw / 1280px));
+  transform-origin: top left;
+  background: #fff;
+  padding: 52px 60px 40px;
+  font-size: 15px;
+}
+/* Standard padding class: use this by default. Most slides (title + body, medium density) take
+   it, and pages should avoid hard-coding their own inline padding - slightly different inline px
+   values per page are the usual reason titles "look misaligned from page to page" in one deck.
+   A page whose layout genuinely needs it (e.g. the full-width mermaid of layout 3, or a cover)
+   may override the padding inline, but consistency is the rule and the reason should be noted
+   on that page. */
+.slide.pad-std { padding: 28px 44px 18px; }
+/* The .slide scaling must be removed while mermaid renders. mermaid inserts labels into the DOM
+   and sizes its node boxes from getBoundingClientRect; with transform: scale(k) on .slide the
+   measurement comes back k times smaller, so node boxes are off by k (the deck default is
+   1040/1280 = 0.8125) and the text ends up 23% larger than its box and gets clipped - the
+   classic "broken layout". visibility:hidden during measurement stops the user seeing an
+   unscaled 1280px flash. */
+body.mermaid-measuring .slide { transform: none !important; visibility: hidden; }
+
+.slide h2 { font-size: 22px; margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+/* Top-left section label (pages in one section share identical text) */
+.slide-label {
+  position: absolute;
+  top: 14px; left: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---- Legacy .block support (backwards compatibility; not used by new pages) ---- */
+.block {
+  background: #fff; border-radius: 14px; padding: 24px 28px; margin-bottom: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.block h2 { font-size: 20px; margin: 0 0 6px; display: flex; align-items: center; gap: 12px; }
+
+/* ---- Contents cover (agenda, optional) ---- */
+.cover { text-align: center; padding: 64px 28px; }
+.cover .kicker { color: var(--br); font-weight: 700; letter-spacing: 2px; font-size: 14px; }
+.cover h2 { display: block; font-size: 34px; margin: 14px 0 10px; line-height: 1.3; }
+.cover .desc { color: #6b7280; font-size: 16px; }
+.cover .meta { margin-top: 28px; color: #8a8f98; font-size: 14px; }
+.cover .agenda { display: inline-flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; justify-content: center; }
+.cover .agenda span {
+  background: #eef2ff; color: #3344aa; border-radius: 99px; padding: 8px 18px; font-size: 14px; font-weight: 600;
+}
+
+/* ---- Presentation mode (slide mode) ---- */
+body.slides { padding: 0; background: #111; overflow: hidden; }
+body.slides .wrap > h1,
+body.slides .wrap > .sub { display: none; }
+
+/* Legacy .block behaviour in slide mode */
+body.slides .block { display: none; }
+body.slides .block.active { display: block; animation: fade .25s ease; }
+
+/* Current .slide-outer in slide mode: centred full screen */
+body.slides .slide-outer {
+  display: none;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: #111;
+}
+body.slides .slide-outer.active {
+  display: block;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  max-width: none;
+  aspect-ratio: unset;
+  z-index: 10;
+  overflow: hidden;
+}
+/* transform/position of a slide is set by JS */
+body.slides .slide-outer.active .slide {
+  box-shadow: 0 4px 32px rgba(0,0,0,.4);
+}
+
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---- Nav bar ---- */
+.nav {
+  position: fixed; left: 0; right: 0; bottom: 0; display: none;
+  align-items: center; justify-content: center; gap: 18px;
+  padding: 12px; background: rgba(0,0,0,.55); backdrop-filter: blur(6px);
+  z-index: 50; transition: transform .2s ease;
+}
+body.slides .nav { display: flex; }
+body.slides .nav.nav-collapsed { transform: translateY(100%); }
+
+/* ---- Nav-bar collapse button ---- */
+.nav-toggle {
+  display: none;
+  position: fixed; bottom: 8px; right: 12px; z-index: 60;
+  border: none; background: rgba(255,255,255,.18); color: #fff;
+  font-size: 13px; width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; backdrop-filter: blur(4px); transition: background .2s;
+  align-items: center; justify-content: center; line-height: 1;
+}
+body.slides .nav-toggle { display: flex; }
+.nav-toggle:hover { background: rgba(255,255,255,.35); }
+.nav button {
+  border: none; background: var(--br); color: #fff; font-size: 15px; font-weight: 600;
+  padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: opacity .2s;
+}
+.nav button:disabled { opacity: .35; cursor: default; }
+.nav .dots { display: flex; gap: 9px; }
+.nav .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.3); cursor: pointer; transition: all .2s; }
+.nav .dot.on { background: #fff; transform: scale(1.3); }
+.nav .count { font-size: 13px; color: rgba(255,255,255,.7); min-width: 42px; text-align: center; }
+.modetoggle {
+  position: fixed; top: 16px; right: 16px; z-index: 60;
+  border: 1px solid #d0d5dd; background: #fff; color: #344054; font-size: 13px; font-weight: 600;
+  padding: 6px 14px; border-radius: 8px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+.modetoggle:hover { border-color: var(--br); color: var(--br); }
+
+/* ════════════════════════════════════════════════════
+   Layout components
+   The classes below can be used directly inside any .slide, with no inline style
+   ════════════════════════════════════════════════════ */
+
+/* ---- Info card (left colour band) ---- */
+/* Usage: <div class="info-card red"><div class="card-title">Title</div>body</div> */
+.info-card {
+  border-left: 4px solid; padding: 10px 12px; border-radius: 0 4px 4px 0;
+  font-size: 13px; line-height: 1.6;
+}
+.info-card .card-title { font-weight: 700; margin-bottom: 4px; }
+.info-card.red   { background:#fff1f0; border-color:#ff4d4f; color:#5c1a1a; }
+.info-card.red   .card-title { color:#820014; }
+.info-card.green { background:#f6ffed; border-color:#52c41a; color:#1a4d1a; }
+.info-card.green .card-title { color:#135200; }
+.info-card.blue  { background:#e6f4ff; border-color:#1677ff; color:#0b3d91; }
+.info-card.blue  .card-title { color:#003a8c; }
+.info-card.yellow{ background:#fffbe6; border-color:#faad14; color:#613400; }
+.info-card.yellow .card-title { color:#ad6800; }
+
+/* ---- Vertical dashed divider (between two columns) ---- */
+/* Usage: <div class="vdivider"></div> inside a .cols or display:flex container */
+.vdivider {
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, #d1d5db 0, #d1d5db 6px, transparent 6px, transparent 12px);
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* ---- Pipeline diagram (.ap-* family) ---- */
+/* For Write Path / Read Path two-lane flows */
+/* Lane container */
+.ap-lane {
+  border-radius: 14px; padding: 14px 18px 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ap-lane-lbl {
+  font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.ap-lane-lbl::after {
+  content: ''; flex: 1; height: 1px; border-radius: 1px;
+  background: currentColor; opacity: .25;
+}
+/* Node (white card; the top border sets its colour) */
+.ap-node {
+  background: #fff; border-radius: 10px; flex: 1; min-width: 0;
+  padding: 12px 13px 11px; display: flex; flex-direction: column;
+  gap: 7px; box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+.ap-badge {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0;
+}
+.ap-title {
+  font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; gap: 7px; margin-bottom: 1px;
+}
+.ap-sub  { font-size: 9.5px; color: #6b7280; line-height: 1.5; }
+.ap-chip {
+  display: inline-block; font-size: 9px; font-weight: 600;
+  padding: 2px 8px; border-radius: 10px; margin-top: 2px;
+}
+/* Reads bar (illustrative) */
+.ap-rb   { height: 5px; border-radius: 3px; margin: 2px 0; }
+/* Code badge */
+.ap-code {
+  font-size: 9px; font-weight: 700;
+  padding: 2.5px 7px; border-radius: 5px;
+}
+/* Arrow connector */
+.ap-arr {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  width: 46px; flex-shrink: 0; gap: 3px;
+}
+.ap-arr-bar {
+  position: relative; width: 100%; height: 3.5px; border-radius: 2px;
+}
+.ap-arr-head {
+  position: absolute; right: -10px; top: -6px;
+  border-top: 7px solid transparent; border-bottom: 7px solid transparent;
+  /* border-left colour matches the .ap-arr-bar background; set inline */
+}
+.ap-arr-lbl { font-size: 8.5px; color: #9ca3af; text-align: center; line-height: 1.3; }
+
+/* ---- Before/After labels ---- */
+/* Usage: <div class="before-label">Before</div> / <div class="after-label">After</div> */
+.before-label {
+  font-size: 12px; font-weight: 700; color: #820014;
+  white-space: nowrap; min-width: 56px;
+}
+.after-label {
+  font-size: 12px; font-weight: 700; color: #135200;
+  white-space: nowrap; min-width: 56px;
+}
+
+</style>
+</head>
+<body>
+<button class="modetoggle" id="copyImgBtn" style="right:490px;" title="Copy the current page as an image (shortcut: c); on a non-secure connection it downloads a PNG instead">⧉ Copy page</button>
+<button class="modetoggle" id="exportPortableBtn" style="right:330px;">⇓ Export portable HTML</button>
+<button class="modetoggle" id="exportBtn" style="right:170px;">↓ Export PPTX</button>
+<button class="modetoggle" id="modeBtn">▶ Presentation mode</button>
+<div class="wrap">
+  <h1>Progress Report</h1>
+  <div class="sub">20260831</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:10px;">
+    <div class="slide-label">Today's map</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">Methylation went from "the one addable signal" to a locked benchmark, a positive result, and a QC refusal — in one day</h2>
+    <p class="lead">Five sessions, 2026-08-31. A paper-reading thread and an autonomous benchmark thread ran in parallel and landed on the same conclusion. The benchmark then ran to completion and its own QC sent it back. Nothing is committed.</p>
+
+    <table class="ruletable" style="font-size:16.5px;">
+      <tr><th style="width:170px;">Theme</th><th>What moved</th><th style="width:250px;">Representative evidence</th><th style="width:150px;">State at end of day</th></tr>
+      <tr class="hl">
+        <td><b>Signal inventory</b><br><span style="font-size:12px;color:#888;">4 tasks · 09:49–16:22</span></td>
+        <td>Which ONT signals the tumour/normal dilution data can actually carry, and in what role. The user's ordering was reversed: <b class="new">SNV is the baseline</b>, methylation the one addition; <b class="old">copy number is a positive control, not evidence</b>; fragment length unusable on machine-sheared cell-line DNA.</td>
+        <td>0.27 molecules vs 5,000,000 fragments from the same 9&nbsp;ng · ecDNA in 65/792 samples (8.2%)</td>
+        <td><b>Decided</b> — not yet written into <code>claim-boundaries.md</code></td>
+      </tr>
+      <tr class="hl">
+        <td><b>Protocol governance</b><br><span style="font-size:12px;color:#888;">2 tasks · 16:00–16:19</span></td>
+        <td>An autonomous design ↔ adversarial-review loop turned that conclusion into <code>BM-0001-methyl-gate-mrd</code>, frozen at <b class="new">v1.0 LOCKED</b> after 5 design and 5 review iterations and 14 closed blocking findings.</td>
+        <td>8 → 3 → 2 → 1 → 0 blocking issues · B001 degenerate control · B014 aggressiveness confound</td>
+        <td><b>Done</b> — checksum recorded, nothing committed</td>
+      </tr>
+      <tr class="hl">
+        <td><b>Execution &amp; QC</b><br><span style="font-size:12px;color:#888;">2 tasks · 16:20&ndash;17:10</span></td>
+        <td>28 BAM passes launched at parallelism 13–14 with inputs, seeds, feature provenance and environment captured before any number existed.</td>
+        <td>42 passes, 0 failures, 21,043 s CPU · reproduced EXP-S1-022 to 4 figures · S1&ndash;S4 all HELD &rarr; <b>H1 SUPPORTED</b></td>
+        <td><b class="old">REDESIGN_REQUIRED</b> &mdash; result preserved, not usable yet</td>
+      </tr>
+    </table>
+
+    <div class="takeaway">Takeaway: the day's output is <b>a decision about which signals may be claimed</b> and <b>a preregistration that cannot be revised by its own results</b> — no measurement has been produced yet.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <style>
+  .sr .ruletable th, .sr .ruletable td { padding:8px 10px; }
+  .sr .ruletable { line-height:1.4; }
+  .sr .takeaway { margin-top:6px; padding:8px 13px; }
+</style>
+<div class="slide sr" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:7px;">
+    <div class="slide-label">Signal inventory</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">SNV is the baseline, not an addition — and only one of the other three signals is testable here</h2>
+    <p class="lead">The user's proposal was "CN + methylation are the useful signals, and SNV too". The ordering was reversed: the thesis <b>is</b> an SNV counting rule on tumour-only candidates; everything else is an ablation branch asking "does adding this help?". Without that ordering there is no baseline left.</p>
+
+    <table class="ruletable" style="font-size:15px;">
+      <tr><th style="width:150px;">Signal</th><th style="width:290px;">What it answers in SIMMA</th><th>Role on <i>this</i> project's tumour/normal dilution data</th></tr>
+      <tr class="hl"><td><b>SNV</b></td>
+        <td>Not in the tumour-agnostic model at all — split into a separate targeted 76-gene UMI assay (ALK, TP53, MYC, CCND1, ATRX)</td>
+        <td><b class="new">The primary signal. This is the thesis.</b> A group with 792 real patient samples still separated SNV into its own assay rather than mixing it in — which pre-answers "why not just use SIMMA for the SNV problem?"</td></tr>
+      <tr class="hl"><td><b>Methylation</b></td>
+        <td>Detects samples where copy number sees nothing; also classifies tumour type. Strongest at satellite repeats, which only long reads can place</td>
+        <td><b class="new">The only genuinely new, testable addition.</b> MM/ML tags already present on the dilution BAMs, <code>5mCG_5hmCG</code> — computable without re-running the instrument</td></tr>
+      <tr><td><b>Copy number</b></td>
+        <td>The best quantitative signal — reads tumour fraction off 500 kb bin deviations</td>
+        <td><b class="old">Positive control only, not evidence.</b> Cell line spiked into its own matched normal means CN tracks the mixing ratio by construction. If it <i>fails</i> to track, data prep is broken — that is all it can tell us</td></tr>
+      <tr class="drop"><td><b>Fragment length</b></td>
+        <td>An independent third vote; the short-fragment shift is visible even in CN-negative samples</td>
+        <td>Unusable — cell-line DNA is machine-sheared, so length reflects library preparation, not biology. Already recorded in <code>design-space/gaps.md</code></td></tr>
+      <tr class="drop"><td><b>ecDNA</b></td>
+        <td>Visible below 0.1× coverage; perfectly specific; per-patient junction fingerprint for longitudinal tracking</td>
+        <td>Out of scope — no ecDNA to track, and present in only <b>65/792 (8.2%)</b> of SIMMA's own cohort</td></tr>
+    </table>
+
+    <div class="takeaway">Takeaway: the paper's <b>title half (ecDNA) is the thinnest evidence and the least usable here</b>; the untitled half — methylation and conformal prediction over all 792 samples — is what this thesis should cite, as a hold-out-scale comparison (43 individuals vs this project's 6).</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:8px;">
+    <div class="slide-label">Signal inventory</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">Why methylation survives at low tumour fraction: the denominator changed, not the sample</h2>
+    <p class="lead">The same <b>9 ng of cfDNA</b> at <b>TF = 1e-4</b>, counted two ways. Log axis — each gridline is 100&times;.</p>
+
+    <svg viewBox="0 0 1200 258" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+      <defs>
+        <marker id="tick" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#8c8c8c"/>
+        </marker>
+      </defs>
+
+      <text x="8" y="44" font-size="17" font-weight="700" fill="#262626">SNV lens</text>
+      <text x="8" y="64" font-size="12.5" fill="#8c8c8c">count molecules crossing</text>
+      <text x="8" y="80" font-size="12.5" fill="#8c8c8c">ONE position (2,700 copies)</text>
+
+      <rect x="200" y="30" width="351" height="26" rx="3" fill="#d9d9d9"/>
+      <text x="559" y="49" font-size="14.5" fill="#595959">2,700 genome copies in the tube</text>
+
+      <rect x="200" y="64" width="34" height="26" rx="3" fill="#ff4d4f"/>
+      <text x="242" y="83" font-size="16" font-weight="700" fill="#a8071a">0.27 tumour molecules &#10007; most tubes contain none at all</text>
+
+      <line x1="8" y1="108" x2="1155" y2="108" stroke="#f0f0f0" stroke-width="1"/>
+
+      <text x="8" y="140" font-size="17" font-weight="700" fill="#262626">Methylation lens</text>
+      <text x="8" y="160" font-size="12.5" fill="#8c8c8c">count 167 bp fragments across</text>
+      <text x="8" y="176" font-size="12.5" fill="#8c8c8c">~28M CpG sites &#8212; every</text>
+      <text x="8" y="192" font-size="12.5" fill="#8c8c8c">read contributes</text>
+      <text x="8" y="192" font-size="12.5" fill="#8c8c8c">&nbsp;</text>
+
+      <rect x="200" y="126" width="927" height="26" rx="3" fill="#d9d9d9"/>
+      <text x="700" y="145" font-size="14.5" fill="#595959">~50,000,000,000 fragments in the tube</text>
+
+      <rect x="200" y="160" width="610" height="26" rx="3" fill="#52c41a"/>
+      <text x="818" y="179" font-size="16" font-weight="700" fill="#135200">5,000,000 tumour fragments &#10003;</text>
+
+      <line x1="200" y1="212" x2="1155" y2="212" stroke="#8c8c8c" stroke-width="1.5" marker-end="url(#tick)"/>
+      <g font-size="12" fill="#8c8c8c" text-anchor="middle">
+        <line x1="279" y1="208" x2="279" y2="216" stroke="#8c8c8c"/><text x="279" y="232">1</text>
+        <line x1="438" y1="208" x2="438" y2="216" stroke="#8c8c8c"/><text x="438" y="232">100</text>
+        <line x1="596" y1="208" x2="596" y2="216" stroke="#8c8c8c"/><text x="596" y="232">10&#8308;</text>
+        <line x1="754" y1="208" x2="754" y2="216" stroke="#8c8c8c"/><text x="754" y="232">10&#8310;</text>
+        <line x1="913" y1="208" x2="913" y2="216" stroke="#8c8c8c"/><text x="913" y="232">10&#8312;</text>
+        <line x1="1071" y1="208" x2="1071" y2="216" stroke="#8c8c8c"/><text x="1071" y="232">10&#185;&#8304;</text>
+      </g>
+      <text x="1155" y="252" font-size="12" fill="#8c8c8c" text-anchor="end">molecules / fragments, log scale</text>
+    </svg>
+
+    <div style="font-size:13.5px;font-weight:700;color:#a8071a;margin-top:2px;">Three things methylation still does NOT fix &mdash; all three must be said out loud in the thesis</div>
+    <div style="display:flex;gap:12px;">
+      <div class="info-card red" style="flex:1;font-size:12.5px;">
+        <div class="card-title">(a) The sampling limit</div>
+        It extracts more information <i>per</i> tumour molecule; it does not create tumour molecules. If the tube truly contains zero, methylation reads zero. Only drawing more blood helps.
+      </div>
+      <div class="info-card yellow" style="flex:1;font-size:12.5px;">
+        <div class="card-title">(b) Cell-of-origin confounding</div>
+        The mean shift also moves with chemotherapy, marrow suppression and inflammation. Pre-analytical handling matters too &mdash; plasma separated up to seven days after venepuncture.
+      </div>
+      <div class="info-card blue" style="flex:1;font-size:12.5px;">
+        <div class="card-title">(c) Sample-level, not molecule-level</div>
+        It says "this sample looks tumour-shifted". It never says "molecule #4,281 is tumour" &mdash; which is exactly why SIMMA wraps the output in conformal prediction.
+      </div>
+    </div>
+
+    <div class="takeaway">Takeaway: SNV asks for <b>one specific rare event</b> and dies of small <i>n</i>; methylation estimates a <b>mean shift over n &asymp; 10&#8310;</b>, where standard error falls as 1/&radic;n. Same tube, different denominator &mdash; not a better assay.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:8px;">
+    <div class="slide-label">Protocol governance</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">Five adversarial reviews drove blocking issues 8 &rarr; 0, then the protocol was frozen</h2>
+    <p class="lead"><code>prompt.md</code> asked for the full lifecycle with no human in the loop. The designer wrote, a <code>grill-me</code> reviewer attacked without editing, and the loop only exited on <b>zero blocking issues</b> &mdash; 16:05 to 16:55 local, benchmark <code>BM-0001-methyl-gate-mrd</code>.</p>
+
+    <div style="font-size:13.5px;color:#595959;">
+      <b style="color:#262626;">14</b> blocking findings raised, <b style="color:#262626;">14</b> resolved &nbsp;&middot;&nbsp;
+      <b style="color:#262626;">13</b> non-blocking raised, <b style="color:#262626;">13</b> adopted &nbsp;&middot;&nbsp;
+      <b class="old">0</b> deleted &nbsp;&middot;&nbsp; the reviewer also recorded an <b>addendum correcting two of its own findings</b> rather than editing them away
+    </div>
+
+    <svg viewBox="0 0 1200 296" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+      <defs>
+        <marker id="ar-g" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+          <path d="M0,0 L12,6 L0,12 Z" fill="#389e0d"/>
+        </marker>
+      </defs>
+
+      <text x="8" y="24" font-size="13" fill="#8c8c8c">blocking issues</text>
+      <line x1="60" y1="250" x2="1195" y2="250" stroke="#d9d9d9" stroke-width="1.5"/>
+
+      <!-- review 1 : 8 blocking -->
+      <rect x="110" y="90" width="90" height="160" rx="3" fill="#ff4d4f"/>
+      <text x="155" y="82" font-size="22" font-weight="700" fill="#a8071a" text-anchor="middle">8</text>
+      <text x="155" y="180" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">B001&ndash;B008</text>
+      <text x="155" y="268" font-size="13" fill="#595959" text-anchor="middle">review_001 &middot; on v0.1</text>
+      <text x="155" y="286" font-size="12" fill="#a8071a" text-anchor="middle">degenerate control</text>
+
+      <!-- review 2 : 3 -->
+      <rect x="300" y="190" width="90" height="60" rx="3" fill="#ff7a45"/>
+      <text x="345" y="182" font-size="22" font-weight="700" fill="#a8071a" text-anchor="middle">3</text>
+      <text x="345" y="268" font-size="13" fill="#595959" text-anchor="middle">review_002 &middot; on v0.2</text>
+      <text x="345" y="286" font-size="12" fill="#8c8c8c" text-anchor="middle">B009&ndash;B011 integer-score ties</text>
+
+      <!-- review 3 : 2 -->
+      <rect x="490" y="210" width="90" height="40" rx="3" fill="#ffa940"/>
+      <text x="535" y="202" font-size="22" font-weight="700" fill="#a8071a" text-anchor="middle">2</text>
+      <text x="535" y="268" font-size="13" fill="#595959" text-anchor="middle">review_003 &middot; on v0.3</text>
+      <text x="535" y="286" font-size="12" fill="#8c8c8c" text-anchor="middle">B012 arithmetic, B013 empty set</text>
+
+      <!-- review 4 : 1 -->
+      <rect x="680" y="230" width="90" height="20" rx="3" fill="#ffc53d"/>
+      <text x="725" y="222" font-size="22" font-weight="700" fill="#a8071a" text-anchor="middle">1</text>
+      <text x="725" y="268" font-size="13" fill="#595959" text-anchor="middle">review_004 &middot; on v0.4</text>
+      <text x="725" y="286" font-size="12" fill="#a8071a" text-anchor="middle">B014 confound returns via C1</text>
+
+      <!-- review 5 : 0 -->
+      <rect x="870" y="246" width="90" height="4" rx="2" fill="#52c41a"/>
+      <text x="915" y="238" font-size="22" font-weight="700" fill="#135200" text-anchor="middle">0</text>
+      <text x="915" y="268" font-size="13" fill="#595959" text-anchor="middle">review_005 &middot; on v0.5</text>
+      <text x="915" y="286" font-size="12" fill="#135200" text-anchor="middle" font-weight="700">REVIEW_PASS</text>
+
+      <path d="M975 200 L1015 200" stroke="#389e0d" stroke-width="2.5" fill="none" marker-end="url(#ar-g)"/>
+
+      <!-- lock -->
+      <rect x="1022" y="152" width="172" height="96" rx="6" fill="#f6ffed" stroke="#389e0d" stroke-width="2"/>
+      <text x="1108" y="180" font-size="17" font-weight="700" fill="#135200" text-anchor="middle">v1.0 LOCKED</text>
+      <text x="1108" y="202" font-size="12" fill="#389e0d" text-anchor="middle">20 lock gates PASS</text>
+      <text x="1108" y="220" font-size="11.5" fill="#8c8c8c" text-anchor="middle">sha256:9c615da4&hellip;</text>
+      <text x="1108" y="236" font-size="11.5" fill="#8c8c8c" text-anchor="middle">16:55 +08:00</text>
+
+      <!-- ledger strip -->
+    </svg>
+
+    <div style="display:flex;gap:14px;align-items:stretch;">
+      <div style="flex:1.25;border:1px solid #e5e7eb;border-radius:5px;padding:8px 11px;">
+        <div style="font-size:12px;font-weight:700;color:#8c8c8c;letter-spacing:.4px;">RESEARCH QUESTION, FROZEN AT LOCK</div>
+        <div style="font-size:13.5px;color:#262626;margin-top:3px;line-height:1.45;">Does adding an <b>oracle-free per-read methylation filter</b> to the frozen SNV-only gated detection score improve sample-level detection at <b>1% / 0.1% / 0.01%</b> tumour fraction, relative to the SNV-only score alone &mdash; and <b>does it replicate on a second individual?</b></div>
+      </div>
+      <div style="flex:1;border:1px solid #e5e7eb;border-radius:5px;padding:8px 11px;">
+        <div style="font-size:12px;font-weight:700;color:#8c8c8c;letter-spacing:.4px;">H1 HOLDS ONLY IF ALL FOUR HOLD</div>
+        <div style="font-size:13px;color:#262626;margin-top:3px;line-height:1.5;">
+          <b>S1</b> B1 beats B0, C1 and C2 at 0.1% on <b>both</b> individuals under <b>both</b> variance models &nbsp;&middot;&nbsp;
+          <b>S2</b> no level detected by B0 becomes undetected &nbsp;&middot;&nbsp;
+          <b>S3</b> none of the ten blanks returns <code>detected</code> &nbsp;&middot;&nbsp;
+          <b>S4</b> B1's ALT retention is <b>differential</b>, higher at 0.1% than in the blank
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">Takeaway: the loop's value is not that it reached zero &mdash; it is that <b>every finding, including the reviewer's own mistakes, stayed in the audit trail</b>, and the protocol was frozen with a checksum <b>before any number existed</b>.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <style>
+  .cd .ruletable th, .cd .ruletable td { padding:5px 9px; }
+  .cd .ruletable { line-height:1.4; }
+  .cd .takeaway { margin-top:6px; padding:8px 13px; }
+</style>
+<div class="slide cd" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:6px;">
+    <div class="slide-label">Protocol governance</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">One confound, killed twice: is methylation selecting tumour reads, or is the filter just more aggressive?</h2>
+    <p class="lead">Two of the fourteen findings were structural &mdash; without them the benchmark could have produced a clean win that meant nothing.</p>
+
+    <table class="ruletable" style="font-size:14px;">
+      <tr><th style="width:78px;">Finding</th><th style="width:330px;">What was wrong</th><th>What the protocol now does instead</th></tr>
+      <tr class="hl">
+        <td><b class="old">B001</b><br><span style="font-size:11.5px;color:#888;">review_001</span></td>
+        <td><b>The control was arithmetically identical to the treatment.</b> The outcome-matched random control was matched on B1's own answer, so it could never differ from it</td>
+        <td>Control removed. Replaced by two controls matched on the <b>cutoff rule</b>, not on the answer: <b class="new">C1</b> permuted-score (read&ndash;score correspondence destroyed) and <b class="new">C2</b> CpG-density. Neither can equal B1 by construction</td>
+      </tr>
+      <tr class="hl">
+        <td><b class="old">B014</b><br><span style="font-size:11.5px;color:#888;">review_004</span></td>
+        <td><b>The confound came back through C1.</b> C1 retains ~<b>5%</b> of ALT reads in every sample, while B1's measured retention on HCC1395 was <b>26%</b> in the blank, <b>67%</b> at 1%, <b>37&ndash;50%</b> at 0.1%. A z-win over C1 could be counting statistics, not selection</td>
+        <td>New preregistered condition <b class="new">S4 (differential retention)</b>: B1's ALT retention at 0.1% must exceed its retention in the blank, on both individuals, with C1's 5th/95th percentiles over 200 draws as the noise band</td>
+      </tr>
+      <tr>
+        <td>B003</td>
+        <td>The variance model was being chosen silently &mdash; two different constructions existed in the project record</td>
+        <td>Both preregistered together: <b>V1</b> plug-in binomial sd (frozen <code>mrdz</code> construction) and <b>V2</b> Poisson &radic;(mean_blank). S1 must hold under <b>both</b></td>
+      </tr>
+      <tr>
+        <td>B006</td>
+        <td>S3 would have been decided by noise; two of five blank replicates went unused</td>
+        <td>All five TF0 replicates executed per individual (24 &rarr; 28 BAM passes); S3 is leave-one-out over all five, failing if <b>any</b> of the ten blanks returns <code>detected</code></td>
+      </tr>
+      <tr>
+        <td>&mdash;</td>
+        <td>A pre-registration that its own results can revise is not one</td>
+        <td>Named non-success outcomes that may not be relabelled: <code>MECHANISM UNSUPPORTED</code>, <code>SD-MODEL DEPENDENT</code>, <code>NOT REPLICATED</code>, <code>FAILURE TO DEMONSTRATE</code>. No p-value is computed, so none can be selected after the fact</td>
+      </tr>
+    </table>
+
+    <div class="takeaway warn">Takeaway: <b>a z-win over C1 alone does not establish the mechanism</b> &mdash; S4 is the leg that carries the claim. The protocol says so in writing, before the first number exists.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:12px;">
+    <div class="slide-label">Execution state</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">The run finished clean, and reproduced a months-old result to four figures</h2>
+    <p class="lead">16:24 &rarr; 17:02 local. <b>42 BAM passes, 0 failures, 21,043&nbsp;s CPU</b> (mean 513&nbsp;s), 27/27 artifacts written and checksummed, 5 deviations all classified <code>Methodology changed: NO</code>.</p>
+
+    <div style="display:flex;gap:14px;align-items:stretch;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#135200;">Reproducibility &mdash; two implementations written months apart</div>
+        <table class="ruletable" style="font-size:15.5px;">
+          <tr><th>Quantity (HCC1395 TF0 rep1)</th><th style="width:105px;">EXP-S1-022</th><th style="width:105px;">This run</th></tr>
+          <tr><td>consensus positions</td><td>1,153,835</td><td class="new-c">1,153,835</td></tr>
+          <tr><td>confident positions</td><td>353,719</td><td class="new-c">353,719</td></tr>
+          <tr><td>cut / gated / kept</td><td>0.0769 / 39 / 10</td><td class="new-c">0.0769 / 39 / 10</td></tr>
+          <tr class="hl"><td><code>zlo_min</code> B0 at 0.1%</td><td>+0.74</td><td class="new-c">+0.7396</td></tr>
+          <tr class="hl"><td><code>zlo_min</code> B1 at 0.1%</td><td>+2.30</td><td class="new-c">+2.2995</td></tr>
+        </table>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#135200;">Leakage &mdash; verified by evidence, not declared</div>
+        <div class="info-card green" style="font-size:14.5px;">
+          <div class="card-title">31 paths opened by 42 workers, all captured</div>
+          28 dilution BAMs + 2 candidate frames + <code>mrdz/score.py</code>. <b>No matched-normal BAM, no SEQC2 or orthogonal truth VCF, no panel of normals, no population database.</b> Consensus, confident-position set and cutoff are fitted per sample on that sample alone.
+        </div>
+        <div class="info-card yellow" style="font-size:14.5px;">
+          <div class="card-title">Negative results kept, not dropped</div>
+          0.01% not detected in any arm (<code>z_lo</code> &minus;4.11 to +0.38). The exploratory COLO829 chr1 arm is reported <b>degenerate</b> &mdash; consensus 97,789 vs the primary run's 1,153,835, every blank yields zero kept ALT reads &rarr; <code>no estimate</code>. Exactly the consensus-limited failure review_003 predicted in advance.
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">Takeaway: nothing about the execution is in dispute &mdash; and that is what makes the next page's finding a <b>methodology</b> finding rather than a bug.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:11px;">
+    <div class="slide-label">Registered outcome</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">All four preregistered criteria held: <span style="color:#237804;">H1 SUPPORTED</span></h2>
+    <p class="lead">A mechanical application of the locked v1.0 rules &mdash; no interpretation. <code>zlo_min</code> at the preregistered primary level of <b>0.1%</b>, on both individuals, under both variance constructions.</p>
+
+    <table class="ruletable" style="font-size:16.5px;">
+      <tr><th style="width:105px;">Individual</th><th style="width:60px;">Var.</th><th style="width:95px;">B1 (methyl)</th><th style="width:135px;">B0 (SNV only)</th><th style="width:145px;">C1 (permuted)</th><th style="width:145px;">C2 (CpG density)</th><th>S4 retention ratio, B1</th></tr>
+      <tr class="hl"><td rowspan="2"><b>HCC1395</b></td><td>V1</td><td class="new-c">+2.2995</td><td>+0.7396 <span style="color:#888;">(&Delta;1.56)</span></td><td>&minus;1.8074 <span style="color:#888;">(&Delta;4.11)</span></td><td>&minus;0.0730 <span style="color:#888;">(&Delta;2.37)</span></td><td rowspan="2">blank 0.3635 &rarr; 0.1% 0.6085 = <b>1.6741&times;</b></td></tr>
+      <tr class="hl"><td>V2</td><td class="new-c">+3.5547</td><td>+0.8557 <span style="color:#888;">(&Delta;2.70)</span></td><td>&minus;2.4843 <span style="color:#888;">(&Delta;6.04)</span></td><td>&minus;0.1237 <span style="color:#888;">(&Delta;3.68)</span></td></tr>
+      <tr><td rowspan="2"><b>COLO829</b></td><td>V1</td><td class="new-c">+0.6931</td><td>&minus;0.3667 <span style="color:#888;">(&Delta;1.06)</span></td><td>&minus;1.8113 <span style="color:#888;">(&Delta;2.50)</span></td><td>+0.1676 <span style="color:#888;">(&Delta;0.53)</span></td><td rowspan="2">blank 0.0924 &rarr; 0.1% 0.2692 = <b>2.9127&times;</b></td></tr>
+      <tr><td>V2</td><td class="new-c">+1.4364</td><td>&minus;0.4543 <span style="color:#888;">(&Delta;1.89)</span></td><td>&minus;2.4651 <span style="color:#888;">(&Delta;3.90)</span></td><td>+0.4024 <span style="color:#888;">(&Delta;1.03)</span></td></tr>
+    </table>
+
+    <div style="display:flex;gap:10px;font-size:14px;">
+      <div class="info-card green" style="flex:1;"><div class="card-title">S1 HELD</div>B1 beats B0, C1 and C2 in all 4 individual &times; construction cells</div>
+      <div class="info-card green" style="flex:1;"><div class="card-title">S2 HELD</div>No level detected by B0 was lost under B1</div>
+      <div class="info-card green" style="flex:1;"><div class="card-title">S3 HELD</div>0 of 5 leave-one-out blanks <code>detected</code>, per individual, both constructions</div>
+      <div class="info-card green" style="flex:1;"><div class="card-title">S4 HELD</div>B1's ALT retention is higher at 0.1% than in its blank, on both individuals</div>
+    </div>
+
+    <div class="takeaway">Takeaway: <code>results/registered_outcome.txt</code> reads <b>H1 SUPPORTED</b>, and it is a correct application of the frozen rules. <b>QC did not overturn it &mdash; it is preserved verbatim.</b> What QC found is on the next page.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:12px;">
+    <div class="slide-label">QC verdict</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">REDESIGN_REQUIRED &mdash; S4 is passed by the very confound it was written to exclude</h2>
+    <p class="lead">The criterion added in review_004 to carry the mechanism claim is satisfied <b>identically</b> by <b>C2</b>, a control that scores reads by how many confident CpG positions they carry and uses <b>no methylation pattern at all</b>.</p>
+
+    <div style="flex:1;display:flex;gap:14px;align-items:flex-start;">
+      <div style="flex:1.05;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#a8071a;">QC-01 &mdash; the mechanism criterion cannot tell the two apart</div>
+        <table class="ruletable" style="font-size:19px;">
+          <tr><th>Retention ratio, 0.1% &divide; blank</th><th style="width:96px;">B1 methyl</th><th style="width:96px;">C2 density</th><th style="width:92px;">difference</th></tr>
+          <tr class="hl"><td>HCC1395</td><td><b>1.6741</b></td><td><b>1.6839</b></td><td class="old-c">&minus;0.0098</td></tr>
+          <tr class="hl"><td>COLO829</td><td><b>2.9127</b></td><td><b>2.9041</b></td><td class="old-c">+0.0086</td></tr>
+        </table>
+        <div style="font-size:16px;color:#595959;line-height:1.6;">C2 reproduces B1's differential-retention signature to within <b>0.6%</b> on one individual and <b>0.3%</b> on the other. S4 only asks whether B1's ratio beats <i>its own blank</i>. It does. It never asks whether it beats <b>C2's</b> ratio &mdash; and it does not, on either individual.</div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#a8071a;">QC-02 &mdash; the control legs are decided at 8&ndash;10&times; different count scales</div>
+        <svg viewBox="0 0 560 190" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+          <text x="0" y="16" font-size="12" fill="#8c8c8c">gated total G at 0.1% (HCC1395 / COLO829)</text>
+          <text x="0" y="46" font-size="14" font-weight="700" fill="#262626">B1</text>
+          <rect x="42" y="32" width="392" height="19" rx="3" fill="#ff4d4f"/>
+          <text x="442" y="47" font-size="13.5" font-weight="700" fill="#a8071a">22&ndash;28 / 9&ndash;19</text>
+          <text x="0" y="80" font-size="14" font-weight="700" fill="#262626">C1</text>
+          <rect x="42" y="66" width="42" height="19" rx="3" fill="#bfbfbf"/>
+          <text x="92" y="81" font-size="13.5" fill="#595959">1&ndash;3 / 2&ndash;3</text>
+          <text x="0" y="114" font-size="14" font-weight="700" fill="#262626">C2</text>
+          <rect x="42" y="100" width="42" height="19" rx="3" fill="#bfbfbf"/>
+          <text x="92" y="115" font-size="13.5" fill="#595959">2&ndash;3 / 2&ndash;7</text>
+          <text x="0" y="141" font-size="12" fill="#8c8c8c">nominal cutoffs matched (K_B1 4.91%, k_C2 5.00%) &mdash; realised ALT retention did not</text>
+        </svg>
+        <div style="font-size:16px;color:#595959;line-height:1.6;"><code>z</code> improves with counting statistics independently of selection quality, so the S1 legs compare <b>precision</b>, not selection. <b>B014's confound survived the fix written for it.</b></div>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Takeaway: this is <b>not</b> a claim that H1 is false &mdash; it is that the benchmark <b>as locked cannot establish the mechanism half of its own question</b>. The fix QC names is computable from the same passes: a <b>retention sweep</b> asking whether B1's curve lies above C2's <i>at matched retention</i>.</div>
+  </div>
+</div>
+
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:12px;">
+    <div class="slide-label">Claim control</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">What may actually be said: one cell of a four-cell table, on single-digit counts</h2>
+    <p class="lead"><code>zlo_min</code> improved for B1 in all four cells. The <b>detection</b> outcome under the frozen replicate rule changed in exactly <b>one</b>.</p>
+
+    <div style="display:flex;gap:14px;align-items:stretch;">
+      <div style="flex:0.85;display:flex;flex-direction:column;gap:5px;">
+        <div style="font-size:14.5px;font-weight:700;color:#262626;">QC-03 &mdash; levels called <code>detected</code></div>
+        <table class="ruletable" style="font-size:17px;">
+          <tr><th>Arm</th><th style="width:90px;">V1</th><th style="width:120px;">V2</th></tr>
+          <tr><td>HCC1395 B0</td><td>1%</td><td>1%</td></tr>
+          <tr class="hl"><td>HCC1395 <b>B1</b></td><td>1%</td><td class="new-c">1% and 0.1%</td></tr>
+          <tr><td>COLO829 B0</td><td>1%</td><td>1%</td></tr>
+          <tr><td>COLO829 <b>B1</b></td><td>1%</td><td>1%</td></tr>
+        </table>
+        <div style="font-size:14.5px;color:#595959;line-height:1.55;">Any sentence of the form <i>"methylation enables 0.1% detection"</i> is a sentence about <b>one cell</b>: one individual, one of two preregistered variance constructions.</div>
+      </div>
+
+      <div style="flex:1.15;display:flex;flex-direction:column;gap:8px;">
+        <div class="info-card yellow" style="font-size:14.5px;">
+          <div class="card-title">QC-04 &mdash; COLO829's statistic runs on single-digit counts</div>
+          B1 blank totals are <b>2 / 0 / 4 / 3 / 6</b> reads; 0.1% totals are 9 / 19 / 18. The headline S4 ratio of <b>2.9127</b> is computed from roughly <b>three kept reads</b> in the blank. Four significant figures overstate what three reads can support. One blank gives <code>G = 0</code> &rarr; <code>sample_sd = 0</code> &rarr; <code>no estimate</code> &mdash; the case §15 defined a priori, so handled rather than broken.
+        </div>
+        <div class="info-card yellow" style="font-size:14.5px;">
+          <div class="card-title">QC-05 &mdash; S3 holds, but thinly under V2</div>
+          Two COLO829 blanks return <code>UNRELIABLE</code> under V2: rep3 at [&minus;1.64, +3.15], rep5 at [+0.69, +4.31]. Neither is a false detection &mdash; both straddle the call threshold, which is what <code>UNRELIABLE</code> is for &mdash; and both sit in the same single-digit-count regime.
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway warn">Takeaway: the redesign is now written with the result known, so QC bound it in advance &mdash; <b>every new criterion must be strictly harder to satisfy</b>, and the new criteria must be labelled <b>POST HOC permanently</b>, with the v1.0 preregistered outcome reported beside them in full.</div>
+  </div>
+</div>
+
+<style>
+  .oi .ruletable th, .oi .ruletable td { padding:3px 8px; }
+  .oi .ruletable { font-size:12.5px; line-height:1.35; }
+  .oi .ruletable code { font-size:11.5px; padding:0 3px; }
+  .oi .takeaway { margin-top:6px; padding:7px 12px; font-size:13px; }
+</style>
+<div class="slide-outer">
+  <div class="slide oi" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:6px;">
+    <div class="slide-label">Open items</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">What tomorrow starts with &mdash; and where each item is stuck</h2>
+    <p class="lead">Ten items, as of 20:08 local. Four of them are one job: <b>protocol v1.1</b>, which QC has already constrained before a line of it is written.</p>
+
+    <table class="ruletable">
+      <tr><th style="width:30px;">#</th><th style="width:255px;">Item</th><th style="width:310px;">Stuck where</th><th>Why it matters</th></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">PROTOCOL v1.1 &mdash; THE WORKFLOW IS SITTING AT THIS GATE</td></tr>
+      <tr class="hl"><td>1</td><td>Draft v1.1 resolving <b>QC-01</b> (S4 passed by C2) and <b>QC-02</b> (incomparable count scales)</td><td><code>workflow_state.yaml</code>: <code>current_stage: DESIGN</code>, <code>last_status: REDESIGN_REQUIRED</code>, <code>design_iteration: 5</code> &rarr; 6. No <code>v1.1</code> file exists</td><td>The whole lifecycle is blocked here. v1.0 and EXEC-001 are preserved unchanged &mdash; v1.1 is a new draft, not a mutation</td></tr>
+      <tr class="hl"><td>2</td><td>Run the <b>retention sweep</b> QC named as the settling comparison</td><td>Not started. Computable from the same 42 passes; needs no new methodological assumption</td><td>Trace each arm's <code>zlo_min</code> against realised ALT retention and ask whether B1's curve is above C2's <i>at matched retention</i>. That is the mechanism test S4 failed to be</td></tr>
+      <tr class="hl"><td>3</td><td>Label every new criterion <b>POST HOC</b>, permanently</td><td>A rule with nothing yet written to enforce it</td><td>They will be authored after C2's ratio was seen. They may qualify or withdraw the v1.0 conclusion; they may never be reported as preregistered, and v1.0's outcome must appear beside them in full</td></tr>
+      <tr><td>4</td><td>Fold deviations <b>D3</b> and <b>D4</b> into v1.1</td><td>Recorded as standing deviations against v1.0</td><td>Both are corrections of internal inconsistencies in the locked protocol, not executor choices &mdash; leaving them as deviations hides that</td></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">DECISIONS NOT YET MADE</td></tr>
+      <tr class="hl"><td>5</td><td>How to handle reads whose MM/ML tags fail to parse</td><td><b>1,935 rejected reads per 25&times; pass</b>; no missingness rule in v1.0 covers this case</td><td>Must be decided as a recorded amendment in v1.1, not silently &mdash; and under the same strictly-harder rule</td></tr>
+      <tr><td>6</td><td>Whether BM-0001 gets an entry in <code>research/experiments/registry/</code></td><td>Lives only under <code>research/benchmarks/</code>; no <code>EXP-</code> id assigned</td><td>The 2026-08-25 note required methylation to be "a separate experiment, separately registered". The registration half is still missing</td></tr>
+      <tr><td>7</td><td>Write the evidence summary with QC-03's scope stated</td><td>No summary exists &mdash; QC withholds it until QC passes</td><td>"Methylation enables 0.1% detection" is true of <b>one</b> of four individual &times; construction cells. The summary has to say which</td></tr>
+
+      <tr><td colspan="4" style="background:#fafafa;font-weight:700;color:#595959;font-size:12px;">KNOWN, UNSCHEDULED</td></tr>
+      <tr class="hl"><td>8</td><td>Nothing is committed</td><td><code>git status</code> in <code>mrd/</code>: <b>193+ changed or untracked paths</b>, the entire benchmark included</td><td>Protocol lock, 5 reviews, EXEC-001 and the QC report exist only in the working tree</td></tr>
+      <tr><td>9</td><td>Write the signal-role decision into <code>claim-boundaries.md</code></td><td>Settled in conversation at 16:22 only &mdash; "CN is a positive control, not evidence"; "fragment length is unusable here"</td><td>The most defence-relevant conclusion of the day exists nowhere in the repo</td></tr>
+      <tr><td>10</td><td>Apply the SIMMA citation rule in the thesis draft</td><td>Decided at 14:45; the draft still has no literature section written to it</td><td>Cite it for conformal prediction and hold-out scale (43 individuals vs 6), not as an ecDNA paper</td></tr>
+    </table>
+
+    <div class="takeaway warn">Takeaway: the day ends with <b>a positive registered result that its own QC will not let you use yet</b>. Items 1&ndash;4 are the price of keeping it honest, and item 2 is the one that decides whether the mechanism claim survives.</div>
+  </div>
+</div>
+
+</div>
+
+<div class="nav" id="nav">
+  <button id="prev">← Prev</button>
+  <div class="dots" id="dots"></div>
+  <span class="count" id="count"></span>
+  <button id="next">Next →</button>
+</div>
+<button class="nav-toggle" id="navToggle" title="Collapse the nav bar">▼</button>
+
+<script>window.DECK_NAME = 'Progress-Report-20260831'; window.DECK_DATE = '20260831'; window.DECK_PRESENTER = 'hung114';</script>
+<script>
+/* Progress-report slides - runtime behaviour of a built deck: page navigation,
+   entering/leaving presentation mode, and PPTX export.
+   Supports both the current .slide-outer/.slide structure and the legacy .block one.
+   Requires mermaid, html2canvas and pptxgenjs already loaded in <head>. The export file
+   name comes from window.DECK_NAME. */
+(function () {
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+
+  // Supports the current .slide-outer and the legacy .block
+  const newSlides = Array.from(document.querySelectorAll('.slide-outer'));
+  const oldBlocks = Array.from(document.querySelectorAll('.block'));
+  const useNew = newSlides.length > 0;
+  const slides = useNew ? newSlides : oldBlocks;
+
+  const STORAGE_KEY = 'deck_idx_' + (window.DECK_NAME || location.pathname);
+  let idx = Math.min(+(localStorage.getItem(STORAGE_KEY) || 0), slides.length - 1);
+  let slideMode = false, navCollapsed = false;
+
+  /* -- Scaling: fit .slide into .slide-outer (scroll mode) -- */
+  function scaleSlideInOuter(outer) {
+    const inner = outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = `scale(${scale})`;
+    inner.style.top = '0';
+    inner.style.left = '0';
+  }
+
+  /* -- Scaling: fit .slide centred in the viewport (presentation mode, minus the nav bar) -- */
+  function scaleSlideFullscreen(outer) {
+    const inner = outer.querySelector('.slide');
+    if (!inner) return;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const navEl = document.getElementById('nav');
+    const navH = (!navCollapsed && navEl) ? navEl.offsetHeight : 0;
+    const availH = vh - navH;
+    const scale = Math.min(vw / 1280, availH / 720);
+    const tx = (vw - 1280 * scale) / 2;
+    const ty = (availH - 720 * scale) / 2;
+    inner.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    inner.style.top = '0';
+    inner.style.left = '0';
+  }
+
+  function scaleAll() {
+    if (!useNew) return;
+    if (slideMode) {
+      const active = slides[idx];
+      if (active) scaleSlideFullscreen(active);
+    } else {
+      slides.forEach(scaleSlideInOuter);
+    }
+  }
+
+  window.addEventListener('resize', scaleAll);
+
+  function renderDots() {
+    const dots = document.getElementById('dots');
+    if (!dots) return;
+    dots.innerHTML = '';
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === idx ? ' on' : '');
+      d.onclick = () => go(i);
+      dots.appendChild(d);
+    });
+  }
+
+  function go(i) {
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    localStorage.setItem(STORAGE_KEY, idx);
+    slides.forEach((s, k) => s.classList.toggle('active', k === idx));
+    document.getElementById('prev').disabled = idx === 0;
+    document.getElementById('next').disabled = idx === slides.length - 1;
+    document.getElementById('count').textContent = (idx + 1) + ' / ' + slides.length;
+    renderDots();
+    window.scrollTo({ top: 0 });
+    if (slideMode && useNew) scaleSlideFullscreen(slides[idx]);
+  }
+
+  function setMode(on) {
+    slideMode = on;
+    document.body.classList.toggle('slides', on);
+    document.getElementById('modeBtn').textContent = on ? '◼ Exit presentation' : '▶ Presentation mode';
+    if (!on) {
+      // Reset the nav-bar collapsed state on exit
+      navCollapsed = false;
+      const navEl = document.getElementById('nav');
+      if (navEl) navEl.classList.remove('nav-collapsed');
+      const navToggleBtn = document.getElementById('navToggle');
+      if (navToggleBtn) { navToggleBtn.textContent = '▼'; navToggleBtn.title = 'Collapse the nav bar'; }
+    }
+    if (on) {
+      go(idx);
+    } else {
+      // Re-scale every slide when returning to scroll mode
+      if (useNew) slides.forEach(scaleSlideInOuter);
+    }
+  }
+
+  document.getElementById('prev').onclick = () => go(idx - 1);
+  document.getElementById('next').onclick = () => go(idx + 1);
+  document.getElementById('modeBtn').onclick = () => setMode(!slideMode);
+
+  const navToggleBtn = document.getElementById('navToggle');
+  if (navToggleBtn) {
+    navToggleBtn.onclick = () => {
+      navCollapsed = !navCollapsed;
+      const navEl = document.getElementById('nav');
+      if (navEl) navEl.classList.toggle('nav-collapsed', navCollapsed);
+      navToggleBtn.textContent = navCollapsed ? '▲' : '▼';
+      navToggleBtn.title = navCollapsed ? 'Expand the nav bar' : 'Collapse the nav bar';
+      if (slideMode && useNew) scaleSlideFullscreen(slides[idx]);
+    };
+  }
+  document.addEventListener('keydown', (e) => {
+    if (!slideMode) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { go(idx + 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(idx - 1); e.preventDefault(); }
+    if (e.key === 'Escape') setMode(false);
+    if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.metaKey) { copyCurrentSlide(); e.preventDefault(); }
+  });
+
+  /* -- Capture one slide to a canvas at 1:1 scale; video areas are punched out to white
+     (their relative positions are returned so they can be embedded later).
+     PPTX export and "Copy page" share this capture logic, so quality is identical. -- */
+  async function renderSlideToCanvas(s) {
+    let captureEl = s;
+    let restoreTransform = null;
+
+    // Find [data-pptx-video] elements, detach them before capture, reinsert afterwards
+    const videoEls = [...s.querySelectorAll('[data-pptx-video]')];
+    videoEls.forEach(v => { v._nextSibling = v.nextSibling; v._parent = v.parentNode; v.remove(); });
+
+    // html2canvas does not support object-fit:contain and stretches images to fill the box,
+    // distorting them. Compute the real displayed size proportionally, override width/height
+    // temporarily before the capture, then restore it.
+    const fitImgs = [...s.querySelectorAll('img')].filter(img => {
+      const fit = getComputedStyle(img).objectFit;
+      return fit === 'contain' && img.naturalWidth && img.naturalHeight;
+    });
+    const fitImgSnapshots = fitImgs.map(img => {
+      const prevCss = img.style.cssText;
+      const boxW = img.clientWidth;
+      const boxH = img.clientHeight;
+      const scale = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
+      img.style.objectFit = 'none';
+      img.style.width = (img.naturalWidth * scale) + 'px';
+      img.style.height = (img.naturalHeight * scale) + 'px';
+      img.style.display = 'block';
+      img.style.margin = '0 auto';
+      return { img, prevCss };
+    });
+
+    if (useNew) {
+      // Capture .slide at 1:1 for maximum quality
+      const inner = s.querySelector('.slide');
+      if (inner) {
+        restoreTransform = inner.style.transform;
+        inner.style.transform = 'none';
+        captureEl = inner;
+      }
+    }
+
+    const canvas = await html2canvas(captureEl, {
+      scale: 1.5,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      width: useNew ? 1280 : undefined,
+      height: useNew ? 720 : undefined,
+    });
+
+    if (restoreTransform !== null) {
+      captureEl.style.transform = restoreTransform;
+    }
+    videoEls.forEach(v => { v._parent.insertBefore(v, v._nextSibling); });
+    fitImgSnapshots.forEach(({ img, prevCss }) => { img.style.cssText = prevCss; });
+
+    // Punch the video areas out to white so the later video layer does not overlap
+    const ctx = canvas.getContext('2d');
+    const slideW = captureEl.offsetWidth || 1280;
+    const slideH = captureEl.offsetHeight || 720;
+    const base = captureEl.getBoundingClientRect();
+    const videoRects = videoEls.map(v => {
+      const vr = v.getBoundingClientRect();
+      return {
+        v,
+        rx: (vr.left - base.left) / slideW,
+        ry: (vr.top - base.top) / slideH,
+        rw: vr.width / slideW,
+        rh: vr.height / slideH,
+      };
+    });
+    for (const { rx, ry, rw, rh } of videoRects) {
+      ctx.clearRect(rx * canvas.width, ry * canvas.height, rw * canvas.width, rh * canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(rx * canvas.width, ry * canvas.height, rw * canvas.width, rh * canvas.height);
+    }
+    return { canvas, videoRects };
+  }
+
+  /* -- Lightweight toast (feedback for copy/download without interrupting via alert) -- */
+  function toast(msg, isErr) {
+    let t = document.getElementById('deckToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'deckToast';
+      t.style.cssText = 'position:fixed;left:50%;top:20px;transform:translateX(-50%);z-index:9999;'
+        + 'padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;color:#fff;'
+        + 'box-shadow:0 4px 14px rgba(0,0,0,.25);transition:opacity .25s;pointer-events:none;';
+      document.body.appendChild(t);
+    }
+    t.style.background = isErr ? '#dc2626' : '#16a34a';
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2400);
+  }
+
+  /* -- Copy the current page as a PNG: write to the clipboard when possible; in a
+     non-secure context (e.g. an http LAN IP) fall back to downloading the PNG.
+     Shortcut: c. -- */
+  async function copyCurrentSlide() {
+    const btn = document.getElementById('copyImgBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Capturing…'; }
+    try {
+      const { canvas } = await renderSlideToCanvas(slides[idx]);
+      const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+      const pageNo = String(idx + 1).padStart(2, '0');
+      // Writing an image to the clipboard needs a secure context (https / localhost / file://);
+      // it is unavailable over an http LAN IP
+      if (navigator.clipboard && window.ClipboardItem && window.isSecureContext) {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          toast('Copied page ' + (idx + 1) + ' to the clipboard');
+          return;
+        } catch (e) { /* fall through to the download fallback */ }
+      }
+      // Fallback: download the page as a PNG
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (window.DECK_NAME || 'slide') + '-' + pageNo + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(a.href);
+      toast('This context cannot write to the clipboard; downloaded page ' + (idx + 1) + ' as a PNG instead');
+    } catch (e) {
+      console.error(e);
+      toast('Copy failed: ' + e.message, true);
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = '⧉ Copy page'; }
+    }
+  }
+
+  const copyImgBtn = document.getElementById('copyImgBtn');
+  if (copyImgBtn) copyImgBtn.onclick = copyCurrentSlide;
+
+  async function exportPptx() {
+    const btn = document.getElementById('exportBtn');
+    const wasSlides = slideMode;
+    btn.disabled = true; btn.textContent = 'Exporting…';
+    if (wasSlides) setMode(false);
+    await new Promise(r => setTimeout(r, 80));
+    try {
+      const pptx = new PptxGenJS();
+      pptx.defineLayout({ name: 'W16x9', width: 13.333, height: 7.5 });
+      pptx.layout = 'W16x9';
+      const PW = 13.333, PH = 7.5;
+
+      // Generate the cover slide as native text (editable in PowerPoint). It exists only in
+      // the PPTX export; deck.html itself (the browsing/editing intermediate) has no cover.
+      // If deck.html was built with --titlecover its first page is already a static cover
+      // (data-titlecover="1"), so no second one is added and the PPTX does not start with two
+      // "Progress Report" covers.
+      const hasStaticCover = slides[0] && slides[0].dataset.titlecover === '1';
+      if (!hasStaticCover) {
+        const cover = pptx.addSlide();
+        cover.background = { color: 'FFFFFF' };
+        cover.addText('Progress Report', { x: 0, y: 2.2, w: PW, h: 1.1, align: 'center', fontSize: 44, bold: true, color: '1f2329' });
+        cover.addText(window.DECK_DATE || '', { x: 0, y: 3.45, w: PW, h: 0.65, align: 'center', fontSize: 22, color: '6b7280' });
+        cover.addText(window.DECK_PRESENTER || '', { x: 0, y: 4.2, w: PW, h: 0.65, align: 'center', fontSize: 22, bold: true, color: '344054' });
+      }
+
+      // Try to fetch the video src as base64; under file:// Chrome fails, so fall back
+      async function fetchVideoBase64(src) {
+        try {
+          const resp = await fetch(src);
+          if (!resp.ok) return null;
+          const buf = await resp.arrayBuffer();
+          const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+          return 'data:video/mp4;base64,' + b64;
+        } catch { return null; }
+      }
+
+      for (const s of slides) {
+        const { canvas, videoRects } = await renderSlideToCanvas(s);
+        const img = canvas.toDataURL('image/png');
+        const slide = pptx.addSlide();
+        slide.background = { color: 'FFFFFF' };
+        slide.addImage({ data: img, x: 0, y: 0, w: PW, h: PH });
+
+        // Embed the video into the PPT (at the punched-out position)
+        for (const { v, rx, ry, rw, rh } of videoRects) {
+          const mediaData = await fetchVideoBase64(v.src || v.currentSrc);
+          if (mediaData) {
+            slide.addMedia({ type: 'video', data: mediaData, extension: 'mp4',
+              x: rx * PW, y: ry * PH, w: rw * PW, h: rh * PH });
+          } else {
+            // fetch failed (file:// CORS): fall back to the current frame
+            const fc = document.createElement('canvas');
+            fc.width = v.videoWidth || 640; fc.height = v.videoHeight || 360;
+            fc.getContext('2d').drawImage(v, 0, 0, fc.width, fc.height);
+            slide.addImage({ data: fc.toDataURL('image/png'),
+              x: rx * PW, y: ry * PH, w: rw * PW, h: rh * PH });
+          }
+        }
+      }
+      await pptx.writeFile({ fileName: (window.DECK_NAME || 'progress-report') + '.pptx' });
+    } catch (e) {
+      console.error(e);
+      alert('Export failed: ' + e.message);
+    } finally {
+      if (wasSlides) setMode(true);
+      btn.disabled = false;
+      btn.textContent = '↓ Export PPTX';
+    }
+  }
+
+  document.getElementById('exportBtn').onclick = exportPptx;
+
+  /* -- Export portable HTML: images are re-encoded at their displayed size (downscaled +
+     compressed) and inlined as data URIs, and the CDN mermaid / html2canvas / pptxgenjs
+     scripts are inlined too, so the file works offline and can be moved on its own -- */
+  async function blobToDataURL(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  // Redraw already-loaded <img> elements onto a canvas at their displayed size (x2 for
+  // sharpness, never above the original) and output JPEG, so inlining the full-size originals
+  // does not bloat the HTML
+  function liveImgToDataURL(liveImg) {
+    try {
+      const dispW = liveImg.clientWidth || liveImg.naturalWidth || 1;
+      const dispH = liveImg.clientHeight || liveImg.naturalHeight || 1;
+      const w = Math.max(1, Math.min(Math.round(dispW * 2), liveImg.naturalWidth || dispW * 2));
+      const h = Math.max(1, Math.min(Math.round(dispH * 2), liveImg.naturalHeight || dispH * 2));
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(liveImg, 0, 0, w, h);
+      return c.toDataURL('image/jpeg', 0.85);
+    } catch (e) { return null; } // tainted (cross-origin) canvas and similar: let the caller fall back
+  }
+
+  async function exportPortableHtml() {
+    const btn = document.getElementById('exportPortableBtn');
+    btn.disabled = true; btn.textContent = 'Exporting…';
+    try {
+      const clone = document.documentElement.cloneNode(true);
+
+      // Inline images as data URIs (downscaled to displayed size + JPEG compression to keep the file small)
+      const liveImgs = document.querySelectorAll('img');
+      const cloneImgs = clone.querySelectorAll('img');
+      for (let i = 0; i < cloneImgs.length; i++) {
+        const src = cloneImgs[i].getAttribute('src');
+        if (!src || src.startsWith('data:')) continue;
+        let dataUrl = liveImgToDataURL(liveImgs[i]);
+        if (!dataUrl) {
+          try {
+            const resp = await fetch(new URL(src, location.href).href);
+            if (resp.ok) dataUrl = await blobToDataURL(await resp.blob());
+          } catch (e) { /* give up and keep the original link */ }
+        }
+        if (dataUrl) cloneImgs[i].setAttribute('src', dataUrl);
+      }
+
+      // Inline external <script src> content (including the CDN mermaid / html2canvas /
+      // pptxgenjs) so the file opens offline
+      const scripts = clone.querySelectorAll('script[src]');
+      for (const s of scripts) {
+        const src = s.getAttribute('src');
+        try {
+          const resp = await fetch(src);
+          const text = await resp.text();
+          const inline = document.createElement('script');
+          inline.textContent = text;
+          s.replaceWith(inline);
+        } catch (e) {
+          console.warn('Failed to inline a script; keeping the original link (needs network access):', src, e);
+        }
+      }
+
+      const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+      const blob = new Blob([html], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (window.DECK_NAME || 'deck') + '_portable.html';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+    } catch (e) {
+      console.error(e);
+      alert('Portable export failed: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '⇓ Export portable HTML';
+    }
+  }
+
+  const exportPortableBtn = document.getElementById('exportPortableBtn');
+  if (exportPortableBtn) exportPortableBtn.onclick = exportPortableHtml;
+
+  /* mermaid measures labels with getBoundingClientRect, which picks up the .slide
+     transform: scale(). Remove the scaling during rendering (see .mermaid-measuring in
+     slides.css) and restore it afterwards, otherwise node boxes shrink with the scale and
+     their text overflows and is clipped. */
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    if (useNew) slides.forEach(scaleSlideInOuter);
+    renderDots();
+    setMode(true);
+  });
+})();
+
+</script>
+</body>
+</html>

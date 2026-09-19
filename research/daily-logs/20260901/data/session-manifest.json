@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "report_kind": "daily",
+  "report_date": "2026-09-01",
+  "selected_tool": "all",
+  "source_mode": "scan",
+  "sessions": [
+    {
+      "source": "claude",
+      "session_id": "3aff324a-6091-446d-99ed-a4e2b268f8d8",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/3aff324a-6091-446d-99ed-a4e2b268f8d8.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD/mrd/research/weekly-reports/2026-W35-simma",
+      "started_at": "2026-09-01T06:49:53.142Z",
+      "ended_at": "2026-09-01T14:09:20.465Z",
+      "turn_count": 23
+    },
+    {
+      "source": "claude",
+      "session_id": "d6b1f878-b601-4756-835b-f5b9a4992c49",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/d6b1f878-b601-4756-835b-f5b9a4992c49.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-09-01T07:26:49.248Z",
+      "ended_at": "2026-09-01T07:27:44.292Z",
+      "turn_count": 2
+    },
+    {
+      "source": "claude",
+      "session_id": "ca5c44a8-e515-435e-8d9d-d1f91b2c82f6",
+      "source_file": "/home/hung114/.claude/projects/-big8-disk-hung114-ONT-MRD/ca5c44a8-e515-435e-8d9d-d1f91b2c82f6.jsonl",
+      "cwd": "/big8_disk/hung114/ONT_MRD",
+      "started_at": "2026-09-01T08:49:32.185Z",
+      "ended_at": "2026-09-01T14:03:47.665Z",
+      "turn_count": 12
+    }
+  ]
+}

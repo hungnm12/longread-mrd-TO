@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:11px;">
+    <div class="slide-label">Bounds on this project</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">"Dilute to 0.001% and still get a call" &mdash; the paper already ran that experiment, and it failed</h2>
+    <p class="lead">A unit check settled it before any argument: <b>0.001% = 1×10⁻⁵</b>, while SIMMA's LOD is <b>100 ppm = 1×10⁻⁴ = 0.01%</b>. The ask was <b>ten times below</b> the reported limit.</p>
+
+    <svg viewBox="0 0 1200 252" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+      <defs>
+        <marker id="dn" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="5.5" refY="10" orient="auto">
+          <path d="M0,0 L11,0 L5.5,11 Z" fill="#cf1322"/>
+        </marker>
+      </defs>
+
+      <rect x="120" y="72" width="404" height="80" fill="#fff1f0" stroke="#ffccc7" stroke-width="1"/>
+      <text x="322" y="100" font-size="15" font-weight="700" fill="#a8071a" text-anchor="middle">below the LOD</text>
+      <text x="322" y="122" font-size="13.5" fill="#a8071a" text-anchor="middle">"predictions plateaued &hellip; undetectable</text>
+      <text x="322" y="140" font-size="13.5" fill="#a8071a" text-anchor="middle">by the model" &mdash; the paper's own words</text>
+
+      <text x="322" y="30" font-size="14.5" font-weight="700" fill="#cf1322" text-anchor="middle">asked for: 0.001% = 1×10⁻⁵ &#10007;</text>
+      <line x1="322" y1="38" x2="322" y2="64" stroke="#cf1322" stroke-width="2" marker-end="url(#dn)"/>
+
+      <line x1="524" y1="56" x2="524" y2="186" stroke="#d48806" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <text x="536" y="86" font-size="14.5" font-weight="700" fill="#ad6800">SIMMA multimodal LOD</text>
+      <text x="536" y="106" font-size="13.5" fill="#ad6800">1×10⁻⁴ = 0.01% = 100 ppm &mdash; the edge, not a safe point</text>
+
+      <line x1="726" y1="112" x2="726" y2="186" stroke="#8c8c8c" stroke-width="2" stroke-dasharray="3 4"/>
+      <text x="738" y="134" font-size="13.5" fill="#595959">ecDNA LOD ~1×10⁻³, tumour-informed</text>
+
+      <line x1="110" y1="186" x2="1160" y2="186" stroke="#8c8c8c" stroke-width="1.5"/>
+      <g font-size="13" fill="#595959" text-anchor="middle">
+        <line x1="120" y1="182" x2="120" y2="190" stroke="#8c8c8c"/><text x="120" y="208">10⁻⁶</text>
+        <line x1="322" y1="182" x2="322" y2="190" stroke="#8c8c8c"/><text x="322" y="208">10⁻⁵</text>
+        <line x1="524" y1="182" x2="524" y2="190" stroke="#8c8c8c"/><text x="524" y="208">10⁻⁴</text>
+        <line x1="726" y1="182" x2="726" y2="190" stroke="#8c8c8c"/><text x="726" y="208">10⁻³</text>
+        <line x1="928" y1="182" x2="928" y2="190" stroke="#8c8c8c"/><text x="928" y="208">10⁻²</text>
+        <line x1="1130" y1="182" x2="1130" y2="190" stroke="#8c8c8c"/><text x="1130" y="208">10⁻¹</text>
+      </g>
+      <text x="1160" y="232" font-size="12.5" fill="#8c8c8c" text-anchor="end">tumour fraction, log scale</text>
+      <text x="6" y="232" font-size="13.5" fill="#595959">The paper simulated <tspan font-weight="700" fill="#262626">down to 10⁻⁶</tspan> &#8212; the whole shaded stretch &#8212; and reported the plateau itself: the authors' own result, not an extrapolation.</text>
+    </svg>
+
+    <div style="display:flex;gap:14px;">
+      <div class="info-card red" style="flex:1;font-size:14.5px;">
+        <div class="card-title">Ceiling 1 &mdash; counting statistics</div>
+        At 10⁻⁴ roughly <b>42</b> independent features suffice to hold the z-score. At 10⁻⁵ you would need about <b>4,200</b> &mdash; and only <b>tens</b> of independent copy-number segments exist. The features run out before the arithmetic does.
+      </div>
+      <div class="info-card yellow" style="flex:1;font-size:14.5px;">
+        <div class="card-title">Ceiling 2 &mdash; the biological floor</div>
+        Healthy-person variation in copy number, methylation and fragment length is <b>3&ndash;4 orders of magnitude larger</b> than a 10⁻⁵ tumour signal. These are distribution-shift signals, so they sit in an already-salty pool.
+      </div>
+    </div>
+
+    <div class="takeaway warn">Takeaway: to reach 10⁻⁵ you must <b>change evidence type</b> &mdash; to SNV (personalised, tumour-informed) or an SV/ecDNA junction, where the background is zero. At exactly 10⁻⁴ all you get is a scalar tumour fraction with an interval; SCNA, ecDNA and SNV are each already dead at that level.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    inner.style.transform = 'scale(' + (outer.offsetWidth / 1280) + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => { document.body.classList.remove('mermaid-measuring'); scaleSlide(); });
+</script>
+</body>
+</html>

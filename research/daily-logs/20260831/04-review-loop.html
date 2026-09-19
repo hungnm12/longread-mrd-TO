@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide page</title>
+<link rel="stylesheet" href="assets/slides.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+<!-- SLIDE:START -->
+<div class="slide-outer">
+  <div class="slide" style="padding:28px 40px 20px;display:flex;flex-direction:column;gap:8px;">
+    <div class="slide-label">Protocol governance</div>
+    <h2 style="font-size:26px;margin:0 0 2px;">Five adversarial reviews drove blocking issues 8 &rarr; 0, then the protocol was frozen</h2>
+    <p class="lead"><code>prompt.md</code> asked for the full lifecycle with no human in the loop. The designer wrote, a <code>grill-me</code> reviewer attacked without editing, and the loop only exited on <b>zero blocking issues</b> &mdash; 16:05 to 16:55 local, benchmark <code>BM-0001-methyl-gate-mrd</code>.</p>
+
+    <div style="font-size:13.5px;color:#595959;">
+      <b style="color:#262626;">14</b> blocking findings raised, <b style="color:#262626;">14</b> resolved &nbsp;&middot;&nbsp;
+      <b style="color:#262626;">13</b> non-blocking raised, <b style="color:#262626;">13</b> adopted &nbsp;&middot;&nbsp;
+      <b class="old">0</b> deleted &nbsp;&middot;&nbsp; the reviewer also recorded an <b>addendum correcting two of its own findings</b> rather than editing them away
+    </div>
+
+    <svg viewBox="0 0 1200 296" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+      <defs>
+        <marker id="ar-g" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+          <path d="M0,0 L12,6 L0,12 Z" fill="#389e0d"/>
+        </marker>
+      </defs>
+
+      <text x="8" y="24" font-size="13" fill="#8c8c8c">blocking issues</text>
+      <line x1="60" y1="250" x2="1195" y2="250" stroke="#d9d9d9" stroke-width="1.5"/>
+
+      <!-- review 1 : 8 blocking -->
+      <rect x="110" y="90" width="90" height="160" rx="3" fill="#ff4d4f"/>
+      <text x="155" y="82" font-size="22" font-weight="700" fill="#a8071a" text-anchor="middle">8</text>
+      <text x="155" y="180" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">B001&ndash;B008</text>
+      <text x="155" y="268" font-size="13" fill="#595959" text-anchor="middle">review_001 &middot; on v0.1</text>
+      <text x="155" y="286" font-size="12" fill="#a8071a" text-anchor="middle">degenerate control</text>
+
+      <!-- review 2 : 3 -->
+      <rect x="300" y="190" width="90" height="60" rx="3" fill="#ff7a45"/>
+      <text x="345" y="182" font-size="22" font-weight="700" fill="#a8071a" text-anchor="middle">3</text>
+      <text x="345" y="268" font-size="13" fill="#595959" text-anchor="middle">review_002 &middot; on v0.2</text>
+      <text x="345" y="286" font-size="12" fill="#8c8c8c" text-anchor="middle">B009&ndash;B011 integer-score ties</text>
+
+      <!-- review 3 : 2 -->
+      <rect x="490" y="210" width="90" height="40" rx="3" fill="#ffa940"/>
+      <text x="535" y="202" font-size="22" font-weight="700" fill="#a8071a" text-anchor="middle">2</text>
+      <text x="535" y="268" font-size="13" fill="#595959" text-anchor="middle">review_003 &middot; on v0.3</text>
+      <text x="535" y="286" font-size="12" fill="#8c8c8c" text-anchor="middle">B012 arithmetic, B013 empty set</text>
+
+      <!-- review 4 : 1 -->
+      <rect x="680" y="230" width="90" height="20" rx="3" fill="#ffc53d"/>
+      <text x="725" y="222" font-size="22" font-weight="700" fill="#a8071a" text-anchor="middle">1</text>
+      <text x="725" y="268" font-size="13" fill="#595959" text-anchor="middle">review_004 &middot; on v0.4</text>
+      <text x="725" y="286" font-size="12" fill="#a8071a" text-anchor="middle">B014 confound returns via C1</text>
+
+      <!-- review 5 : 0 -->
+      <rect x="870" y="246" width="90" height="4" rx="2" fill="#52c41a"/>
+      <text x="915" y="238" font-size="22" font-weight="700" fill="#135200" text-anchor="middle">0</text>
+      <text x="915" y="268" font-size="13" fill="#595959" text-anchor="middle">review_005 &middot; on v0.5</text>
+      <text x="915" y="286" font-size="12" fill="#135200" text-anchor="middle" font-weight="700">REVIEW_PASS</text>
+
+      <path d="M975 200 L1015 200" stroke="#389e0d" stroke-width="2.5" fill="none" marker-end="url(#ar-g)"/>
+
+      <!-- lock -->
+      <rect x="1022" y="152" width="172" height="96" rx="6" fill="#f6ffed" stroke="#389e0d" stroke-width="2"/>
+      <text x="1108" y="180" font-size="17" font-weight="700" fill="#135200" text-anchor="middle">v1.0 LOCKED</text>
+      <text x="1108" y="202" font-size="12" fill="#389e0d" text-anchor="middle">20 lock gates PASS</text>
+      <text x="1108" y="220" font-size="11.5" fill="#8c8c8c" text-anchor="middle">sha256:9c615da4&hellip;</text>
+      <text x="1108" y="236" font-size="11.5" fill="#8c8c8c" text-anchor="middle">16:55 +08:00</text>
+
+      <!-- ledger strip -->
+    </svg>
+
+    <div style="display:flex;gap:14px;align-items:stretch;">
+      <div style="flex:1.25;border:1px solid #e5e7eb;border-radius:5px;padding:8px 11px;">
+        <div style="font-size:12px;font-weight:700;color:#8c8c8c;letter-spacing:.4px;">RESEARCH QUESTION, FROZEN AT LOCK</div>
+        <div style="font-size:13.5px;color:#262626;margin-top:3px;line-height:1.45;">Does adding an <b>oracle-free per-read methylation filter</b> to the frozen SNV-only gated detection score improve sample-level detection at <b>1% / 0.1% / 0.01%</b> tumour fraction, relative to the SNV-only score alone &mdash; and <b>does it replicate on a second individual?</b></div>
+      </div>
+      <div style="flex:1;border:1px solid #e5e7eb;border-radius:5px;padding:8px 11px;">
+        <div style="font-size:12px;font-weight:700;color:#8c8c8c;letter-spacing:.4px;">H1 HOLDS ONLY IF ALL FOUR HOLD</div>
+        <div style="font-size:13px;color:#262626;margin-top:3px;line-height:1.5;">
+          <b>S1</b> B1 beats B0, C1 and C2 at 0.1% on <b>both</b> individuals under <b>both</b> variance models &nbsp;&middot;&nbsp;
+          <b>S2</b> no level detected by B0 becomes undetected &nbsp;&middot;&nbsp;
+          <b>S3</b> none of the ten blanks returns <code>detected</code> &nbsp;&middot;&nbsp;
+          <b>S4</b> B1's ALT retention is <b>differential</b>, higher at 0.1% than in the blank
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">Takeaway: the loop's value is not that it reached zero &mdash; it is that <b>every finding, including the reviewer's own mistakes, stayed in the audit trail</b>, and the protocol was frozen with a checksum <b>before any number existed</b>.</div>
+  </div>
+</div>
+<!-- SLIDE:END -->
+</div>
+<script>
+  function scaleSlide() {
+    const outer = document.querySelector('.slide-outer');
+    const inner = outer && outer.querySelector('.slide');
+    if (!inner) return;
+    const scale = outer.offsetWidth / 1280;
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+  mermaid.initialize({ startOnLoad: false, theme: 'base', flowchart: { curve: 'basis' }, themeVariables: { fontSize: '13px' } });
+  document.body.classList.add('mermaid-measuring');
+  mermaid.run().finally(() => {
+    document.body.classList.remove('mermaid-measuring');
+    scaleSlide();
+  });
+</script>
+</body>
+</html>
